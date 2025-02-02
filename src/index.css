@@ -1,0 +1,21 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.gradient {
+  width: 100%; /* Chiều rộng của vòng cung */
+  height: 31.25rem; /* Chiều cao của vòng cung */
+  background: linear-gradient(to right, #000000, #5b0e0e);
+  clip-path: ellipse(80% 100% at center top);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.companyColor {
+  width: 100%; /* Chiều rộng của vòng cung */
+  height: 12.5rem; /* Chiều cao của vòng cung */
+  background: linear-gradient(to right, #000000, #5b0e0e);
+  overflow: hidden;
+}
