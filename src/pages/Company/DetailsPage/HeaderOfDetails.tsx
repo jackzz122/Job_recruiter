@@ -14,6 +14,7 @@ export const HeaderOfDetails = ({
     padding: "1.5rem",
     border: "1px solid #bfbfbf",
     borderRadius: "0.5rem",
+    width: "59.563rem",
   };
   return (
     <Box sx={stylesForBlock} className="generalInfo">

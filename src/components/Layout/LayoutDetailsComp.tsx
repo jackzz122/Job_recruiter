@@ -41,7 +41,7 @@ export const LayoutDetailsComp = () => {
                 padding: "1.5rem",
                 backgroundColor: "white",
                 maxHeight: "4.5rem",
-                minWidth: "54.625rem",
+                maxWidth: "59.563rem",
                 borderRadius: "0.5rem",
               }}
             >
@@ -67,7 +67,7 @@ export const LayoutDetailsComp = () => {
               <Outlet />
             </div>
           </Box>
-          <Box sx={{ flexGrow: 1 }}>
+          <Box sx={{ flexGrow: 1, maxWidth: "29.375rem" }}>
             <Typography variant="h6" fontWeight="bold">
               7 việc làm đang tuyển dụng{" "}
             </Typography>

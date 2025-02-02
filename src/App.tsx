@@ -14,6 +14,8 @@ import { MyJobs } from "./pages/Information/MyJobs/MyJobs";
 import { ListCompCareer } from "./pages/Company/ListCompany/ListCompCareer";
 import { LayoutDetailsComp } from "./components/Layout/LayoutDetailsComp";
 import { ReviewComp } from "./pages/Company/ReviewCompany/ReviewComp";
+import { LayoutListComp } from "./components/Layout/LayoutListComp";
+import { ShortInfoComp } from "./pages/Company/ListCompany/ShortInfoComp";
 
 function App() {
   return (
@@ -28,7 +30,11 @@ function App() {
               <Route path="change_pass" element={<ChangePass />} />
             </Route>
             <Route path="job/:name" element={<DetailsJob />} />
-            <Route path="list_job/:name" element={<ListCompCareer />} />
+            <Route element={<LayoutListComp />}>
+              <Route path="list_job/:name" element={<ListCompCareer />}>
+                <Route path=":nameComp" element={<ShortInfoComp />} />
+              </Route>
+            </Route>
             <Route path="company/:name" element={<LayoutDetailsComp />}>
               <Route index element={<DetailsComp />} />
               <Route path="reviews" element={<ReviewComp />} />

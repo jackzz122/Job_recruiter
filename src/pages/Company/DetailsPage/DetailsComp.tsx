@@ -23,7 +23,7 @@ const coreOfCompany = [
 ];
 export const DetailsComp = () => {
   return (
-    <Box sx={{ backgroundColor: "#f3f5f7", minHeight: "100vh" }}>
+    <Box sx={{ backgroundColor: "#f3f5f7" }}>
       <HeaderOfDetails name="Thông tin chung">
         <Grid2 container marginTop={3}>
           <Grid2 size={4}>

@@ -8,7 +8,7 @@ import Divider from "@mui/material/Divider";
 
 import { ListOfRequirement } from "../ListOfRequirement";
 import { ListOfHighlightComp } from "../ListOfHighlightComp";
-export const RecruiterComp = () => {
+export const RecruiterComp = ({ isChoose }: { isChoose?: boolean }) => {
   const isHotOrNot = true;
   const requires = ["ProjectManager", "Bridge Engineer", "Japanese"];
   const highlights = [
@@ -23,6 +23,7 @@ export const RecruiterComp = () => {
         border: "1px solid #fff4ec",
         borderRadius: "0.75rem",
         backgroundColor: `${isHotOrNot ? "#fff4ec" : ""}`,
+        borderColor: `${isChoose && "red"}`,
       }}
     >
       <Typography variant="body2" sx={{ color: "gray" }}>
