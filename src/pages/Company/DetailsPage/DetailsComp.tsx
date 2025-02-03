@@ -1,8 +1,8 @@
 import Typography from "@mui/material/Typography";
 import Grid2 from "@mui/material/Grid2";
 import { HeaderOfDetails } from "./HeaderOfDetails";
-import { ListOfRequirement } from "../../../components/ListOfRequirement";
-import { ListOfHighlightComp } from "../../../components/ListOfHighlightComp";
+import { ListOfRequirement } from "../../../components/lists/ListOfRequirement";
+import { ListOfHighlightComp } from "../../../components/lists/ListOfHighlightComp";
 import Box from "@mui/material/Box";
 const listOfTechStack = ["Java", "JavaScript", "ProjectManager", "Japanese"];
 const listHiglights = [

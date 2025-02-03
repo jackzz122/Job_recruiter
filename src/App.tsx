@@ -31,8 +31,11 @@ function App() {
             </Route>
             <Route path="job/:name" element={<DetailsJob />} />
             <Route element={<LayoutListComp />}>
-              <Route path="list_job/:name" element={<ListCompCareer />}>
-                <Route path=":nameComp" element={<ShortInfoComp />} />
+              <Route
+                path="list_job/:name/:nameComp"
+                element={<ListCompCareer />}
+              >
+                <Route index element={<ShortInfoComp />} />
               </Route>
             </Route>
             <Route path="company/:name" element={<LayoutDetailsComp />}>

@@ -1,4 +1,4 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useParams } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -11,13 +11,16 @@ import Button from "@mui/material/Button";
 import { grayLight } from "../../utils/color";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 export const LayoutListComp = () => {
+  const params = useParams();
+  const nameJob = params.name;
+  // const nameComp = params.nameComp;
   return (
     <>
       <Box className="companyColor" sx={{ color: "white" }}></Box>
       <br />
       <Container maxWidth="xl" sx={{ minHeight: "100vh" }}>
         <Typography variant="h6">
-          2 việc làm <span className="text-red-500">ReactJS</span> tại Hà Nội
+          2 việc làm <span className="text-red-500">{nameJob}</span> tại Hà Nội
         </Typography>
         <br />
         <Stack
@@ -32,46 +35,46 @@ export const LayoutListComp = () => {
           <form className="grow ">
             <FormControl sx={{ width: "10%" }}>
               <InputLabel id="level">Cấp bậc</InputLabel>
-              <Select labelId="level" value="fresher" label="Cấp bậc">
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+              <Select labelId="level" value="Fresher" label="Cấp bậc">
+                <MenuItem value="Fresher">Fresher</MenuItem>
+                <MenuItem value="Junior">Junior</MenuItem>
+                <MenuItem value="Senior">Senior</MenuItem>
               </Select>
             </FormControl>
             <FormControl sx={{ width: "10%", marginLeft: "1rem" }}>
-              <InputLabel id="level">Quận/huyện</InputLabel>
-              <Select labelId="level" value="fresher" label="Quận/huyện">
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+              <InputLabel id="District">Quận/huyện</InputLabel>
+              <Select labelId="District" value="BaDing" label="Quận/huyện">
+                <MenuItem value="BaDing">Ba Đình</MenuItem>
+                <MenuItem value="HCM">HCM</MenuItem>
+                <MenuItem value="DaNang">Đà Nẵng</MenuItem>
               </Select>
             </FormControl>
             <FormControl sx={{ width: "10%", marginLeft: "1rem" }}>
-              <InputLabel id="level">Hình thức làm việc</InputLabel>
+              <InputLabel id="typeOfWork">Hình thức làm việc</InputLabel>
               <Select
-                labelId="level"
-                value="fresher"
+                labelId="typeOfWork"
+                value="office"
                 label="Hình thức làm việc"
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value="office">Tại văn phòng</MenuItem>
+                <MenuItem value="remote">Làm từ xa</MenuItem>
+                <MenuItem value="flexible">Linh hoạt</MenuItem>
               </Select>
             </FormControl>
             <FormControl sx={{ width: "10%", marginLeft: "1rem" }}>
-              <InputLabel id="level">Mức lương</InputLabel>
-              <Select labelId="level" value="fresher" label="Mức lương">
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+              <InputLabel id="salary">Mức lương</InputLabel>
+              <Select labelId="salary" value="1000" label="Mức lương">
+                <MenuItem value="1000">100</MenuItem>
+                <MenuItem value="2000">200</MenuItem>
+                <MenuItem value="3000">300</MenuItem>
               </Select>
             </FormControl>
             <FormControl sx={{ width: "10%", marginLeft: "1rem" }}>
-              <InputLabel id="level">Lĩnh vực</InputLabel>
-              <Select labelId="level" value="fresher" label="Lĩnh vực">
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+              <InputLabel id="industry">Lĩnh vực</InputLabel>
+              <Select labelId="industry" value="beauty" label="Lĩnh vực">
+                <MenuItem value="beauty">Ten</MenuItem>
+                <MenuItem value="network">Twenty</MenuItem>
+                <MenuItem value="bus">Thirty</MenuItem>
               </Select>
             </FormControl>
           </form>

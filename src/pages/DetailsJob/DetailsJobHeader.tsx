@@ -6,10 +6,10 @@ import Stack from "@mui/material/Stack";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
-import EditLocationAltOutlinedIcon from "@mui/icons-material/EditLocationAltOutlined";
-import Chip from "@mui/material/Chip";
+
+const listOfReq = ["Devops", "AWS", "Cloud"];
+import { ListOfRequirement } from "../../components/lists/ListOfRequirement";
+import { ListOfInformation } from "../../components/lists/ListOfInformation";
 export default function DetailsJobHeader() {
   return (
     <Box
@@ -69,24 +69,14 @@ export default function DetailsJobHeader() {
         </ImageListItem>
       </ImageList>
       <Box>
-        <Typography sx={{ marginBlock: "1rem" }} variant="body2">
-          <EditLocationAltOutlinedIcon sx={{ marginRight: "0.5rem" }} /> 11th
-          Floor, ROX Tower, No 54A Nguyen Chi Thanh, Lang Thuong Ward, Dong Da,
-          Ha Noi{" "}
-        </Typography>
-        <Typography sx={{ marginBlock: "1rem" }} variant="body2">
-          <EmojiEmotionsOutlinedIcon sx={{ marginRight: "0.5rem" }} />
-          Linh hoạt
-        </Typography>
-        <Typography sx={{ marginBlock: "1rem" }} variant="body2">
-          <AccessTimeIcon sx={{ marginRight: "0.5rem" }} />
-          Đăng 2 giờ trước
-        </Typography>
+        <ListOfInformation
+          place="11th Floor, ROX Tower, No 54A Nguyen Chi Thanh, Lang Thuong Ward, Dong Da, Ha Noi"
+          workType="Linh hoạt"
+          time="Đăng 2 giờ trước"
+        />
         <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <Typography variant="body2">Kỹ năng</Typography>
-          <Chip label="Devops" />
-          <Chip label="AWS" />
-          <Chip label="Cloud" />
+          <ListOfRequirement listOfRequire={listOfReq} />
         </Box>
       </Box>
     </Box>
