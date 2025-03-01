@@ -16,12 +16,18 @@ import { LayoutDetailsComp } from "./components/Layout/LayoutDetailsComp";
 import { ReviewComp } from "./pages/Company/ReviewCompany/ReviewComp";
 import { LayoutListComp } from "./components/Layout/LayoutListComp";
 import { ShortInfoComp } from "./pages/Company/ListCompany/ShortInfoComp";
+import { Home } from "./JobRecruiter/HomeSettings/Home";
+import { NotFoundPage } from "./NotFoundPage";
+import { LayoutRecruiter } from "./JobRecruiter/layout/LayoutRecruiter";
+import { ListOfCompany } from "./pages/CompanyList/ListOfCompany";
+import { CVPages } from "./pages/CV/CVPages";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
+          {/* ! This is for employees */}
           <Route element={<LayoutHome />}>
             <Route path="/" element={<HomePage />} />
             <Route element={<LayoutUser />}>
@@ -29,6 +35,8 @@ function App() {
               <Route path="myJobs" element={<MyJobs />} />
               <Route path="change_pass" element={<ChangePass />} />
             </Route>
+            <Route path="CV" element={<CVPages />} />
+            <Route path="list_company" element={<ListOfCompany />} />
             <Route path="job/:name" element={<DetailsJob />} />
             <Route element={<LayoutListComp />}>
               <Route
@@ -48,6 +56,15 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="forgot_pass" element={<ForgotPage />} />
           </Route>
+          {/* This is for admin  */}
+          <Route></Route>
+          {/* This is for recruiter */}
+          <Route path="recruiter">
+            <Route element={<LayoutRecruiter />}>
+              <Route index element={<Home />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </>

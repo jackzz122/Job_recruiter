@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 const places: string[] = ["Ha Noi", "Ho Chi Minh", "Da Nang", "Others"];
 const suggestions: string[] = ["javascript", "C++", "Java", ".Net"];
-export default function Slider() {
+export default function SearchLayout() {
   const [place, setPlace] = useState<string>("Ha Noi");
   const handleChange = (e: SelectChangeEvent) => {
     setPlace(e.target.value);

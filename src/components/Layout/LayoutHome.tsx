@@ -76,11 +76,14 @@ export const LayoutHome = () => {
             >
               Việc làm IT <KeyboardArrowDownRoundedIcon />
             </Button>
-            <Button sx={{ color: "white" }}>
-              Top Công ty IT <KeyboardArrowDownRoundedIcon />
+            <Button
+              onClick={() => navigate("/list_company")}
+              sx={{ color: "white" }}
+            >
+              Công ty IT
             </Button>
-            <Button sx={{ color: "white" }}>
-              Blog <KeyboardArrowDownRoundedIcon />
+            <Button sx={{ color: "white" }} onClick={() => navigate("/CV")}>
+              Create CV
             </Button>
           </Stack>
           {

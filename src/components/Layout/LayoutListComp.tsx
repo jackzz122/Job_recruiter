@@ -1,7 +1,6 @@
 import { Outlet, useParams } from "react-router-dom";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -10,13 +9,14 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { grayLight } from "../../utils/color";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import SearchLayout from "./SearchLayout";
 export const LayoutListComp = () => {
   const params = useParams();
   const nameJob = params.name;
   // const nameComp = params.nameComp;
   return (
     <>
-      <Box className="companyColor" sx={{ color: "white" }}></Box>
+      <SearchLayout />
       <br />
       <Container maxWidth="xl" sx={{ minHeight: "100vh" }}>
         <Typography variant="h6">

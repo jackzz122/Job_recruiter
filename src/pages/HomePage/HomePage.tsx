@@ -1,15 +1,15 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import Slider from "./Slider";
 import { ListJobSkeleten } from "../../components/ListJobSkeleten";
 import { Grid2 } from "@mui/material";
 // const CardCompVip = lazy(() => import("../../components/CardCompVip"));
 import CardCompVip from "../../components/Card/CardCompVip";
+import SearchLayout from "../../components/Layout/SearchLayout";
 export const HomePage = () => {
   return (
     <div>
-      <Slider />
+      <SearchLayout />
       <Box
         sx={{
           backgroundColor: "#f3f5f7",
