@@ -16,13 +16,29 @@ import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
 import { DialogUploadCV } from "../../components/Dialog/DialogUploadCV";
+import { DialogCreateCV } from "../../components/Dialog/DialogCreateCV";
+import { DialogDelete } from "../../components/Dialog/DialogDelete";
 export const CVPages = () => {
   const [openUpload, setOpenUpload] = useState(false);
+  const [openCreateCV, setOpenCreateCV] = useState(false);
+  const [openDeleteCV, setDeleteCV] = useState(false);
   const handleOpen = () => {
     setOpenUpload(true);
   };
   const handleCloseDialog = () => {
     setOpenUpload(false);
+  };
+  const handleOpenCreateCV = () => {
+    setOpenCreateCV(true);
+  };
+  const handleCloseCreateCV = () => {
+    setOpenCreateCV(false);
+  };
+  const handleOpenDelete = () => {
+    setDeleteCV(true);
+  };
+  const handleCloseDelete = () => {
+    setDeleteCV(false);
   };
   return (
     <Container maxWidth="xl">
@@ -58,9 +74,14 @@ export const CVPages = () => {
               gap: "0.25rem",
               alignItems: "center",
             }}
+            onClick={handleOpenCreateCV}
           >
             Create CV <AddCircleOutlineIcon />
           </Button>
+          <DialogCreateCV
+            handleClose={handleCloseCreateCV}
+            open={openCreateCV}
+          />
         </Stack>
       </Stack>
       <TableContainer>
@@ -99,9 +120,14 @@ export const CVPages = () => {
                   <Button
                     sx={{ border: "1px solid red", color: "red" }}
                     variant="outlined"
+                    onClick={handleOpenDelete}
                   >
                     <DeleteOutlineIcon />
                   </Button>
+                  <DialogDelete
+                    handleClose={handleCloseDelete}
+                    open={openDeleteCV}
+                  />
                 </Stack>
               </TableCell>
             </TableRow>

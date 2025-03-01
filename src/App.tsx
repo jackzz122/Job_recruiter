@@ -21,23 +21,31 @@ import { NotFoundPage } from "./NotFoundPage";
 import { LayoutRecruiter } from "./JobRecruiter/layout/LayoutRecruiter";
 import { ListOfCompany } from "./pages/CompanyList/ListOfCompany";
 import { CVPages } from "./pages/CV/CVPages";
+import { LayoutCreateCV } from "./components/Layout/LayoutCreateCV";
+import { CreateCVPage } from "./pages/CV/CreateCVPage";
 
 function App() {
   return (
     <>
       <BrowserRouter>
         <Routes>
-          {/* ! This is for employees */}
+          {/* This is for employees */}
           <Route element={<LayoutHome />}>
             <Route path="/" element={<HomePage />} />
+            {/* Information pages */}
             <Route element={<LayoutUser />}>
               <Route path="information" element={<Information />} />
               <Route path="myJobs" element={<MyJobs />} />
               <Route path="change_pass" element={<ChangePass />} />
             </Route>
+            {/* CV page */}
             <Route path="CV" element={<CVPages />} />
+            <Route element={<LayoutCreateCV />}>
+              <Route path="CV/edit/:id" element={<CreateCVPage />} />
+            </Route>
             <Route path="list_company" element={<ListOfCompany />} />
             <Route path="job/:name" element={<DetailsJob />} />
+            {/* Specifics of Job in list company */}
             <Route element={<LayoutListComp />}>
               <Route
                 path="list_job/:name/:nameComp"
@@ -46,11 +54,13 @@ function App() {
                 <Route index element={<ShortInfoComp />} />
               </Route>
             </Route>
+            {/* Details page of Company */}
             <Route path="company/:name" element={<LayoutDetailsComp />}>
               <Route index element={<DetailsComp />} />
               <Route path="reviews" element={<ReviewComp />} />
             </Route>
           </Route>
+          {/* Login_Regis pages for employee */}
           <Route element={<LayoutLog_Register />}>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />

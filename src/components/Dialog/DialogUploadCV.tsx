@@ -1,9 +1,8 @@
-import DialogTitle from "@mui/material/DialogTitle";
-import Dialog from "@mui/material/Dialog";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { DialogContruct } from "./DialogContruct";
 export const DialogUploadCV = ({
   open,
   handleClose,
@@ -12,8 +11,11 @@ export const DialogUploadCV = ({
   handleClose: () => void;
 }) => {
   return (
-    <Dialog fullWidth onClose={handleClose} open={open}>
-      <DialogTitle textAlign="center">Upload CV from computer</DialogTitle>
+    <DialogContruct
+      name="Upload CV from your computer"
+      handleClose={handleClose}
+      open={open}
+    >
       <br />
       <Typography variant="body2" sx={{ paddingInline: "2rem" }}>
         Upload your CV (Support file *.doc, *.docx, *.pdf, and less than 5MB)
@@ -51,6 +53,6 @@ export const DialogUploadCV = ({
           Save
         </Button>
       </Stack>
-    </Dialog>
+    </DialogContruct>
   );
 };
