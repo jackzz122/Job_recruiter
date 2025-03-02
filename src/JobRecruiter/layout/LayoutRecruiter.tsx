@@ -1,82 +1,58 @@
-import { Link, Outlet } from "react-router-dom";
-import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
-import RecentActorsIcon from "@mui/icons-material/RecentActors";
-import Drawer from "@mui/material/Drawer";
-import AddIcon from "@mui/icons-material/Add";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DashboardCustomizeOutlinedIcon from "@mui/icons-material/DashboardCustomizeOutlined";
 import Typography from "@mui/material/Typography";
-import ScreenSearchDesktopOutlinedIcon from "@mui/icons-material/ScreenSearchDesktopOutlined";
-import ExitToAppOutlinedIcon from "@mui/icons-material/ExitToAppOutlined";
-const listOfRecruiterSettings: {
-  icon: React.ReactNode;
-  name: string;
-  href: string;
-}[] = [
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import { AppProvider, type Navigation } from "@toolpad/core/AppProvider";
+import { DashboardLayout } from "@toolpad/core/DashboardLayout";
+import { useDemoRouter } from "@toolpad/core/internal";
+// import { Outlet } from "react-router-dom";
+
+const NAVIGATION: Navigation = [
   {
-    icon: <DashboardCustomizeOutlinedIcon />,
-    name: "Dashboard",
-    href: "",
+    segment: "dashboard",
+    title: "Dashboard",
+    icon: <DashboardIcon />,
   },
   {
-    icon: <RecentActorsIcon />,
-    name: "list of waiting",
-    href: "",
-  },
-  {
-    icon: <AddIcon />,
-    name: "Create a new Job",
-    href: "",
+    segment: "orders",
+    title: "Orders",
+    icon: <ShoppingCartIcon />,
   },
 ];
-const drawerPlaces = (
-  <List sx={{ flexGrow: 2 }}>
-    {listOfRecruiterSettings.map((setting, index) => {
-      return (
-        <Link key={index} to="/recruiter">
-          <ListItem>
-            <ListItemIcon>{setting.icon}</ListItemIcon>
-            <ListItemText>{setting.name}</ListItemText>
-          </ListItem>
-        </Link>
-      );
-    })}
-  </List>
-);
-export const LayoutRecruiter = () => {
+
+function DemoPageContent({ pathname }: { pathname: string }) {
   return (
-    <>
-      <Stack direction="row" spacing={2}>
-        {/* <Drawer
-          sx={{ backgroundColor: "red", color: "white" }}
-          variant="permanent"
-        >
-          <List sx={{ flexGrow: 1 }}>
-            <ListItem>
-              <Typography variant="h4" fontWeight="bold">
-                {" "}
-                <ScreenSearchDesktopOutlinedIcon fontSize="large" /> Recruiter
-              </Typography>
-            </ListItem>
-          </List>
-          {drawerPlaces}
-          <List sx={{ flexGrow: 0 }}>
-            <ListItem sx={{ justifyContent: "center", gap: 2 }}>
-              <Typography>
-                {" "}
-                <ExitToAppOutlinedIcon /> LogOut
-              </Typography>
-            </ListItem>
-          </List>
-        </Drawer> */}
-        <Box sx={{ marginLeft: "20rem" }} flexGrow={3}>
-          <Outlet />
-        </Box>
-      </Stack>
-    </>
+    <Box
+      sx={{
+        py: 4,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        textAlign: "center",
+      }}
+    >
+      <Typography>Dashboard content for {pathname}</Typography>
+    </Box>
   );
-};
+}
+
+export function LayoutRecruiter() {
+  const router = useDemoRouter("/dashboard");
+
+  return (
+    // preview-start
+    <AppProvider
+      navigation={NAVIGATION}
+      branding={{
+        logo: <img src="https://mui.com/static/logo.png" alt="MUI logo" />,
+        title: "Admin",
+        homeUrl: "/toolpad/core/introduction",
+      }}
+      router={router}
+    >
+      <DashboardLayout>
+        <DemoPageContent pathname={router.pathname} />
+      </DashboardLayout>
+    </AppProvider>
+  );
+}
