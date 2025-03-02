@@ -44,9 +44,6 @@ export const MenuNavHomePage = ({
       id={menuJobId}
       anchorEl={anchorEl}
       open={open}
-      MenuListProps={{
-        "aria-labelledby": "resources_btn",
-      }}
       sx={{
         "& .MuiPaper-root": {
           width: "500",

@@ -49,9 +49,6 @@ export const MenuNavUser = ({
       id={avatarMenuId}
       open={openAvatar}
       anchorEl={anchorAvatar}
-      MenuListProps={{
-        "aria-labelledby": "avatar_btn",
-      }}
       sx={{
         "& .MuiPaper-root": {
           width: "300px",

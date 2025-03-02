@@ -100,7 +100,7 @@ export const LayoutHome = () => {
             <Typography fontSize={12} sx={{ color: "white" }}>
               Bạn là nhà tuyển dụng ?
             </Typography>
-            <Link to="/" className="hover:underline">
+            <Link to="/recruiter" className="hover:underline">
               Đăng tuyển ngay
             </Link>
           </Box>

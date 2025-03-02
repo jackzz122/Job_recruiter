@@ -51,7 +51,7 @@ export const LayoutRecruiter = () => {
   return (
     <>
       <Stack direction="row" spacing={2}>
-        <Drawer
+        {/* <Drawer
           sx={{ backgroundColor: "red", color: "white" }}
           variant="permanent"
         >
@@ -72,8 +72,8 @@ export const LayoutRecruiter = () => {
               </Typography>
             </ListItem>
           </List>
-        </Drawer>
-        <Box flexGrow={3}>
+        </Drawer> */}
+        <Box sx={{ marginLeft: "20rem" }} flexGrow={3}>
           <Outlet />
         </Box>
       </Stack>
