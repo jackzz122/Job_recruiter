@@ -7,10 +7,13 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
 
-const listOfReq = ["Devops", "AWS", "Cloud"];
 import { ListOfRequirement } from "../../components/lists/ListOfRequirement";
 import { ListOfInformation } from "../../components/lists/ListOfInformation";
+import { DialogApplication } from "../../components/Dialog/DialogApplication";
+import { useState } from "react";
+const listOfReq = ["Devops", "AWS", "Cloud"];
 export default function DetailsJobHeader() {
+  const [openApplication, setOpenApplication] = useState(false);
   return (
     <Box
       sx={{
@@ -44,10 +47,16 @@ export default function DetailsJobHeader() {
             color: "white",
             padding: "1rem",
           }}
+          onClick={() => setOpenApplication(true)}
           variant="contained"
         >
           Ứng tuyển
         </Button>
+        <DialogApplication
+          handleClose={() => setOpenApplication(false)}
+          title="Ứng tuyển cho vị trí"
+          open={openApplication}
+        />
         <Button sx={{ flexGrow: 0, border: "1px solid red" }}>
           <FavoriteIcon sx={{ color: "#e50000" }} fontSize="large" />
         </Button>

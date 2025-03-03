@@ -23,8 +23,10 @@ import { ListOfCompany } from "./pages/CompanyList/ListOfCompany";
 import { CVPages } from "./pages/CV/CVPages";
 import { LayoutCreateCV } from "./components/Layout/LayoutCreateCV";
 import { CreateCVPage } from "./pages/CV/CreateCVPage";
-import { Dashboard } from "@mui/icons-material";
-
+import { List_employ } from "./JobRecruiter/Employees/List_employ";
+import { Dashboard } from "./JobRecruiter/HomeSettings/Dashboard";
+import { RecruiterCompany } from "./JobRecruiter/RecuiterJob/RecruiterCompany";
+import { CompanyInfo } from "./JobRecruiter/Information_Recruiter/CompanyInfo";
 function App() {
   return (
     <>
@@ -71,10 +73,12 @@ function App() {
           <Route></Route>
           {/* This is for recruiter */}
           <Route path="recruiter">
-            <Route></Route>
             <Route element={<LayoutRecruiter />}>
               <Route index element={<Home />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="list_employees" element={<List_employ />} />
+              <Route path="recruiter_job" element={<RecruiterCompany />} />
+              <Route path="company_info" element={<CompanyInfo />} />
             </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />

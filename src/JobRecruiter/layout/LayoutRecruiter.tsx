@@ -1,58 +1,122 @@
-import Box from "@mui/material/Box";
+import AppBar from "@mui/material/AppBar";
+import CssBaseline from "@mui/material/CssBaseline";
+import Divider from "@mui/material/Divider";
+import Drawer from "@mui/material/Drawer";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+// import ListItemButton from "@mui/material/ListItemButton";
+// import ListItemIcon from "@mui/material/ListItemIcon";
+// import ListItemText from "@mui/material/ListItemText";
+import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import { AppProvider, type Navigation } from "@toolpad/core/AppProvider";
-import { DashboardLayout } from "@toolpad/core/DashboardLayout";
-import { useDemoRouter } from "@toolpad/core/internal";
-// import { Outlet } from "react-router-dom";
+import { NavLink, Outlet } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+const drawerWidth = 270;
 
-const NAVIGATION: Navigation = [
+type setting_types = {
+  name: string;
+  href: string;
+  icons: React.ReactNode;
+};
+
+const recruiter_settings: setting_types[] = [
   {
-    segment: "dashboard",
-    title: "Dashboard",
-    icon: <DashboardIcon />,
+    name: "dashboard",
+    href: "dashboard",
+    icons: "",
   },
   {
-    segment: "orders",
-    title: "Orders",
-    icon: <ShoppingCartIcon />,
+    name: "Recruiter Job management",
+    href: "recruiter_job",
+    icons: "",
+  },
+  {
+    name: "Employees management",
+    href: "list_employees",
+    icons: "",
+  },
+  {
+    name: "Company information",
+    href: "list_employees",
+    icons: "",
   },
 ];
 
-function DemoPageContent({ pathname }: { pathname: string }) {
-  return (
-    <Box
-      sx={{
-        py: 4,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        textAlign: "center",
-      }}
-    >
-      <Typography>Dashboard content for {pathname}</Typography>
-    </Box>
-  );
-}
-
 export function LayoutRecruiter() {
-  const router = useDemoRouter("/dashboard");
-
+  const drawer = (
+    <div>
+      <Toolbar />
+      <Divider />
+      <List>
+        {recruiter_settings.map((text, index) => (
+          <NavLink key={index} to={text.href}>
+            <ListItem>{text.name.toUpperCase()}</ListItem>
+          </NavLink>
+        ))}
+      </List>
+    </div>
+  );
   return (
-    // preview-start
-    <AppProvider
-      navigation={NAVIGATION}
-      branding={{
-        logo: <img src="https://mui.com/static/logo.png" alt="MUI logo" />,
-        title: "Admin",
-        homeUrl: "/toolpad/core/introduction",
-      }}
-      router={router}
-    >
-      <DashboardLayout>
-        <DemoPageContent pathname={router.pathname} />
-      </DashboardLayout>
-    </AppProvider>
+    <>
+      <Box sx={{ display: "flex" }}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          sx={{
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+            ml: { sm: `${drawerWidth}px` },
+          }}
+        >
+          <Toolbar>
+            <Typography variant="h6" noWrap component="div">
+              Recruiter Page
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Box
+          component="nav"
+          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
+          aria-label="mailbox folders"
+        >
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: {
+                xs: "none",
+                sm: "flex",
+              },
+              "& .MuiDrawer-paper": {
+                boxSizing: "border-box",
+                width: drawerWidth,
+              },
+            }}
+            open
+          >
+            <Box flexGrow={1}>{drawer}</Box>
+            <Box sx={{ paddingInline: "1rem" }}>
+              <Button
+                variant="contained"
+                fullWidth
+                sx={{ marginBlock: "2rem" }}
+              >
+                Logout
+              </Button>
+            </Box>
+          </Drawer>
+        </Box>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: { sm: `calc(100% - ${drawerWidth}px)` },
+          }}
+        >
+          <Toolbar />
+          <Outlet />
+        </Box>
+      </Box>
+    </>
   );
 }
