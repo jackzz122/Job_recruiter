@@ -38,7 +38,7 @@ const recruiter_settings: setting_types[] = [
   },
   {
     name: "Company information",
-    href: "list_employees",
+    href: "company_info",
     icons: "",
   },
 ];

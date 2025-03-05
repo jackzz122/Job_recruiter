@@ -27,6 +27,8 @@ import { List_employ } from "./JobRecruiter/Employees/List_employ";
 import { Dashboard } from "./JobRecruiter/HomeSettings/Dashboard";
 import { RecruiterCompany } from "./JobRecruiter/RecuiterJob/RecruiterCompany";
 import { CompanyInfo } from "./JobRecruiter/Information_Recruiter/CompanyInfo";
+import { Company_Intro } from "./JobRecruiter/Information_Recruiter/Company_Intro";
+import { Company_review_list } from "./JobRecruiter/Information_Recruiter/Company_review_list";
 function App() {
   return (
     <>
@@ -78,7 +80,10 @@ function App() {
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="list_employees" element={<List_employ />} />
               <Route path="recruiter_job" element={<RecruiterCompany />} />
-              <Route path="company_info" element={<CompanyInfo />} />
+              <Route path="company_info" element={<CompanyInfo />}>
+                <Route index element={<Company_Intro />} />
+                <Route path="reviews" element={<Company_review_list />} />
+              </Route>
             </Route>
           </Route>
           <Route path="*" element={<NotFoundPage />} />

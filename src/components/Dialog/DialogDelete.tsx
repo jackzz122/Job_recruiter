@@ -10,10 +10,12 @@ export const DialogDelete = ({
   open: boolean;
 }) => {
   return (
-    <DialogContruct name="Delete your CV" handleClose={handleClose} open={open}>
-      <Typography textAlign="center">
-        Are you sure to delete your CV ?
-      </Typography>
+    <DialogContruct
+      name="Delete your item"
+      handleClose={handleClose}
+      open={open}
+    >
+      <Typography textAlign="center">Are you sure to delete?</Typography>
       <Stack
         sx={{ marginBlock: "2rem", paddingInline: "1rem" }}
         direction="row"
