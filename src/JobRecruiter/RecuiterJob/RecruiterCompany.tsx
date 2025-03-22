@@ -13,6 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { useState } from "react";
 import { DialogDelete } from "../../components/Dialog/DialogDelete";
 import { DialogReviewRecruiterJob } from "../../components/Dialog/DialogReviewRecruiterJob";
+import { DialogCreateJobRecruiter } from "../../components/Dialog/DialogCreateJobRecruiter";
 
 const job_list = ["Java", "JavaScript", "C++", "C#"];
 const job_level_list = ["Fresher", "Junior", "Senior", "PM", "TechLead"];
@@ -33,6 +34,7 @@ export const RecruiterCompany = () => {
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
   const [openReviewDialog, setopenReviewDialog] = useState<boolean>(false);
+  const [openCreateDialog, setCreateOpenDialog] = useState<boolean>(false);
   return (
     <>
       <Box>
@@ -99,10 +101,17 @@ export const RecruiterCompany = () => {
               })}
             </Select>
           </FormControl>
+          <Button variant="contained">Apply</Button>
         </form>
       </Box>
       <Box marginBlock={2}>
-        <Button variant="contained">Create</Button>
+        <Button onClick={() => setCreateOpenDialog(true)} variant="contained">
+          Create
+        </Button>
+        <DialogCreateJobRecruiter
+          handleClose={() => setCreateOpenDialog(false)}
+          open={openCreateDialog}
+        />
       </Box>
       <Grid2 container>
         <Grid2 size={4}>

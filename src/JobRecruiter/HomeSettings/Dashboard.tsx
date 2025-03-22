@@ -1,5 +1,4 @@
 import { PieChart } from "@mui/x-charts/PieChart";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,10 +9,13 @@ import FolderSharedIcon from "@mui/icons-material/FolderShared";
 import Stack from "@mui/material/Stack";
 import WorkIcon from "@mui/icons-material/Work";
 import { LineChart } from "@mui/x-charts/LineChart";
+import Chip from "@mui/material/Chip";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 type setting_type = {
   name: string;
   icons: React.ReactNode;
   amount: number;
+  color: string;
 };
 
 const list_settings_dashboard: setting_type[] = [
@@ -21,56 +23,74 @@ const list_settings_dashboard: setting_type[] = [
     name: "Total Page Views",
     icons: <RemoveRedEyeIcon fontSize="large" />,
     amount: 4.462,
+    color: "blue",
   },
   {
     name: "Employees Waiting",
     icons: <PeopleAltIcon fontSize="large" />,
     amount: 300,
+    color: "yellow",
   },
   {
     name: "Employees Application",
     icons: <FolderSharedIcon fontSize="large" />,
     amount: 20,
+    color: "#5CFF5C",
   },
   {
     name: "Recruiter Posting",
     icons: <WorkIcon fontSize="large" />,
     amount: 10,
+    color: "red",
   },
 ];
-
+const GetListDashboard = () => {
+  return list_settings_dashboard.map((setting, index) => {
+    return (
+      <Grid2 key={index} size={3}>
+        <Card>
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <Stack direction="row" justifyContent="space-between">
+              <Typography fontSize="0.9rem">{setting.name}</Typography>
+              <Chip
+                size="small"
+                sx={{ backgroundColor: setting.color, color: "white" }}
+                label="+4 this week"
+              />
+            </Stack>
+            <Stack
+              sx={{ marginTop: "1rem" }}
+              direction="row"
+              alignItems="center"
+              spacing={2}
+            >
+              <Typography
+                fontWeight="bold"
+                variant="h5"
+                sx={{ marginTop: "1rem" }}
+              >
+                {setting.amount}
+              </Typography>
+              <Typography sx={{ color: "#5CFF5C" }}>
+                <ArrowUpwardIcon /> 12%
+              </Typography>
+            </Stack>
+          </CardContent>
+        </Card>
+      </Grid2>
+    );
+  });
+};
 export const Dashboard = () => {
   return (
     <>
-      <Typography variant="h5" marginBottom={2}>
-        Dashboard
-      </Typography>
       <Grid2 container spacing={3}>
-        {list_settings_dashboard.map((setting, index) => {
-          return (
-            <Grid2 key={index} size={3}>
-              <Card>
-                <CardContent
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-around",
-                  }}
-                >
-                  {setting.icons}
-                  <Box>
-                    <Typography sx={{ color: "gray" }}>
-                      {setting.name}
-                    </Typography>
-                    <Typography variant="h5" sx={{ marginTop: "1rem" }}>
-                      {setting.amount}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            </Grid2>
-          );
-        })}
+        <GetListDashboard />
       </Grid2>
       <Stack
         direction="row"

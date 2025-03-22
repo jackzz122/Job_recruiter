@@ -4,14 +4,22 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-// import ListItemButton from "@mui/material/ListItemButton";
-// import ListItemIcon from "@mui/material/ListItemIcon";
-// import ListItemText from "@mui/material/ListItemText";
+import Avatar from "@mui/material/Avatar";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { NavLink, Outlet } from "react-router-dom";
+import { NavLink, Outlet, useLocation } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
+import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
+import WorkOutlineRoundedIcon from "@mui/icons-material/WorkOutlineRounded";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
+import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
+import SettingsIcon from "@mui/icons-material/Settings";
+import CodeIcon from "@mui/icons-material/Code";
 const drawerWidth = 270;
 
 type setting_types = {
@@ -23,36 +31,85 @@ type setting_types = {
 const recruiter_settings: setting_types[] = [
   {
     name: "dashboard",
-    href: "dashboard",
-    icons: "",
+    href: ".",
+    icons: <DashboardOutlinedIcon />,
   },
   {
-    name: "Recruiter Job management",
-    href: "recruiter_job",
-    icons: "",
+    name: "Job management",
+    href: "job_management",
+    icons: <WorkOutlineRoundedIcon />,
   },
   {
-    name: "Employees management",
-    href: "list_employees",
-    icons: "",
+    name: "Candidate management",
+    href: "candidate_management",
+    icons: <GroupRoundedIcon />,
   },
   {
-    name: "Company information",
-    href: "company_info",
-    icons: "",
+    name: "Staff management",
+    href: "staff_management",
+    icons: <ManageAccountsRoundedIcon />,
+  },
+  {
+    name: "Comment management",
+    href: "comment_management",
+    icons: <CommentRoundedIcon />,
+  },
+  {
+    name: "Settings",
+    href: "settings",
+    icons: <SettingsIcon />,
   },
 ];
 
 export function LayoutRecruiter() {
+  const location = useLocation();
+  const getCurrentPath = () => {
+    const currentPath = location.pathname.split("/").pop();
+    const changeCurrentPathToCapitalize = currentPath
+      ?.replace(/[_. ]/g, " ")
+      .split(" ")
+      .reduce((accu, curr) => {
+        accu += curr.charAt(0).toUpperCase() + curr.slice(1) + " ";
+        return accu;
+      }, "");
+    return changeCurrentPathToCapitalize;
+  };
   const drawer = (
     <div>
-      <Toolbar />
+      <Stack
+        direction="row"
+        spacing={1}
+        alignItems="center"
+        paddingInline="1rem"
+        onClick={() => (window.location.href = "/recruiter")}
+        marginBlock="1.2rem"
+        sx={{ cursor: "pointer" }}
+      >
+        <CodeIcon sx={{ color: "red" }} fontSize="large" />
+        <Typography fontWeight="bold"> Recruiter Page</Typography>
+      </Stack>
       <Divider />
       <List>
         {recruiter_settings.map((text, index) => (
-          <NavLink key={index} to={text.href}>
-            <ListItem>{text.name.toUpperCase()}</ListItem>
-          </NavLink>
+          <ListItem
+            sx={{ padding: 0, display: "flex", alignItems: "center" }}
+            key={index}
+          >
+            <NavLink
+              end
+              className={({ isActive }) =>
+                `p-2  my-2 ${
+                  isActive
+                    ? "border text-red-500  border-l-4 border-l-red-500 border-y-0 border-r-0"
+                    : null
+                }  w-full`
+              }
+              to={text.href}
+            >
+              {text.icons}{" "}
+              <p className="text-white inline capitalize">{text.name}</p>
+            </NavLink>
+          </ListItem>
         ))}
       </List>
     </div>
@@ -66,12 +123,24 @@ export function LayoutRecruiter() {
           sx={{
             width: { sm: `calc(100% - ${drawerWidth}px)` },
             ml: { sm: `${drawerWidth}px` },
+            backgroundColor: "#282c34",
           }}
         >
           <Toolbar>
-            <Typography variant="h6" noWrap component="div">
-              Recruiter Page
+            <Typography flexGrow={1} variant="h6" noWrap component="div">
+              {getCurrentPath()}
             </Typography>
+            <Stack alignItems="center" direction="row" spacing={2}>
+              <IconButton>
+                <NotificationsActiveOutlinedIcon sx={{ color: "white" }} />
+              </IconButton>
+              <IconButton>
+                <NotificationsActiveOutlinedIcon sx={{ color: "white" }} />
+              </IconButton>
+              <IconButton>
+                <Avatar alt="Company logo" src="/bss_avatar.png" />
+              </IconButton>
+            </Stack>
           </Toolbar>
         </AppBar>
         <Box
@@ -89,6 +158,8 @@ export function LayoutRecruiter() {
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
                 width: drawerWidth,
+                backgroundColor: "#282c34",
+                color: "white",
               },
             }}
             open
@@ -98,7 +169,7 @@ export function LayoutRecruiter() {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ marginBlock: "2rem" }}
+                sx={{ marginBlock: "2rem", backgroundColor: "red" }}
               >
                 Logout
               </Button>
