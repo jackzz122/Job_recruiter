@@ -7,12 +7,21 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import { colorButtonOrange, styleButton } from "../../themeContext";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
-import { colorButtonOrange, styleButton } from "../../themeContext";
-import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
+import { useState } from "react";
+import { DialogEmployeeAccount } from "../../components/Dialog/Recruiter/DialogEmployeeAccount";
 import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
-export const List_employ = () => {
+
+export const StaffManage = () => {
+  const [openAccout, setOpenAccount] = useState(false);
+  const handleOpenAccount = () => {
+    setOpenAccount(true);
+  };
+  const handleCloseAccount = () => {
+    setOpenAccount(false);
+  };
   return (
     <ContainerBox>
       <form action="">
@@ -34,6 +43,17 @@ export const List_employ = () => {
         <Button sx={styleButton} variant="outlined">
           Sort <SortByAlphaIcon />
         </Button>
+        <Button
+          sx={styleButton}
+          onClick={handleOpenAccount}
+          variant="contained"
+        >
+          Create Employee account
+        </Button>
+        <DialogEmployeeAccount
+          open={openAccout}
+          closeAccountFunct={handleCloseAccount}
+        />
       </Stack>
       <TableContainer>
         <Table>
@@ -41,56 +61,19 @@ export const List_employ = () => {
             <TableRow>
               <TableCell>Name</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Status</TableCell>
               <TableCell>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             <TableRow>
               <TableCell>Nguyễn Văn Đình</TableCell>
-              <TableCell>dinh0123@gmail.com</TableCell>
-              <TableCell>FrontEnd</TableCell>
-              <TableCell>Not seen</TableCell>
+              <TableCell>Nguyễn Văn Đình</TableCell>
               <TableCell>
                 <Stack direction="row" spacing={1}>
-                  <Button
-                    sx={{ border: `1px solid ${colorButtonOrange}` }}
-                    variant="outlined"
-                  >
-                    <RemoveRedEyeOutlinedIcon
-                      sx={{ color: colorButtonOrange }}
-                    />
+                  <Button variant="outlined">
+                    <RemoveRedEyeOutlinedIcon />
                   </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      border: `1px solid ${colorButtonOrange}`,
-                      color: colorButtonOrange,
-                    }}
-                  >
-                    Accept
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      border: `1px solid ${colorButtonOrange}`,
-                      color: colorButtonOrange,
-                    }}
-                  >
-                    Reject
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    sx={{
-                      border: `1px solid ${colorButtonOrange}`,
-                      color: colorButtonOrange,
-                    }}
-                  >
-                    <DeleteOutlineOutlinedIcon
-                      sx={{ color: colorButtonOrange }}
-                    />
-                  </Button>
+                  <Button variant="outlined">Delete</Button>
                 </Stack>
               </TableCell>
             </TableRow>

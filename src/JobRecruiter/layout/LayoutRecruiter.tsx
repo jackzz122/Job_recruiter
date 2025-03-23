@@ -20,6 +20,10 @@ import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SettingsIcon from "@mui/icons-material/Settings";
 import CodeIcon from "@mui/icons-material/Code";
+import {
+  backgroundColorRecruiter,
+  colorButtonOrange,
+} from "../../themeContext";
 const drawerWidth = 270;
 
 type setting_types = {
@@ -85,7 +89,7 @@ export function LayoutRecruiter() {
         marginBlock="1.2rem"
         sx={{ cursor: "pointer" }}
       >
-        <CodeIcon sx={{ color: "red" }} fontSize="large" />
+        <CodeIcon sx={{ color: colorButtonOrange }} fontSize="large" />
         <Typography fontWeight="bold"> Recruiter Page</Typography>
       </Stack>
       <Divider />
@@ -100,7 +104,7 @@ export function LayoutRecruiter() {
               className={({ isActive }) =>
                 `p-2  my-2 ${
                   isActive
-                    ? "border text-red-500  border-l-4 border-l-red-500 border-y-0 border-r-0"
+                    ? "border text-orange-500  border-l-4 border-l-orange-500 border-y-0 border-r-0"
                     : null
                 }  w-full`
               }
@@ -158,7 +162,7 @@ export function LayoutRecruiter() {
               "& .MuiDrawer-paper": {
                 boxSizing: "border-box",
                 width: drawerWidth,
-                backgroundColor: "#282c34",
+                backgroundColor: backgroundColorRecruiter,
                 color: "white",
               },
             }}
@@ -169,7 +173,7 @@ export function LayoutRecruiter() {
               <Button
                 variant="contained"
                 fullWidth
-                sx={{ marginBlock: "2rem", backgroundColor: "red" }}
+                sx={{ marginBlock: "2rem", backgroundColor: colorButtonOrange }}
               >
                 Logout
               </Button>
@@ -180,7 +184,6 @@ export function LayoutRecruiter() {
           component="main"
           sx={{
             flexGrow: 1,
-            p: 3,
             width: { sm: `calc(100% - ${drawerWidth}px)` },
           }}
         >

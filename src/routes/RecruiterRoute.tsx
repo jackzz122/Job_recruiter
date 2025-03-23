@@ -2,9 +2,11 @@ import { Route } from "react-router-dom";
 import { LayoutRecruiter } from "../JobRecruiter/layout/LayoutRecruiter";
 import { List_employ } from "../JobRecruiter/Employees/List_employ";
 import { RecruiterCompany } from "../JobRecruiter/RecuiterJob/RecruiterCompany";
-import { Company_Intro } from "../JobRecruiter/Information_Recruiter/Company_Intro";
 import { RecruiterEditJob } from "../JobRecruiter/RecuiterJob/RecruiterEditJob";
 import { Dashboard } from "../JobRecruiter/HomeSettings/Dashboard";
+import { StaffManage } from "../JobRecruiter/StaffManagement/StaffManage";
+import { CommentManage } from "../JobRecruiter/CommentManagement/CommentManage";
+import { CompanyInfo } from "../JobRecruiter/Information_Recruiter/CompanyInfo";
 
 export const RecruiterRoute = [
   <Route path="recruiter">
@@ -13,10 +15,10 @@ export const RecruiterRoute = [
       <Route path="list_employees" element={<List_employ />} />
       <Route path="job_management" element={<RecruiterCompany />} />
       <Route path="candidate_management" element={<List_employ />} />
-      <Route path="comment_management" element={<RecruiterCompany />} />
-      <Route path="staff_management" element={<RecruiterCompany />} />
+      <Route path="comment_management" element={<CommentManage />} />
+      <Route path="staff_management" element={<StaffManage />} />
       <Route path="create/:id" element={<RecruiterEditJob />} />
-      <Route path="settings" element={<Company_Intro />} />
+      <Route path="settings" element={<CompanyInfo />} />
     </Route>
   </Route>,
 ];

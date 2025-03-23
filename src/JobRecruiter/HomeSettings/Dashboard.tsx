@@ -11,6 +11,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import { LineChart } from "@mui/x-charts/LineChart";
 import Chip from "@mui/material/Chip";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
 type setting_type = {
   name: string;
   icons: React.ReactNode;
@@ -88,7 +89,7 @@ const GetListDashboard = () => {
 };
 export const Dashboard = () => {
   return (
-    <>
+    <ContainerBox>
       <Grid2 container spacing={3}>
         <GetListDashboard />
       </Grid2>
@@ -125,6 +126,6 @@ export const Dashboard = () => {
           height={400}
         />
       </Stack>
-    </>
+    </ContainerBox>
   );
 };

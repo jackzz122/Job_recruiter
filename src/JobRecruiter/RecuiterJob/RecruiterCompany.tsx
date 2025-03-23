@@ -14,6 +14,8 @@ import { useState } from "react";
 import { DialogDelete } from "../../components/Dialog/DialogDelete";
 import { DialogReviewRecruiterJob } from "../../components/Dialog/DialogReviewRecruiterJob";
 import { DialogCreateJobRecruiter } from "../../components/Dialog/DialogCreateJobRecruiter";
+import { colorButtonOrange } from "../../themeContext";
+import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
 
 const job_list = ["Java", "JavaScript", "C++", "C#"];
 const job_level_list = ["Fresher", "Junior", "Senior", "PM", "TechLead"];
@@ -36,11 +38,14 @@ export const RecruiterCompany = () => {
   const [openReviewDialog, setopenReviewDialog] = useState<boolean>(false);
   const [openCreateDialog, setCreateOpenDialog] = useState<boolean>(false);
   return (
-    <>
+    <ContainerBox>
       <Box>
         <form action="" className="flex items-center gap-3">
           <TextField fullWidth label="Search company recruiter blog" />
-          <Button variant="contained" sx={{ padding: "0.98rem" }}>
+          <Button
+            variant="contained"
+            sx={{ padding: "0.98rem", backgroundColor: colorButtonOrange }}
+          >
             Search
           </Button>
         </form>
@@ -154,6 +159,6 @@ export const RecruiterCompany = () => {
           </CardActions>
         </Grid2>
       </Grid2>
-    </>
+    </ContainerBox>
   );
 };
