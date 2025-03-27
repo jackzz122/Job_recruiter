@@ -45,7 +45,7 @@ export default function CardComp() {
         }}
       >
         <CardContent sx={{ width: "100%" }}>
-          <Link to={`job/${nameJob}`}>
+          <Link to={`/job/${nameJob}`}>
             <Typography
               sx={{
                 whiteSpace: "nowrap",

@@ -17,32 +17,31 @@ import { LayoutDetailsComp } from "../components/Layout/LayoutDetailsComp";
 import { DetailsComp } from "../pages/Company/DetailsPage/DetailsComp";
 import { ReviewComp } from "../pages/Company/ReviewCompany/ReviewComp";
 
-export const EmployeeRoute =  [
-    <Route element={<LayoutHome />}>
-      <Route path="/" element={<HomePage />} />
-      {/* Information pages */}
-      <Route element={<LayoutUser />}>
-        <Route path="information" element={<Information />} />
-        <Route path="myJobs" element={<MyJobs />} />
-        <Route path="change_pass" element={<ChangePass />} />
-      </Route>
-      {/* CV page */}
-      <Route path="CV" element={<CVPages />} />
-      <Route element={<LayoutCreateCV />}>
-        <Route path="CV/edit/:id" element={<CreateCVPage />} />
-      </Route>
-      <Route path="list_company" element={<ListOfCompany />} />
-      <Route path="job/:name" element={<DetailsJob />} />
-      {/* Company related routes */}
-      <Route element={<LayoutListComp />}>
-        <Route path="list_job/:name/:nameComp" element={<ListCompCareer />}>
-          <Route index element={<ShortInfoComp />} />
-        </Route>
-      </Route>
-      <Route path="company/:name" element={<LayoutDetailsComp />}>
-        <Route index element={<DetailsComp />} />
-        <Route path="reviews" element={<ReviewComp />} />
+export const EmployeeRoute = [
+  <Route key="recruiter" element={<LayoutHome />}>
+    <Route path="/homepage" element={<HomePage />} />
+    {/* Information pages */}
+    <Route element={<LayoutUser />}>
+      <Route path="information" element={<Information />} />
+      <Route path="myJobs" element={<MyJobs />} />
+      <Route path="change_pass" element={<ChangePass />} />
+    </Route>
+    {/* CV page */}
+    <Route path="CV" element={<CVPages />} />
+    <Route element={<LayoutCreateCV />}>
+      <Route path="CV/edit/:id" element={<CreateCVPage />} />
+    </Route>
+    <Route path="list_company" element={<ListOfCompany />} />
+    <Route path="job/:name" element={<DetailsJob />} />
+    {/* Company related routes */}
+    <Route element={<LayoutListComp />}>
+      <Route path="list_job/:name/:nameComp" element={<ListCompCareer />}>
+        <Route index element={<ShortInfoComp />} />
       </Route>
     </Route>
-
+    <Route path="company/:name" element={<LayoutDetailsComp />}>
+      <Route index element={<DetailsComp />} />
+      <Route path="reviews" element={<ReviewComp />} />
+    </Route>
+  </Route>,
 ];

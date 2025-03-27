@@ -13,7 +13,6 @@ import { useState } from "react";
 import { MenuNavHomePage } from "../MenuNav/MenuNavHomePage";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { MenuNavUser } from "../MenuNav/MenuNavUser";
-import Divider from "@mui/material/Divider";
 
 export const LayoutHome = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -52,7 +51,7 @@ export const LayoutHome = () => {
               cursor: "pointer",
             }}
             onClick={() => {
-              navigate("/");
+              navigate("/homepage");
             }}
           >
             <IconButton>
@@ -136,16 +135,6 @@ export const LayoutHome = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Box sx={{ display: "flex", gap: "2px" }}>
-            <Typography>EN</Typography>
-            <Divider
-              orientation="vertical"
-              variant="middle"
-              flexItem
-              sx={{ backgroundColor: "white", fontWeight: "bold" }}
-            />
-            <Typography>VI</Typography>
-          </Box>
         </Toolbar>
       </AppBar>
       <Box sx={{ mt: "64px" }}></Box>

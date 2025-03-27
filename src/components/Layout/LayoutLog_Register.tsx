@@ -1,62 +1,103 @@
 import { Outlet } from "react-router-dom";
 import Grid2 from "@mui/material/Grid2";
-import GoogleIcon from "@mui/icons-material/Google";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import AppleIcon from "@mui/icons-material/Apple";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-const styleButton = {
-  gg: {
-    backgroundColor: "red",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-  },
-  fb: {
-    backgroundColor: "blue",
-    color: "white",
-    display: "flex",
-    alignItems: "center",
-  },
-  ap: {
-    backgroundColor: "white",
-    color: "black",
-    border: "1px solid black",
-    display: "flex",
-    alignItems: "center",
-  },
-};
+import Typography from "@mui/material/Typography";
+import Stack from "@mui/material/Stack";
+
+import SecurityIcon from "@mui/icons-material/Security";
+import SpeedIcon from "@mui/icons-material/Speed";
+import StarIcon from "@mui/icons-material/Star";
+
 export const LayoutLog_Register = () => {
   return (
-    <div className="flex justify-between h-screen">
-      <div className="loginForm w-full flex justify-center items-center">
-        <Box component="div" sx={{ width: "80%" }}>
-          <Outlet />
-          <p className="flex justify-center my-5">Hoặc đăng nhập bằng</p>
-          <Grid2 container spacing={3}>
-            <Grid2 size={4}>
-              <Button fullWidth sx={styleButton.gg}>
-                <GoogleIcon /> Google
-              </Button>
-            </Grid2>
-            <Grid2 size={4}>
-              <Button fullWidth sx={styleButton.fb}>
-                <FacebookIcon />
-                Facebook
-              </Button>
-            </Grid2>
-            <Grid2 size={4}>
-              <Button fullWidth sx={styleButton.ap}>
-                <AppleIcon />
-                Apple
-              </Button>
-            </Grid2>
-          </Grid2>
-        </Box>
-      </div>
-      <div className="imageLogin w-2/3 h-screen flex items-center">
-        <img src="/banner_login.jpg" alt="" className="h-full" />
-      </div>
-    </div>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: "white",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        p: { xs: 2, md: 4 },
+      }}
+    >
+      <Grid2
+        container
+        sx={{
+          maxWidth: 1200,
+          bgcolor: "white",
+          borderRadius: 2,
+          overflow: "hidden",
+        }}
+      >
+        <Grid2 size={{ xs: 12, md: 5 }} sx={{ bgcolor: "#f5f5f5", p: 4 }}>
+          <Typography
+            variant="h3"
+            fontWeight="bold"
+            sx={{
+              color: "#000000",
+              mb: 2,
+            }}
+          >
+            Dev<span style={{ color: "#ff0000" }}>Hub</span>
+          </Typography>
+
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#666666",
+              mb: 6,
+            }}
+          >
+            Your Gateway to Professional Success
+          </Typography>
+
+          <Stack spacing={4}>
+            <Stack direction="row" spacing={2} alignItems="center">
+              <SpeedIcon sx={{ color: "#ff0000", fontSize: 32 }} />
+              <Box>
+                <Typography variant="h6" color="black">
+                  Fast Recruitment
+                </Typography>
+                <Typography variant="body2" color="#666666">
+                  Quick and efficient hiring process
+                </Typography>
+              </Box>
+            </Stack>
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <SecurityIcon sx={{ color: "#ff0000", fontSize: 32 }} />
+              <Box>
+                <Typography variant="h6" color="black">
+                  Verified Companies
+                </Typography>
+                <Typography variant="body2" color="#666666">
+                  All employers are pre-screened
+                </Typography>
+              </Box>
+            </Stack>
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <StarIcon sx={{ color: "#ff0000", fontSize: 32 }} />
+              <Box>
+                <Typography variant="h6" color="black">
+                  Premium Jobs
+                </Typography>
+                <Typography variant="body2" color="#666666">
+                  High-quality career opportunities
+                </Typography>
+              </Box>
+            </Stack>
+          </Stack>
+        </Grid2>
+
+        <Grid2 size={{ xs: 12, md: 7 }} sx={{ p: 4 }}>
+          <Box sx={{ maxWidth: 480, mx: "auto" }}>
+            <Box sx={{ mb: 4 }}>
+              <Outlet />
+            </Box>
+          </Box>
+        </Grid2>
+      </Grid2>
+    </Box>
   );
 };

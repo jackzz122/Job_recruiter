@@ -18,7 +18,7 @@ const listTypeCompany = [
 export default function CardCompVip() {
   const text = "Công ty cổ phần Đồng Tâm";
   return (
-    <Link to={`company/${text}`}>
+    <Link to={`/company/${text}`}>
       <Card
         sx={{
           display: "flex",

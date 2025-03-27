@@ -7,9 +7,10 @@ import { Dashboard } from "../JobRecruiter/HomeSettings/Dashboard";
 import { StaffManage } from "../JobRecruiter/StaffManagement/StaffManage";
 import { CommentManage } from "../JobRecruiter/CommentManagement/CommentManage";
 import { CompanyInfo } from "../JobRecruiter/Information_Recruiter/CompanyInfo";
+import { UpdateCompany } from "../JobRecruiter/Information_Recruiter/UpdateCompany";
 
 export const RecruiterRoute = [
-  <Route path="recruiter">
+  <Route key="recruiter" path="recruiter">
     <Route element={<LayoutRecruiter />}>
       <Route index element={<Dashboard />} />
       <Route path="list_employees" element={<List_employ />} />
@@ -19,6 +20,7 @@ export const RecruiterRoute = [
       <Route path="staff_management" element={<StaffManage />} />
       <Route path="create/:id" element={<RecruiterEditJob />} />
       <Route path="settings" element={<CompanyInfo />} />
+      <Route path="update_company/:companyId" element={<UpdateCompany />} />
     </Route>
   </Route>,
 ];

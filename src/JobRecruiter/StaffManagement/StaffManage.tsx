@@ -1,21 +1,17 @@
 import TextField from "@mui/material/TextField";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { colorButtonOrange, styleButton } from "../../themeContext";
 import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
-import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { useState } from "react";
 import { DialogEmployeeAccount } from "../../components/Dialog/Recruiter/DialogEmployeeAccount";
 import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
-
+import { SimpleInforStaff } from "./SimpleInforStaff";
+import { CardInforStaff } from "./CardInforStaff";
+import Grid2 from "@mui/material/Grid2";
 export const StaffManage = () => {
   const [openAccout, setOpenAccount] = useState(false);
+  const [isSimple, setIsSimple] = useState(true);
   const handleOpenAccount = () => {
     setOpenAccount(true);
   };
@@ -54,32 +50,29 @@ export const StaffManage = () => {
           open={openAccout}
           closeAccountFunct={handleCloseAccount}
         />
+        <Button
+          sx={{ backgroundColor: colorButtonOrange, color: "white" }}
+          onClick={() => setIsSimple(!isSimple)}
+        >
+          {isSimple ? "Show Advanced" : "Show Simple"}
+        </Button>
       </Stack>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <TableRow>
-              <TableCell>Nguyễn Văn Đình</TableCell>
-              <TableCell>Nguyễn Văn Đình</TableCell>
-              <TableCell>
-                <Stack direction="row" spacing={1}>
-                  <Button variant="outlined">
-                    <RemoveRedEyeOutlinedIcon />
-                  </Button>
-                  <Button variant="outlined">Delete</Button>
-                </Stack>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <br />
+      {isSimple ? (
+        <SimpleInforStaff />
+      ) : (
+        <Grid2 container spacing={2}>
+          <Grid2 size={3}>
+            <CardInforStaff />
+          </Grid2>
+          <Grid2 size={3}>
+            <CardInforStaff />
+          </Grid2>
+          <Grid2 size={3}>
+            <CardInforStaff />
+          </Grid2>
+        </Grid2>
+      )}
     </ContainerBox>
   );
 };

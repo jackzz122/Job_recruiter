@@ -7,6 +7,7 @@ import { NotFoundPage } from "./NotFoundPage";
 import { AdminRoute } from "./routes/AdminRoute";
 import { RecruiterRoute } from "./routes/RecruiterRoute";
 import { EmployeeRoute } from "./routes/EmployeeRoute";
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <>
@@ -14,7 +15,7 @@ function App() {
         <Routes>
           {EmployeeRoute}
           <Route element={<LayoutLog_Register />}>
-            <Route path="login" element={<Login />} />
+            <Route path="/" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="forgot_pass" element={<ForgotPage />} />
           </Route>
@@ -23,6 +24,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </>
   );
 }

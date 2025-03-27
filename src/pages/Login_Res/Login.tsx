@@ -1,51 +1,136 @@
+import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Link } from "react-router-dom";
+import Stack from "@mui/material/Stack";
+import Link from "@mui/material/Link";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import authApi from "../../api/auth/auth";
+import { toast } from "react-toastify";
+import { isAxiosError } from "axios";
+type FormField = {
+  email: string;
+  password: string;
+};
+
 export const Login = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormField>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const navigate = useNavigate();
+  const onSubmitTing: SubmitHandler<FormField> = async (data) => {
+    try {
+      const response = await authApi.login(data);
+      if (response.status === 200) {
+        toast.success("Login successful");
+        navigate("/homepage", {
+          replace: true,
+        });
+      }
+    } catch (err) {
+      if (isAxiosError(err)) {
+        toast.error(err.response?.data.message);
+      } else {
+        console.log(err);
+      }
+    }
+  };
+
   return (
-    <>
-      <Typography variant="h6" sx={{ color: "green" }}>
-        Chào mừng bạn đã quay trở lại
-      </Typography>
-      <Typography variant="body2" color="textSecondary">
-        Cùng xây dựng 1 hồ sơ nổi bật và nhận được các cơ hội sự nghiệp lý tưởng
-      </Typography>
-      <form>
-        <TextField
-          id="email"
-          type="email"
-          label="Email"
-          fullWidth
-          sx={{ marginBlock: "0.75rem" }}
-        />
-        <TextField
-          id="password"
-          type="password"
-          label="Password"
-          fullWidth
-          sx={{ marginBlock: "0.75rem" }}
-        />
-        <div className="flex items-center justify-end mb-2">
-          <Link className="text-green-500 hover:underline" to="/forgot_pass">
-            Quên mật khẩu
-          </Link>
-        </div>
-        <Button
-          type="submit"
-          sx={{ backgroundColor: "red", color: "white" }}
-          fullWidth
+    <Stack spacing={4}>
+      <Box textAlign="center">
+        <Typography
+          variant="h5"
+          fontWeight="bold"
+          gutterBottom
+          sx={{ color: "red" }}
         >
-          Đăng nhập
-        </Button>
+          Welcome Back
+        </Typography>
+        <Typography color="text.secondary">
+          Enter your credentials to access your account
+        </Typography>
+      </Box>
+
+      <form onSubmit={handleSubmit(onSubmitTing)}>
+        <Stack spacing={3}>
+          <TextField
+            fullWidth
+            label="Email"
+            {...register("email", {
+              required: "Email must be provided",
+            })}
+            type="email"
+            error={!!errors.email}
+            helperText={errors.email?.message}
+          />
+
+          <TextField
+            fullWidth
+            label="Password"
+            {...register("password", {
+              required: "Password must be provided",
+            })}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            type="password"
+          />
+
+          <Box textAlign="right">
+            <Link
+              component={RouterLink}
+              to="/forgot_pass"
+              sx={{
+                color: "#FF6B00",
+                textDecoration: "none",
+                "&:hover": { textDecoration: "underline" },
+              }}
+            >
+              Forgot password?
+            </Link>
+          </Box>
+
+          <Button
+            fullWidth
+            variant="contained"
+            type="submit"
+            size="large"
+            loading={isSubmitting}
+            sx={{
+              bgcolor: "red",
+              "&:hover": { bgcolor: "#FF8A3D" },
+              textTransform: "none",
+              py: 1.5,
+            }}
+          >
+            Sign In
+          </Button>
+        </Stack>
       </form>
 
-      <p className="flex justify-center my-5">
-        Bạn chưa có tài khoản?{" "}
-        <Link className="text-green-500 hover:underline" to="/register">
-          Đăng ký ngay
+      <Typography textAlign="center" color="text.secondary">
+        Don't have an account?{" "}
+        <Link
+          component={RouterLink}
+          to="/register"
+          sx={{
+            color: "#FF6B00",
+            textDecoration: "none",
+            fontWeight: 500,
+            "&:hover": { textDecoration: "underline" },
+          }}
+        >
+          Sign up now
         </Link>
-      </p>
-    </>
+      </Typography>
+    </Stack>
   );
 };
