@@ -9,10 +9,11 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MenuNavHomePage } from "../MenuNav/MenuNavHomePage";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { MenuNavUser } from "../MenuNav/MenuNavUser";
+import userApi from "../../api/user/user";
 
 export const LayoutHome = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -32,6 +33,14 @@ export const LayoutHome = () => {
   const handleClickAvatar = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorAvatar(event.currentTarget);
   };
+
+  const handleGetUser = async () => {
+    const response = await userApi.getUserInfor();
+    console.log(response);
+  };
+  useEffect(() => {
+    handleGetUser();
+  }, []);
 
   return (
     <>
@@ -99,7 +108,7 @@ export const LayoutHome = () => {
             <Typography fontSize={12} sx={{ color: "white" }}>
               Bạn là nhà tuyển dụng ?
             </Typography>
-            <Link to="/recruiter" className="hover:underline">
+            <Link to="/recruiter/register" className="hover:underline">
               Đăng tuyển ngay
             </Link>
           </Box>

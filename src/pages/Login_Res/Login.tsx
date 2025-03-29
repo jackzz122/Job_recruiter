@@ -8,8 +8,8 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import authApi from "../../api/auth/auth";
 import { toast } from "react-toastify";
-import { isAxiosError } from "axios";
-type FormField = {
+import { handleError } from "../../helper/HandleError/handleError";
+export type FormField = {
   email: string;
   password: string;
 };
@@ -36,11 +36,8 @@ export const Login = () => {
         });
       }
     } catch (err) {
-      if (isAxiosError(err)) {
-        toast.error(err.response?.data.message);
-      } else {
-        console.log(err);
-      }
+      const error = handleError(err);
+      toast.error(error?.message);
     }
   };
 

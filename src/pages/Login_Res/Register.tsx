@@ -10,6 +10,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import PersonIcon from "@mui/icons-material/Person";
 import { toast } from "react-toastify";
 import authApi from "../../api/auth/auth";
+import { handleError } from "../../helper/HandleError/handleError";
 
 type FormRegisterField = {
   fullname: string;
@@ -40,7 +41,8 @@ export const Register = () => {
         });
       }
     } catch (err) {
-      console.log(err);
+      const error = handleError(err);
+      toast.error(error?.message);
     }
   };
   return (
@@ -132,7 +134,7 @@ export const Register = () => {
         Already have an account?{" "}
         <Link
           component={RouterLink}
-          to="/login"
+          to="/"
           sx={{
             color: "red",
             textDecoration: "none",

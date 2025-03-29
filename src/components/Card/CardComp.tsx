@@ -33,6 +33,7 @@ export default function CardComp() {
           borderRadius: "10px",
           flexShrink: 0,
         }}
+        loading="lazy"
         image="./bss_avatar.png"
         alt="Company_img"
       />

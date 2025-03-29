@@ -8,6 +8,9 @@ import { AdminRoute } from "./routes/AdminRoute";
 import { RecruiterRoute } from "./routes/RecruiterRoute";
 import { EmployeeRoute } from "./routes/EmployeeRoute";
 import { ToastContainer } from "react-toastify";
+import { RecruiterLogin } from "./JobRecruiter/Login_Regis/RecruiterLogin";
+import { RecruiterRegister } from "./JobRecruiter/Login_Regis/RecruiterRegister";
+// import { AuthLayout } from "./JobRecruiter/layout/AuthLayout";
 function App() {
   return (
     <>
@@ -18,6 +21,10 @@ function App() {
             <Route path="/" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="forgot_pass" element={<ForgotPage />} />
+          </Route>
+          <Route>
+            <Route path="recruiter/login" element={<RecruiterLogin />} />
+            <Route path="recruiter/register" element={<RecruiterRegister />} />
           </Route>
           {AdminRoute}
           {RecruiterRoute}

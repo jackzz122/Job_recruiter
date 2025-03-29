@@ -7,3 +7,10 @@ export type regisData = {
   password: string;
   fullname: string;
 };
+export type recruiterData = {
+  email: string;
+  companyName: string;
+  phoneNumber: string;
+  address: string;
+  websiteUrl: string;
+};
