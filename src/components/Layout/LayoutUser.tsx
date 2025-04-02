@@ -7,9 +7,7 @@ import WavingHandIcon from "@mui/icons-material/WavingHand";
 import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
-import AlternateEmailOutlinedIcon from "@mui/icons-material/AlternateEmailOutlined";
 const listOfInformations: {
   name: string;
   href: string;
@@ -22,7 +20,7 @@ const listOfInformations: {
   },
   {
     name: "Hồ sơ đính kèm",
-    href: "",
+    href: "myInfo",
     icon: <AssignmentOutlinedIcon />,
   },
   {
@@ -34,16 +32,6 @@ const listOfInformations: {
     name: "Việc làm của tôi",
     href: "myJobs",
     icon: <WorkOutlineOutlinedIcon />,
-  },
-  {
-    name: "Lời mời công việc",
-    href: "",
-    icon: <AlternateEmailOutlinedIcon />,
-  },
-  {
-    name: "Đăng ký nhận email",
-    href: "",
-    icon: <EmailOutlinedIcon />,
   },
   {
     name: "Cài đặt",
@@ -68,7 +56,7 @@ export const LayoutUser = () => {
           gap: "2rem",
         }}
       >
-        <div className="w-1/4 bg-white p-4 rounded-lg border border-gray-200">
+        <div className="w-1/4 max-h-96 bg-white p-4 rounded-lg border border-gray-200">
           <div className="flex items-center gap-2 mb-2">
             <WavingHandIcon sx={{ color: "red" }} />
             <p>Xin Chào </p>

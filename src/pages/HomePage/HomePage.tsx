@@ -57,27 +57,6 @@ export const HomePage = () => {
         </Grid2>
       </Container>
       <br />
-      <Box
-        sx={{
-          backgroundColor: "#f3f5f7",
-          paddingBottom: 2,
-        }}
-      >
-        <Container>
-          <Typography
-            sx={{ color: "green" }}
-            fontWeight="bold"
-            fontSize={20}
-            paddingTop={2}
-          >
-            Top nghành nghề nổi bật
-          </Typography>
-          <Typography color="textSecondary" fontSize={13}>
-            Bạn muốn tìm việc mới?
-          </Typography>
-          <br />
-        </Container>
-      </Box>
     </div>
   );
 };

@@ -3,7 +3,6 @@ import { LayoutHome } from "../components/Layout/LayoutHome";
 import { HomePage } from "../pages/HomePage/HomePage";
 import { LayoutUser } from "../components/Layout/LayoutUser";
 import { Information } from "../pages/Information/Information";
-import { MyJobs } from "../pages/Information/MyJobs/MyJobs";
 import { ChangePass } from "../pages/Information/ChangePass";
 import { CVPages } from "../pages/CV/CVPages";
 import { LayoutCreateCV } from "../components/Layout/LayoutCreateCV";
@@ -16,6 +15,7 @@ import { ShortInfoComp } from "../pages/Company/ListCompany/ShortInfoComp";
 import { LayoutDetailsComp } from "../components/Layout/LayoutDetailsComp";
 import { DetailsComp } from "../pages/Company/DetailsPage/DetailsComp";
 import { ReviewComp } from "../pages/Company/ReviewCompany/ReviewComp";
+import { MyInfo } from "../pages/Information/InformationPage/MyInfo";
 
 export const EmployeeRoute = [
   <Route key="recruiter" element={<LayoutHome />}>
@@ -23,7 +23,7 @@ export const EmployeeRoute = [
     {/* Information pages */}
     <Route element={<LayoutUser />}>
       <Route path="information" element={<Information />} />
-      <Route path="myJobs" element={<MyJobs />} />
+      <Route path="myInfo" element={<MyInfo />} />
       <Route path="change_pass" element={<ChangePass />} />
     </Route>
     {/* CV page */}

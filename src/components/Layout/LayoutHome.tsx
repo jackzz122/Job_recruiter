@@ -9,15 +9,21 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { MenuNavHomePage } from "../MenuNav/MenuNavHomePage";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { MenuNavUser } from "../MenuNav/MenuNavUser";
-import userApi from "../../api/user/user";
+import { useGetUserInfoQuery } from "../../redux/feature/user/userApiSlice";
+import { SkeletonCircle } from "../Skeleton/SkeletonCircle";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { getUserInfo } from "../../redux/feature/user/userSlice";
+import { LayoutFooter } from "./LayoutFooter";
 
 export const LayoutHome = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorAvatar, setAnchorAvatar] = useState<null | HTMLElement>(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const openAvatar = Boolean(anchorAvatar);
@@ -34,16 +40,23 @@ export const LayoutHome = () => {
     setAnchorAvatar(event.currentTarget);
   };
 
-  const handleGetUser = async () => {
-    const response = await userApi.getUserInfor();
-    console.log(response);
-  };
-  useEffect(() => {
-    handleGetUser();
-  }, []);
+  const { data, isError, isLoading } = useGetUserInfoQuery();
 
+  useEffect(() => {
+    if (isError) {
+      toast.error(
+        "Something on the server went wrong, please contact to our team"
+      );
+    }
+
+    if (!isLoading && data) {
+      dispatch(getUserInfo(data?.user));
+    }
+  }, [data, isError, isLoading, dispatch]);
+
+  const user = data?.user;
   return (
-    <>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "00vh" }}>
       <AppBar
         elevation={1}
         sx={{
@@ -119,12 +132,19 @@ export const LayoutHome = () => {
               ml: 2,
               display: { xs: "none", lg: "flex" },
               color: "white",
+              textTransform: "none",
             }}
           >
-            <Avatar src="/avatar.png" />
-            <Typography sx={{ ml: 2 }}>
-              Vương Đức Lương <KeyboardArrowDownRoundedIcon />{" "}
-            </Typography>
+            {!isLoading ? (
+              <Box sx={{ display: "flex", alignItems: "center" }}>
+                <Avatar src={user?.avatarImg ?? "/avatar.png"} />
+                <Typography sx={{ marginLeft: 2 }}>
+                  {user?.fullname ?? "Guest User"}
+                </Typography>
+              </Box>
+            ) : (
+              <SkeletonCircle />
+            )}
           </Button>
           {
             <MenuNavUser
@@ -146,8 +166,11 @@ export const LayoutHome = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Box sx={{ mt: "64px" }}></Box>
-      <Outlet />
-    </>
+      <Box sx={{ mt: "64px" }} />
+      <Box>
+        <Outlet />
+      </Box>
+      <LayoutFooter />
+    </Box>
   );
 };
