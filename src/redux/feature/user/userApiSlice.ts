@@ -1,6 +1,6 @@
-import { regisData } from "../../../context/types/AuthType";
-import { UserType } from "../../../context/types/UserType";
-import ApiSlice from "../../app/api/apiSlice";
+import { regisData } from "../../../types/AuthType";
+import { UserType } from "../../../types/UserType";
+import ApiSlice from "../../api/apiSlice";
 
 type UserResponse = {
   success: boolean;

@@ -1,4 +1,4 @@
-import { JobType } from "../../context/types/JobType";
+import { JobType } from "../../types/JobType";
 import axiosClient from "../axiosClient";
 
 const jobApi = {

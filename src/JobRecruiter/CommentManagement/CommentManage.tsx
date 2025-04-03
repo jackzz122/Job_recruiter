@@ -18,7 +18,7 @@ import {
   Delete as DeleteIcon,
   Block as BlockIcon,
 } from "@mui/icons-material";
-import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
+import { ContainerBox } from "../component/ContainerBox";
 
 interface Comment {
   id: string;

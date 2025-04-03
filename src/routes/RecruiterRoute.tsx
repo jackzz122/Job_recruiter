@@ -1,5 +1,5 @@
 import { Route } from "react-router-dom";
-import { LayoutRecruiter } from "../JobRecruiter/layout/LayoutRecruiter";
+import { LayoutRecruiter } from "../JobRecruiter/component/layout/LayoutRecruiter";
 import { List_employ } from "../JobRecruiter/Employees/List_employ";
 import { RecruiterCompany } from "../JobRecruiter/RecuiterJob/RecruiterCompany";
 import { RecruiterEditJob } from "../JobRecruiter/RecuiterJob/RecruiterEditJob";

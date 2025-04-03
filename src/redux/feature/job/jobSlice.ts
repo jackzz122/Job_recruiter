@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { JobFormData } from "../../../context/types/JobType";
+import { JobFormData } from "../../../types/JobType";
 
 const initialState: JobFormData = {
   title: "",

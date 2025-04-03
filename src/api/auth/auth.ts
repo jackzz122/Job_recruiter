@@ -1,8 +1,4 @@
-import {
-  loginData,
-  recruiterData,
-  regisData,
-} from "../../context/types/AuthType";
+import { loginData, recruiterData, regisData } from "../../types/AuthType";
 import axiosClient from "../axiosClient";
 
 const authApi = {

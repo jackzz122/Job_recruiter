@@ -11,7 +11,7 @@ import SortByAlphaIcon from "@mui/icons-material/SortByAlpha";
 import RemoveRedEyeOutlinedIcon from "@mui/icons-material/RemoveRedEyeOutlined";
 import { colorButtonOrange, styleButton } from "../../themeContext";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
+import { ContainerBox } from "../component/ContainerBox";
 export const List_employ = () => {
   return (
     <ContainerBox>

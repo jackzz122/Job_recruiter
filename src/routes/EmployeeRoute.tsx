@@ -1,21 +1,21 @@
 import { Route } from "react-router-dom";
-import { LayoutHome } from "../components/Layout/LayoutHome";
-import { HomePage } from "../pages/HomePage/HomePage";
-import { LayoutUser } from "../components/Layout/LayoutUser";
-import { Information } from "../pages/Information/Information";
-import { ChangePass } from "../pages/Information/ChangePass";
-import { CVPages } from "../pages/CV/CVPages";
-import { LayoutCreateCV } from "../components/Layout/LayoutCreateCV";
-import { CreateCVPage } from "../pages/CV/CreateCVPage";
-import { ListOfCompany } from "../pages/CompanyList/ListOfCompany";
-import { DetailsJob } from "../pages/DetailsJob/DetailsJob";
-import { LayoutListComp } from "../components/Layout/LayoutListComp";
-import { ListCompCareer } from "../pages/Company/ListCompany/ListCompCareer";
-import { ShortInfoComp } from "../pages/Company/ListCompany/ShortInfoComp";
-import { LayoutDetailsComp } from "../components/Layout/LayoutDetailsComp";
-import { DetailsComp } from "../pages/Company/DetailsPage/DetailsComp";
-import { ReviewComp } from "../pages/Company/ReviewCompany/ReviewComp";
-import { MyInfo } from "../pages/Information/InformationPage/MyInfo";
+import { LayoutHome } from "../user/component/Layout/LayoutHome";
+import { HomePage } from "../user/homepage/HomePage";
+import { LayoutUser } from "../user/component/Layout/LayoutUser";
+import { Information } from "../user/information/Dashboard/Information";
+import { ChangePass } from "../user/information/ChangePass/ChangePass";
+import { CVPages } from "../user/CV/pages/CVPages";
+import { LayoutCreateCV } from "../user/CV/components/LayoutCreateCV";
+import { CreateCVPage } from "../user/CV/pages/CreateCVPage";
+import { ListOfCompany } from "../user/company/ListCompany/ListOfCompany";
+import { DetailsJob } from "../user/job/Detail/DetailsJob";
+import { LayoutListComp } from "../user/component/Layout/LayoutListComp";
+import { ListCompCareer } from "../user/company/ListCompany/ListCompCareer";
+import { ShortInfoComp } from "../user/company/ListCompany/ShortInfoComp";
+import { LayoutDetailsComp } from "../user/company/components/LayoutDetailsComp";
+import { DetailsComp } from "../user/company/DetailsCompany/DetailsComp";
+import { ReviewComp } from "../user/company/Review/ReviewComp";
+import { MyInfo } from "../user/information/Profile/MyInfo";
 
 export const EmployeeRoute = [
   <Route key="recruiter" element={<LayoutHome />}>

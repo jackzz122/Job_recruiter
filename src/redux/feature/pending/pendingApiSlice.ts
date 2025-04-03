@@ -1,5 +1,5 @@
-import { pendingType } from "../../../context/types/pendingType";
-import ApiSlice from "../../app/api/apiSlice";
+import { pendingType } from "../../../types/pendingType";
+import ApiSlice from "../../api/apiSlice";
 
 export const pendingApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({

@@ -1,5 +1,5 @@
-import { MajorType } from "../../../context/types/MajorType";
-import ApiSlice from "../../app/api/apiSlice";
+import { MajorType } from "../../../types/MajorType";
+import ApiSlice from "../../api/apiSlice";
 
 export const majorApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({

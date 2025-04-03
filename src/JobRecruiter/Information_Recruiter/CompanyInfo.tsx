@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
+import { ContainerBox } from "../component/ContainerBox";
 import Divider from "@mui/material/Divider";
 import { colorButtonOrange } from "../../themeContext";
 import Button from "@mui/material/Button";
@@ -13,7 +13,7 @@ import Grid2 from "@mui/material/Grid2";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
-import { CompanyType } from "../../context/types/CompanyType";
+import { CompanyType } from "../../types/CompanyType";
 const companyInformation = [
   {
     title: "Company Information",

@@ -1,6 +1,6 @@
 import { Route } from "react-router-dom";
-import { AdminLayout } from "../admin/AdminLayout";
-import { AdminLogin } from "../admin/Login_Res_Admin/AdminLogin";
+import { AdminLayout } from "../admin/component/layout/AdminLayout";
+import { AdminLogin } from "../auth/admin/pages/AdminLogin";
 import { Dashboard } from "../admin/Dashboard/Dashboard";
 import { CandidateManagement } from "../admin/Candidate/CandidateManagement";
 import { RecruiterManagement } from "../admin/Recruiter/RecruiterManagement";

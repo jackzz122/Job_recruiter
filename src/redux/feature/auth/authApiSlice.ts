@@ -1,9 +1,5 @@
-import {
-  loginData,
-  recruiterData,
-  regisData,
-} from "./../../../context/types/AuthType";
-import ApiSlice from "../../app/api/apiSlice";
+import { loginData, recruiterData, regisData } from "../../../types/AuthType";
+import ApiSlice from "../../api/apiSlice";
 
 function dataForLogin_Register<T>(data: T, url: string) {
   return {

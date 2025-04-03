@@ -14,9 +14,9 @@ import {
   Add as AddIcon,
   FilterList as FilterIcon,
 } from "@mui/icons-material";
-import { DialogCreateJobRecruiter } from "../../components/Dialog/DialogCreateJobRecruiter";
+import { DialogCreateJobRecruiter } from "./component/DialogCreateJobRecruiter";
 import { colorButtonOrange } from "../../themeContext";
-import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
+import { ContainerBox } from "../component/ContainerBox";
 import { SingleJobModel } from "./SingleJobModel";
 
 // Types

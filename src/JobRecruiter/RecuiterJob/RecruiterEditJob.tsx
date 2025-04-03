@@ -19,7 +19,7 @@ import {
   Add as AddIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-import { JobFormData } from "../../context/types/JobType";
+import { JobFormData } from "../../types/JobType";
 import { colorButtonOrange } from "../../themeContext";
 
 export const RecruiterEditJob = () => {

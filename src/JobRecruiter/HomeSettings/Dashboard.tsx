@@ -11,7 +11,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import { LineChart } from "@mui/x-charts/LineChart";
 import Chip from "@mui/material/Chip";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { ContainerBox } from "../../components/ContainerRecruiter/ContainerBox";
+import { ContainerBox } from "../component/ContainerBox";
 type setting_type = {
   name: string;
   icons: React.ReactNode;
