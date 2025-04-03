@@ -33,6 +33,9 @@ export const authApiSlice = ApiSlice.injectEndpoints({
       query: (adminCredentials: loginData) =>
         dataForLogin_Register(adminCredentials, "adminLogin"),
     }),
+    userLogOut: builder.query<void, void>({
+      query: () => "logout",
+    }),
   }),
 });
 

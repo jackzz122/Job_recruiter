@@ -11,6 +11,9 @@ import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Grid2 from "@mui/material/Grid2";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/feature/user/userSlice";
+import { CompanyType } from "../../context/types/CompanyType";
 const companyInformation = [
   {
     title: "Company Information",
@@ -46,8 +49,18 @@ const chipSkills = [
   "JavaScript",
   "JavaScript",
 ];
-// const branches = ["Hanoi", "HCM", "Haiphong", "Danang", "Cantho", "Nha Trang"];
 export const CompanyInfo = () => {
+  const user = useSelector(selectUser);
+  const isCompanyPopulated = (
+    companyId: string | CompanyType | undefined
+  ): companyId is CompanyType => {
+    return (
+      typeof companyId === "object" &&
+      companyId !== null &&
+      "companyName" in companyId
+    );
+  };
+  console.log(user);
   const navigate = useNavigate();
   return (
     <ContainerBox>
@@ -91,7 +104,9 @@ export const CompanyInfo = () => {
                   textAlign="center"
                   variant="h6"
                 >
-                  BSS group
+                  {isCompanyPopulated(user?.companyId)
+                    ? user.companyId.companyName
+                    : user?.fullname}
                 </Typography>
               </Box>
               <Box
@@ -116,7 +131,9 @@ export const CompanyInfo = () => {
                   spacing={2}
                 >
                   <div className="h-20 w-1/4 border rounded-2xl text-orange-500 border-orange-400 flex items-center justify-center">
-                    <Typography fontWeight="bold">BSSGroup@bss.com</Typography>
+                    <Typography fontWeight="bold">
+                      {user?.companyId.emailCompany || "email company ?"}
+                    </Typography>
                   </div>
                   <div className="h-20 w-1/4 border rounded-2xl text-orange-500 border-orange-400 flex items-center justify-center">
                     <Typography fontWeight="bold">0909090909</Typography>
@@ -157,18 +174,18 @@ export const CompanyInfo = () => {
               </Typography>
               {companyInformation.map((infor, index) => {
                 return (
-                  <>
+                  <div key={index}>
                     <div className="my-4 flex items-center justify-between">
                       <Typography fontStyle="italic">{infor.title}</Typography>
                       <Typography fontStyle="italic">{infor.value}</Typography>
                     </div>
                     {index !== companyInformation.length - 1 && <Divider />}
-                  </>
+                  </div>
                 );
               })}
             </Box>
           </Grid2>
-          <Grid2 size={6} spacing={2}>
+          <Grid2 size={6}>
             <Box
               sx={{ backgroundColor: "white", borderRadius: "15px" }}
               padding={2}
@@ -202,7 +219,7 @@ export const CompanyInfo = () => {
             </Box>
           </Grid2>
 
-          <Grid2 size={6} spacing={2}>
+          <Grid2 size={6}>
             <Box
               height="fit-content"
               sx={{

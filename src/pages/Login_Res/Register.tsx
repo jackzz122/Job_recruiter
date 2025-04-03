@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import authApi from "../../api/auth/auth";
 import { handleError } from "../../helper/HandleError/handleError";
 
-type FormRegisterField = {
+export type FormRegisterField = {
   fullname: string;
   email: string;
   password: string;

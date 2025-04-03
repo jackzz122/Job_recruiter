@@ -18,6 +18,8 @@ import {
   backgroundColorRecruiter,
   colorButtonOrange,
 } from "../../themeContext";
+import { useGetCurrentUser } from "../../context/GetCurrentUser/useGetCurrentUser";
+import { CompanyType } from "../../context/types/CompanyType";
 const drawerWidth = 270;
 
 export type setting_types = {
@@ -46,6 +48,16 @@ export function LayoutForRecruiter_Admin({
         return accu;
       }, "");
     return changeCurrentPathToCapitalize;
+  };
+  const { user } = useGetCurrentUser();
+  const isCompanyPopulated = (
+    companyId: string | CompanyType | undefined
+  ): companyId is CompanyType => {
+    return (
+      typeof companyId === "object" &&
+      companyId !== null &&
+      "companyName" in companyId
+    );
   };
   const drawer = (
     <div>
@@ -112,6 +124,15 @@ export function LayoutForRecruiter_Admin({
               </IconButton>
               <IconButton>
                 <Avatar alt="Company logo" src="/bss_avatar.png" />
+                <Typography
+                  sx={{ color: "white" }}
+                  fontSize={20}
+                  marginLeft={2}
+                >
+                  {isCompanyPopulated(user?.companyId)
+                    ? user.companyId.companyName
+                    : user?.fullname}
+                </Typography>
               </IconButton>
             </Stack>
           </Toolbar>

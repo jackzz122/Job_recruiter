@@ -18,7 +18,7 @@ export const RecruiterLogin = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormField>();
   const onSubmitTing = async (data: FormField) => {
     try {
@@ -114,6 +114,7 @@ export const RecruiterLogin = () => {
               type="submit"
               variant="contained"
               size="large"
+              loading={isSubmitting}
               fullWidth
               sx={{ mt: 2, backgroundColor: colorButtonOrange }}
             >

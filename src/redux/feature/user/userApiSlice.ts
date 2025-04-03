@@ -1,3 +1,4 @@
+import { regisData } from "../../../context/types/AuthType";
 import { UserType } from "../../../context/types/UserType";
 import ApiSlice from "../../app/api/apiSlice";
 
@@ -25,7 +26,27 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       query: () => "getAccount",
       providesTags: () => [{ type: "Users", id: "LIST" }],
     }),
+
+    createRecruiter: builder.mutation<UserType, regisData>({
+      query: (data) => ({
+        url: "createAccountStaff",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
+    deleteRecruiter: builder.mutation<UserType, string>({
+      query: (id) => ({
+        url: `deleteAccountStaff/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
   }),
 });
 
-export const { useGetAllUsersQuery, useGetUserInfoQuery } = userApiSlice;
+export const {
+  useGetAllUsersQuery,
+  useGetUserInfoQuery,
+  useCreateRecruiterMutation,
+} = userApiSlice;

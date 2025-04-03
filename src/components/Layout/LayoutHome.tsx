@@ -9,21 +9,17 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { MenuNavHomePage } from "../MenuNav/MenuNavHomePage";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { MenuNavUser } from "../MenuNav/MenuNavUser";
-import { useGetUserInfoQuery } from "../../redux/feature/user/userApiSlice";
 import { SkeletonCircle } from "../Skeleton/SkeletonCircle";
-import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { getUserInfo } from "../../redux/feature/user/userSlice";
 import { LayoutFooter } from "./LayoutFooter";
+import { useGetCurrentUser } from "../../context/GetCurrentUser/useGetCurrentUser";
 
 export const LayoutHome = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorAvatar, setAnchorAvatar] = useState<null | HTMLElement>(null);
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const openAvatar = Boolean(anchorAvatar);
@@ -40,21 +36,7 @@ export const LayoutHome = () => {
     setAnchorAvatar(event.currentTarget);
   };
 
-  const { data, isError, isLoading } = useGetUserInfoQuery();
-
-  useEffect(() => {
-    if (isError) {
-      toast.error(
-        "Something on the server went wrong, please contact to our team"
-      );
-    }
-
-    if (!isLoading && data) {
-      dispatch(getUserInfo(data?.user));
-    }
-  }, [data, isError, isLoading, dispatch]);
-
-  const user = data?.user;
+  const { user, isLoading } = useGetCurrentUser();
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "00vh" }}>
       <AppBar

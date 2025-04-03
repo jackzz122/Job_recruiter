@@ -16,36 +16,101 @@ import {
   Upload as UploadIcon,
   Delete as DeleteIcon,
   Save as SaveIcon,
+  Add as AddIcon,
 } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
-
-interface JobFormData {
-  title: string;
-  description: string;
-  requirements: string;
-  benefits: string;
-  image: File | null;
-}
+import { JobFormData } from "../../context/types/JobType";
+import { colorButtonOrange } from "../../themeContext";
 
 export const RecruiterEditJob = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<JobFormData>({
     title: "Fresher Frontend About React/Nodejs",
-    description: "",
-    requirements: "",
-    benefits: "",
+    sizingPeople: 1,
+    majorId: [],
+    salaryRange: 0,
+    description: {
+      keySkills: {
+        mainText: "",
+        bulletPoints: [],
+      },
+      whyYouLoveIt: {
+        mainText: "",
+        bulletPoints: [],
+      },
+    },
     image: null,
   });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [newKeySkill, setNewKeySkill] = useState("");
+  const [newLovePoint, setNewLovePoint] = useState("");
 
   const handleInputChange =
-    (field: keyof JobFormData) =>
+    (field: keyof Omit<JobFormData, "description" | "image">) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
       setFormData((prev) => ({
         ...prev,
         [field]: event.target.value,
       }));
     };
+
+  const handleDescriptionChange = (
+    section: "keySkills" | "whyYouLoveIt",
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      description: {
+        ...prev.description,
+        [section]: {
+          ...prev.description[section],
+          mainText: event.target.value,
+        },
+      },
+    }));
+  };
+
+  const handleAddBulletPoint = (section: "keySkills" | "whyYouLoveIt") => {
+    const newPoint = section === "keySkills" ? newKeySkill : newLovePoint;
+    if (newPoint.trim()) {
+      setFormData((prev) => ({
+        ...prev,
+        description: {
+          ...prev.description,
+          [section]: {
+            ...prev.description[section],
+            bulletPoints: [
+              ...prev.description[section].bulletPoints,
+              newPoint.trim(),
+            ],
+          },
+        },
+      }));
+      if (section === "keySkills") {
+        setNewKeySkill("");
+      } else {
+        setNewLovePoint("");
+      }
+    }
+  };
+
+  const handleRemoveBulletPoint = (
+    section: "keySkills" | "whyYouLoveIt",
+    index: number
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      description: {
+        ...prev.description,
+        [section]: {
+          ...prev.description[section],
+          bulletPoints: prev.description[section].bulletPoints.filter(
+            (_, i) => i !== index
+          ),
+        },
+      },
+    }));
+  };
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -66,15 +131,79 @@ export const RecruiterEditJob = () => {
     console.log(formData);
   };
 
+  const renderBulletPointsSection = (
+    section: "keySkills" | "whyYouLoveIt",
+    title: string,
+    placeholder: string,
+    newPoint: string,
+    setNewPoint: (value: string) => void
+  ) => (
+    <Box>
+      <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+        {title}
+      </Typography>
+      <TextField
+        fullWidth
+        multiline
+        rows={4}
+        value={formData.description[section].mainText}
+        onChange={(e) => handleDescriptionChange(section, e)}
+        placeholder={placeholder}
+        variant="outlined"
+        size="small"
+        sx={{ mb: 2 }}
+      />
+      <Stack spacing={2}>
+        {formData.description[section].bulletPoints.map((point, index) => (
+          <Box key={index} sx={{ display: "flex", gap: 1 }}>
+            <TextField
+              fullWidth
+              value={point}
+              disabled
+              variant="outlined"
+              size="small"
+            />
+            <IconButton
+              onClick={() => handleRemoveBulletPoint(section, index)}
+              color="error"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Box>
+        ))}
+        <Box sx={{ display: "flex", gap: 1 }}>
+          <TextField
+            fullWidth
+            value={newPoint}
+            onChange={(e) => setNewPoint(e.target.value)}
+            placeholder={`Add a new ${
+              section === "keySkills" ? "skill" : "benefit"
+            }...`}
+            variant="outlined"
+            size="small"
+          />
+          <IconButton
+            onClick={() => handleAddBulletPoint(section)}
+            color="primary"
+          >
+            <AddIcon />
+          </IconButton>
+        </Box>
+      </Stack>
+    </Box>
+  );
+
   return (
     <Container maxWidth="lg">
       <Stack spacing={3}>
-        {/* Header with Back Button */}
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
           <IconButton onClick={() => navigate(-1)}>
             <ArrowBackIcon />
           </IconButton>
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 600, color: colorButtonOrange }}
+          >
             Edit Job Posting
           </Typography>
         </Box>
@@ -129,70 +258,65 @@ export const RecruiterEditJob = () => {
                 />
               </Box>
 
+              {/* Number of People */}
+              <Box>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Number of People Needed
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="number"
+                  value={formData.sizingPeople}
+                  onChange={handleInputChange("sizingPeople")}
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+
+              {/* Salary Range */}
+              <Box>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Salary Range
+                </Typography>
+                <TextField
+                  fullWidth
+                  type="number"
+                  value={formData.salaryRange}
+                  onChange={handleInputChange("salaryRange")}
+                  variant="outlined"
+                  size="small"
+                />
+              </Box>
+
               <Divider />
 
-              {/* Job Description */}
-              <Box>
-                <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Job Description
-                </Typography>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  value={formData.description}
-                  onChange={handleInputChange("description")}
-                  placeholder="Describe the role and responsibilities..."
-                  variant="outlined"
-                  size="small"
-                />
-              </Box>
+              {/* Key Skills Section */}
+              {renderBulletPointsSection(
+                "keySkills",
+                "Key Skills",
+                "Describe the required skills and qualifications...",
+                newKeySkill,
+                setNewKeySkill
+              )}
 
-              {/* Requirements */}
-              <Box>
-                <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Requirements
-                </Typography>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  value={formData.requirements}
-                  onChange={handleInputChange("requirements")}
-                  placeholder="List the required skills and qualifications..."
-                  variant="outlined"
-                  size="small"
-                />
-              </Box>
+              <Divider />
 
-              {/* Benefits */}
-              <Box>
-                <Typography
-                  variant="subtitle2"
-                  color="text.secondary"
-                  gutterBottom
-                >
-                  Benefits
-                </Typography>
-                <TextField
-                  fullWidth
-                  multiline
-                  rows={4}
-                  value={formData.benefits}
-                  onChange={handleInputChange("benefits")}
-                  placeholder="Describe why candidates should choose this role..."
-                  variant="outlined"
-                  size="small"
-                />
-              </Box>
+              {/* Why You'll Love It Section */}
+              {renderBulletPointsSection(
+                "whyYouLoveIt",
+                "Why You'll Love It",
+                "Describe why candidates should choose this role...",
+                newLovePoint,
+                setNewLovePoint
+              )}
 
               {/* Image Upload */}
               <Box>

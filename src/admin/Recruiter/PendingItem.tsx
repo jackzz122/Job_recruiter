@@ -6,7 +6,6 @@ import TableCell from "@mui/material/TableCell";
 import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-// import VerifiedIcon from "@mui/icons-material/Verified";
 import Button from "@mui/material/Button";
 import { pendingType } from "../../context/types/pendingType";
 import Dialog from "@mui/material/Dialog";
@@ -14,10 +13,19 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import { useState } from "react";
+import {
+  useConfirmPendingMutation,
+  useDeletePendingItemMutation,
+} from "../../redux/feature/pending/pendingApiSlice";
+import { toast } from "react-toastify";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export const PendingItem = (props: pendingType) => {
   const [openVerifyDialog, setOpenVerifyDialog] = useState(false);
   const [openCancelDialog, setOpenCancelDialog] = useState(false);
+  const [confirmPending, { isLoading }] = useConfirmPendingMutation();
+  const [deletePending, { isLoading: isDeleting }] =
+    useDeletePendingItemMutation();
 
   const handleVerify = () => {
     setOpenVerifyDialog(true);
@@ -27,14 +35,37 @@ export const PendingItem = (props: pendingType) => {
     setOpenCancelDialog(true);
   };
 
-  const handleConfirmVerify = () => {
-    // Add your verification logic here
-    setOpenVerifyDialog(false);
+  const handleConfirmVerify = async (data: pendingType) => {
+    try {
+      await confirmPending({
+        id: data.accountID._id,
+        body: {
+          accountID: data.accountID,
+          email: data.accountID.email,
+          companyName: data.companyName,
+          phoneNumber: data.phoneNumber,
+          address: data.address,
+          websiteUrl: data.websiteUrl,
+          createdAt: data.createdAt,
+        },
+      }).unwrap();
+      toast.success("Recruiter verified successfully!");
+      setOpenVerifyDialog(false);
+    } catch (err) {
+      toast.error("Failed to verify recruiter. Please try again.");
+      console.error("Verification error:", err);
+    }
   };
 
-  const handleConfirmCancel = () => {
-    // Add your cancel logic here
-    setOpenCancelDialog(false);
+  const handleConfirmCancel = async (id: string) => {
+    try {
+      await deletePending(id).unwrap();
+      toast.success("Recruiter deleted successfully!");
+      setOpenCancelDialog(false);
+    } catch (err) {
+      toast.error("Failed to delete recruiter. Please try again.");
+      console.error("Delete error:", err);
+    }
   };
 
   return (
@@ -83,14 +114,16 @@ export const PendingItem = (props: pendingType) => {
             variant="outlined"
             color="primary"
             onClick={handleVerify}
+            disabled={isLoading}
           >
-            Verify
+            {isLoading ? <CircularProgress size={24} /> : "Verify"}
           </Button>
           <Button
             fullWidth
             sx={{ border: "1px solid red", color: "red" }}
             variant="outlined"
             onClick={handleCancel}
+            disabled={isLoading}
           >
             Cancel
           </Button>
@@ -100,7 +133,7 @@ export const PendingItem = (props: pendingType) => {
       {/* Verify Confirmation Dialog */}
       <Dialog
         open={openVerifyDialog}
-        onClose={() => setOpenVerifyDialog(false)}
+        onClose={() => !isLoading && setOpenVerifyDialog(false)}
         maxWidth="xs"
         fullWidth
       >
@@ -110,13 +143,19 @@ export const PendingItem = (props: pendingType) => {
           undone.
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenVerifyDialog(false)}>Cancel</Button>
           <Button
-            onClick={handleConfirmVerify}
+            onClick={() => setOpenVerifyDialog(false)}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={() => handleConfirmVerify(props)}
             variant="contained"
             color="primary"
+            disabled={isLoading}
           >
-            Verify
+            {isLoading ? <CircularProgress size={24} /> : "Verify"}
           </Button>
         </DialogActions>
       </Dialog>
@@ -124,7 +163,7 @@ export const PendingItem = (props: pendingType) => {
       {/* Cancel Confirmation Dialog */}
       <Dialog
         open={openCancelDialog}
-        onClose={() => setOpenCancelDialog(false)}
+        onClose={() => !isLoading && setOpenCancelDialog(false)}
         maxWidth="xs"
         fullWidth
       >
@@ -136,13 +175,19 @@ export const PendingItem = (props: pendingType) => {
           action cannot be undone.
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpenCancelDialog(false)}>No, Keep</Button>
           <Button
-            onClick={handleConfirmCancel}
+            onClick={() => setOpenCancelDialog(false)}
+            disabled={isLoading}
+          >
+            No, Keep
+          </Button>
+          <Button
+            onClick={() => handleConfirmCancel(props._id)}
             variant="contained"
             color="error"
+            disabled={isDeleting}
           >
-            Yes, Cancel
+            {isDeleting ? <CircularProgress size={24} /> : "Yes, Cancel"}
           </Button>
         </DialogActions>
       </Dialog>

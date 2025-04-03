@@ -1,3 +1,5 @@
+import { CompanyType } from "./CompanyType";
+
 export const RoleName = {
   ADMIN: "admin",
   RECRUIT: "recruit",
@@ -6,12 +8,13 @@ export const RoleName = {
 } as const;
 
 export type UserRole = (typeof RoleName)[keyof typeof RoleName];
+
 export interface UserType {
-  id: string | number;
+  id: string;
   email: string;
-  fullname?: string;
+  fullname: string;
   avatarImg?: string;
-  role: UserRole;
+  role: string;
   dob?: Date;
   address?: string;
   phone?: string;
@@ -23,5 +26,7 @@ export interface UserType {
   updatedAt: string;
   lastLogin?: string;
   isActive: boolean;
+  majorId?: string;
+  companyId?: string | CompanyType; // Can be either string (ID) or populated CompanyType
   linkingProfile: string;
 }

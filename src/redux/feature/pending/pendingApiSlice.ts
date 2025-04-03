@@ -19,20 +19,30 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
         return [{ type: "Pendings" as const, id: "LIST" }];
       },
     }),
-    confirmPending: builder.mutation<string, { userId: string }>({
-      query: ({ userId }) => ({
-        url: `/confirmPending/${userId}`,
-        method: "PUT",
+    confirmPending: builder.mutation<
+      string,
+      { id: string; body: Omit<pendingType, "status" | "_id"> }
+    >({
+      query: (data) => ({
+        url: `/confirmPendingItem/${data.id}`,
+        method: "POST",
+        body: data.body,
       }),
-      invalidatesTags: [{ type: "Pendings", id: "LIST" }],
+      invalidatesTags: (result, error, data) => [
+        { type: "Pendings", id: data.id },
+      ],
     }),
-    deletePendingItem: builder.mutation<string, { userId: string }>({
-      query: ({ userId }) => ({
-        url: `/deletePending/${userId}`,
+    deletePendingItem: builder.mutation<string, string>({
+      query: (id) => ({
+        url: `/deletePendingApprove/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Pendings", id: "LIST" }],
+      invalidatesTags: (result, error, id) => [{ type: "Pendings", id }],
     }),
   }),
 });
-export const { useGetPendingListQuery } = pendingApiSlice;
+export const {
+  useGetPendingListQuery,
+  useConfirmPendingMutation,
+  useDeletePendingItemMutation,
+} = pendingApiSlice;
