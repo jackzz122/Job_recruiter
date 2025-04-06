@@ -6,9 +6,9 @@ import Stack from "@mui/material/Stack";
 import Link from "@mui/material/Link";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
-import authApi from "../../../api/auth/auth";
 import { toast } from "react-toastify";
 import { handleError } from "../../../helper/HandleError/handleError";
+import { useUserLoginMutation } from "../../../redux/feature/auth/authApiSlice";
 export type FormField = {
   email: string;
   password: string;
@@ -26,10 +26,11 @@ export const Login = () => {
     },
   });
   const navigate = useNavigate();
+  const [login, { isLoading }] = useUserLoginMutation();
   const onSubmitTing: SubmitHandler<FormField> = async (data) => {
     try {
-      const response = await authApi.login(data);
-      if (response.status === 200) {
+      await login(data).unwrap();
+      if (!isLoading) {
         toast.success("Login successful");
         navigate("/homepage", {
           replace: true,
@@ -126,6 +127,21 @@ export const Login = () => {
           }}
         >
           Sign up now
+        </Link>
+      </Typography>
+      <Typography textAlign="center" color="text.secondary">
+        You are a recruiter?{" "}
+        <Link
+          component={RouterLink}
+          to="/recruiter/login"
+          sx={{
+            color: "#FF6B00",
+            textDecoration: "none",
+            fontWeight: 500,
+            "&:hover": { textDecoration: "underline" },
+          }}
+        >
+          Sign up for Recruite now
         </Link>
       </Typography>
     </Stack>

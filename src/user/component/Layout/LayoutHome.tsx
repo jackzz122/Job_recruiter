@@ -5,7 +5,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import LogoDevIcon from "@mui/icons-material/LogoDev";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -103,9 +103,17 @@ export const LayoutHome = () => {
             <Typography fontSize={12} sx={{ color: "white" }}>
               Bạn là nhà tuyển dụng ?
             </Typography>
-            <Link to="/recruiter/register" className="hover:underline">
+            <Typography
+              fontSize={12}
+              sx={{
+                color: "white",
+                cursor: "pointer",
+                textDecoration: "underline",
+              }}
+              onClick={() => navigate("/recruiter/register")}
+            >
               Đăng tuyển ngay
-            </Link>
+            </Typography>
           </Box>
           <Button
             id="avatar_btn"

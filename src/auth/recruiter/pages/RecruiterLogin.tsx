@@ -124,8 +124,21 @@ export const RecruiterLogin = () => {
             <Box sx={{ textAlign: "center", mt: 2 }}>
               <Typography variant="body2" color="text.secondary">
                 Don't have an account?{" "}
-                <Link to="/recruiter/register" className="underline">
+                <Link
+                  to="/recruiter/register"
+                  className="underline text-orange-500 font-bold"
+                >
                   Register here
+                </Link>
+              </Typography>
+              <Typography
+                sx={{ marginTop: 2 }}
+                variant="body2"
+                color="text.secondary"
+              >
+                Back to user account?{" "}
+                <Link to="/" className="underline text-red-500 font-bold">
+                  Login here
                 </Link>
               </Typography>
             </Box>

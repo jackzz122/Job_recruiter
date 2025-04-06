@@ -1,11 +1,16 @@
-import { regisData } from "../../../types/AuthType";
+import { regisData } from "./../../../types/AuthType";
 import { UserType } from "../../../types/UserType";
 import ApiSlice from "../../api/apiSlice";
+import { CompanyType } from "../../../types/CompanyType";
 
 type UserResponse = {
   success: boolean;
   user: UserType;
 };
+
+interface recruiterAddType extends regisData {
+  companyId: string | CompanyType;
+}
 
 export const userApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -14,7 +19,7 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       providesTags: (results) => {
         if (results) {
           const final = [
-            ...results.map(({ id }) => ({ type: "Users" as const, id })),
+            ...results.map(({ _id }) => ({ type: "Users" as const, id: _id })),
             { type: "Users" as const, id: "LIST" },
           ];
           return final;
@@ -26,21 +31,24 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       query: () => "getAccount",
       providesTags: () => [{ type: "Users", id: "LIST" }],
     }),
-
-    createRecruiter: builder.mutation<UserType, regisData>({
+    getRecruiter: builder.query<UserType[], string>({
+      query: (id) => `getRecruiter/${id}`,
+      providesTags: () => [{ type: "Recruiter", id: "LIST" }],
+    }),
+    createRecruiter: builder.mutation<UserType, recruiterAddType>({
       query: (data) => ({
-        url: "createAccountStaff",
+        url: "createStaff",
         method: "POST",
         body: data,
       }),
-      invalidatesTags: [{ type: "Users", id: "LIST" }],
+      invalidatesTags: [{ type: "Recruiter", id: "LIST" }],
     }),
     deleteRecruiter: builder.mutation<UserType, string>({
       query: (id) => ({
-        url: `deleteAccountStaff/${id}`,
+        url: `deleteStaffAccount/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Users", id: "LIST" }],
+      invalidatesTags: (results, error, id) => [{ type: "Users", id }],
     }),
   }),
 });
@@ -49,4 +57,6 @@ export const {
   useGetAllUsersQuery,
   useGetUserInfoQuery,
   useCreateRecruiterMutation,
+  useGetRecruiterQuery,
+  useDeleteRecruiterMutation,
 } = userApiSlice;

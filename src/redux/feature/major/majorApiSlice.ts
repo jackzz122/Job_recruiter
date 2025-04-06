@@ -16,9 +16,9 @@ export const majorApiSlice = ApiSlice.injectEndpoints({
         return [{ type: "Majors", id: "LIST" }];
       },
     }),
-    addMajor: builder.mutation<MajorType, Omit<MajorType, "_id">>({
+    addMajor: builder.mutation<string, Omit<MajorType, "_id">>({
       query: (body) => ({
-        url: "createMajorCate",
+        url: "createMajor",
         method: "POST",
         body,
       }),

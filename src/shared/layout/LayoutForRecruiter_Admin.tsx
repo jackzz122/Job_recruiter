@@ -9,7 +9,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { NavLink, useLocation } from "react-router-dom";
+import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
@@ -20,6 +20,9 @@ import {
 } from "../../themeContext";
 import { useGetCurrentUser } from "../../context/useGetCurrentUser";
 import { CompanyType } from "../../types/CompanyType";
+import { useLogout } from "../../hooks/useLogout";
+import { useEffect } from "react";
+import { toast } from "react-toastify";
 const drawerWidth = 270;
 
 export type setting_types = {
@@ -38,6 +41,7 @@ export function LayoutForRecruiter_Admin({
   children: React.ReactNode;
 }) {
   const location = useLocation();
+  const navigate = useNavigate();
   const getCurrentPath = () => {
     const currentPath = location.pathname.split("/").pop();
     const changeCurrentPathToCapitalize = currentPath
@@ -59,6 +63,13 @@ export function LayoutForRecruiter_Admin({
       "companyName" in companyId
     );
   };
+  const { handleLogout, isLoading } = useLogout();
+  useEffect(() => {
+    if (isLoading) {
+      navigate("/recruiter/login", { replace: true });
+      toast.success("Logged out successfully");
+    }
+  }, [isLoading]);
   const drawer = (
     <div>
       <Stack
@@ -66,12 +77,13 @@ export function LayoutForRecruiter_Admin({
         spacing={1}
         alignItems="center"
         paddingInline="1rem"
-        onClick={() => (window.location.href = "/recruiter")}
         marginBlock="1.2rem"
         sx={{ cursor: "pointer" }}
       >
         <CodeIcon sx={{ color: colorButtonOrange }} fontSize="large" />
-        <Typography fontWeight="bold">{titleWeb}</Typography>
+        <Link to="/recruiter">
+          <Typography fontWeight="bold">{titleWeb}</Typography>
+        </Link>
       </Stack>
       <Divider />
       <List>
@@ -81,7 +93,7 @@ export function LayoutForRecruiter_Admin({
             key={index}
           >
             <NavLink
-              end
+              end={index === 0}
               className={({ isActive }) =>
                 `p-2  my-2 ${
                   isActive
@@ -164,8 +176,10 @@ export function LayoutForRecruiter_Admin({
                 variant="contained"
                 fullWidth
                 sx={{ marginBlock: "2rem", backgroundColor: colorButtonOrange }}
+                onClick={handleLogout}
+                disabled={isLoading}
               >
-                Logout
+                {isLoading ? "Logging out..." : "Logout"}
               </Button>
             </Box>
           </Drawer>

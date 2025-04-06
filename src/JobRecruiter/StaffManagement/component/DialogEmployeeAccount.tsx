@@ -11,10 +11,10 @@ import { handleError } from "../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
-import { UserType } from "../../../types/UserType";
+import { CompanyType } from "../../../types/CompanyType";
 
-interface StaffType extends FormRegisterField {
-  companyId: string | undefined;
+export interface StaffType extends FormRegisterField {
+  companyId: { _id: string | undefined };
 }
 
 export const DialogEmployeeAccount = ({
@@ -25,29 +25,40 @@ export const DialogEmployeeAccount = ({
   closeAccountFunct: () => void;
 }) => {
   const [createStaffAccount, { isLoading }] = useCreateRecruiterMutation();
-  const user = useSelector(selectUser) as UserType;
+  const user = useSelector(selectUser);
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<StaffType>({
     defaultValues: {
       fullname: "",
       email: "",
       password: "",
-      companyId: undefined,
+      companyId: user?.companyId
+        ? typeof user.companyId === "string"
+          ? { _id: user.companyId }
+          : { _id: user.companyId._id }
+        : undefined,
     },
   });
+
   const onSumitTing: SubmitHandler<StaffType> = async (data) => {
     try {
+      const companyId =
+        typeof user?.companyId === "string"
+          ? user.companyId
+          : user?.companyId?._id;
       await createStaffAccount({
         fullname: data.fullname,
         email: data.email,
         password: data.password,
-        companyId: user?.companyId?._id,
-      });
+        companyId: companyId as string | CompanyType,
+      }).unwrap();
       toast.success("Account created successfully");
       closeAccountFunct();
+      reset();
     } catch (error) {
       const err = handleError(error);
       toast.error(err?.message);

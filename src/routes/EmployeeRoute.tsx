@@ -16,9 +16,11 @@ import { LayoutDetailsComp } from "../user/company/components/LayoutDetailsComp"
 import { DetailsComp } from "../user/company/DetailsCompany/DetailsComp";
 import { ReviewComp } from "../user/company/Review/ReviewComp";
 import { MyInfo } from "../user/information/Profile/MyInfo";
+// import { ProtectedUser } from "../auth/user/components/ProtectedUser";
 
 export const EmployeeRoute = [
-  <Route key="recruiter" element={<LayoutHome />}>
+  // <Route key="employee" element={<ProtectedUser />}>
+  <Route element={<LayoutHome />}>
     <Route path="/homepage" element={<HomePage />} />
     {/* Information pages */}
     <Route element={<LayoutUser />}>
@@ -44,4 +46,5 @@ export const EmployeeRoute = [
       <Route path="reviews" element={<ReviewComp />} />
     </Route>
   </Route>,
+  // </Route>,
 ];

@@ -10,7 +10,7 @@ export const RoleName = {
 export type UserRole = (typeof RoleName)[keyof typeof RoleName];
 
 export interface UserType {
-  id: string;
+  _id: string;
   email: string;
   fullname: string;
   avatarImg?: string;

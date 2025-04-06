@@ -2,11 +2,11 @@ export type loginData = {
   email: string;
   password: string;
 };
-export type regisData = {
+export interface regisData {
   email: string;
   password: string;
   fullname: string;
-};
+}
 export type recruiterData = {
   email: string;
   companyName: string;

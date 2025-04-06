@@ -4,24 +4,34 @@ import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import CodeIcon from "@mui/icons-material/Code";
-import Typography from "@mui/material/Typography";
-export const MajorItem = () => {
-  return (
-    <TableRow hover>
-      <TableCell>
-        <Stack direction="row" spacing={1} alignItems="center">
-          <CodeIcon color="primary" />
-          <Typography>React</Typography>
-        </Stack>
-      </TableCell>
+import { MajorType } from "../../types/MajorType";
 
+export const MajorItem = ({
+  major,
+  handleOpenNameDialog,
+  handleDelete,
+}: {
+  major: MajorType;
+  handleOpenNameDialog: (major: MajorType) => void;
+  handleDelete: (id: string) => void;
+}) => {
+  return (
+    <TableRow key={major._id} hover>
+      <TableCell>{major.name}</TableCell>
       <TableCell align="right">
         <Stack direction="row" spacing={1} justifyContent="flex-end">
-          <IconButton size="small" color="primary">
+          <IconButton
+            size="small"
+            color="primary"
+            onClick={() => handleOpenNameDialog(major)}
+          >
             <EditIcon fontSize="small" />
           </IconButton>
-          <IconButton size="small" color="error">
+          <IconButton
+            size="small"
+            color="error"
+            onClick={() => handleDelete(major._id)}
+          >
             <DeleteIcon fontSize="small" />
           </IconButton>
         </Stack>

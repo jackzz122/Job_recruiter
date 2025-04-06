@@ -21,7 +21,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { JobFormData } from "../../types/JobType";
 import { colorButtonOrange } from "../../themeContext";
-
+import { useForm } from "react-hook-form";
 export const RecruiterEditJob = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<JobFormData>({
@@ -40,6 +40,28 @@ export const RecruiterEditJob = () => {
       },
     },
     image: null,
+  });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<JobFormData>({
+    defaultValues: {
+      title: "Fresher Frontend About React/Nodejs",
+      sizingPeople: 1,
+      majorId: [],
+      salaryRange: 0,
+      description: {
+        keySkills: {
+          mainText: "",
+          bulletPoints: [],
+        },
+        whyYouLoveIt: {
+          mainText: "",
+          bulletPoints: [],
+        },
+      },
+    },
   });
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [newKeySkill, setNewKeySkill] = useState("");
@@ -123,12 +145,6 @@ export const RecruiterEditJob = () => {
   const handleRemoveImage = () => {
     setFormData((prev) => ({ ...prev, image: null }));
     setPreviewImage(null);
-  };
-
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    // Handle form submission
-    console.log(formData);
   };
 
   const renderBulletPointsSection = (
@@ -238,7 +254,7 @@ export const RecruiterEditJob = () => {
             borderRadius: 2,
           }}
         >
-          <form onSubmit={handleSubmit}>
+          <form>
             <Stack spacing={4}>
               {/* Job Title */}
               <Box>

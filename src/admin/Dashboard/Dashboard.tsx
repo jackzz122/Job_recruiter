@@ -1,9 +1,7 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import Grid2 from "@mui/material/Grid2";
 import Stack from "@mui/material/Stack";
-import Avatar from "@mui/material/Avatar";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Chip from "@mui/material/Chip";
@@ -15,14 +13,8 @@ import BusinessIcon from "@mui/icons-material/Business";
 import ReportIcon from "@mui/icons-material/Report";
 
 import { LineChart, PieChart, BarChart } from "@mui/x-charts";
-
-const themeColors = {
-  primary: "#FF6B00",
-  secondary: "#FF8A3D",
-  tertiary: "#FFB27D",
-  background: "#FFFFFF",
-  text: "#2C2C2C",
-};
+import { themeColors } from "../../utils/themeColor";
+import { StatCard } from "./components/StatCard";
 
 export const Dashboard = () => {
   const statsData = [
@@ -54,42 +46,9 @@ export const Dashboard = () => {
 
   return (
     <Box sx={{ p: 3, bgcolor: "#FFF8F3" }}>
-      {" "}
-      {/* Slight orange tint background */}
-      {/* Stats Cards */}
       <Grid2 container spacing={3}>
         {statsData.map((stat, index) => (
-          <Grid2 size={{ xs: 12, sm: 6, md: 3 }} key={index}>
-            <Paper
-              sx={{
-                p: 2,
-                display: "flex",
-                flexDirection: "column",
-                gap: 1,
-                boxShadow: "0 2px 8px rgba(255, 107, 0, 0.1)", // Orange tinted shadow
-                borderRadius: 2,
-              }}
-            >
-              <Avatar
-                sx={{
-                  bgcolor: `${stat.color}15`,
-                  color: stat.color,
-                  width: 40,
-                  height: 40,
-                }}
-              >
-                {stat.icon}
-              </Avatar>
-              <Typography
-                variant="h4"
-                fontWeight="bold"
-                color={themeColors.text}
-              >
-                {stat.count}
-              </Typography>
-              <Typography color="text.secondary">{stat.title}</Typography>
-            </Paper>
-          </Grid2>
+          <StatCard key={index} index={index} stat={stat} />
         ))}
       </Grid2>
       {/* Charts */}
