@@ -11,8 +11,10 @@ import { SimpleInforStaff } from "./SimpleInforStaff";
 import { useGetRecruiterQuery } from "../../redux/feature/user/userApiSlice";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
-import { Box, CircularProgress, Typography } from "@mui/material";
 
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
+import { UserType } from "../../types/UserType";
 export const StaffManage = () => {
   const [openAccout, setOpenAccount] = useState(false);
   const handleOpenAccount = () => {
@@ -23,7 +25,6 @@ export const StaffManage = () => {
   };
   const recruiter = useSelector(selectUser);
 
-  // Check if companyId is an object with _id property
   const companyId =
     recruiter?.companyId &&
     typeof recruiter.companyId === "object" &&
@@ -31,13 +32,7 @@ export const StaffManage = () => {
       ? recruiter.companyId._id
       : undefined;
 
-  // Only make the query if we have a valid companyId
-  const {
-    data: staff,
-    isLoading,
-    isError,
-  } = useGetRecruiterQuery(companyId || "", {
-    // Skip the query if companyId is undefined
+  const { data: staff, isLoading } = useGetRecruiterQuery(companyId || "", {
     skip: !companyId,
   });
 
@@ -49,28 +44,6 @@ export const StaffManage = () => {
       </Box>
     );
   }
-
-  // Handle error state
-  // if (isError) {
-  //   return (
-  //     <Box sx={{ p: 4, textAlign: "center" }}>
-  //       <Typography color="error">
-  //         Error loading staff data. Please try again later.
-  //       </Typography>
-  //     </Box>
-  //   );
-  // }
-
-  // Handle case when no staff data is available
-  // if (!staff || staff.length === 0) {
-  //   return (
-  //     <Box sx={{ p: 4, textAlign: "center" }}>
-  //       <Typography>
-  //         No staff members found. Add your first staff member to get started.
-  //       </Typography>
-  //     </Box>
-  //   );
-  // }
 
   return (
     <ContainerBox>
@@ -106,7 +79,7 @@ export const StaffManage = () => {
         />
       </Stack>
       <br />
-      <SimpleInforStaff staff={staff} />
+      <SimpleInforStaff staff={staff as UserType[]} />
     </ContainerBox>
   );
 };

@@ -5,7 +5,9 @@ import { getUserInfo } from "../redux/feature/user/userSlice";
 
 export const useGetCurrentUser = () => {
   const dispatch = useDispatch();
-  const { data, isLoading, isError } = useGetUserInfoQuery();
+  const { data, isLoading, isError, refetch } = useGetUserInfoQuery(undefined, {
+    refetchOnMountOrArgChange: true,
+  });
 
   useEffect(() => {
     if (!isLoading && data?.user) {
@@ -18,5 +20,6 @@ export const useGetCurrentUser = () => {
     isLoading,
     isError,
     error: isError ? "Something went wrong, please contact our team" : null,
+    refetch,
   };
 };
