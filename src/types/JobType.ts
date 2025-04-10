@@ -7,10 +7,11 @@ export type JobType = {
 
 interface DescriptionSection {
   mainText: string;
-  bulletPoints: string[];
+  bulletPoints: { value: string }[];
 }
 
 export interface JobDescription {
+  summary: string;
   keySkills: DescriptionSection;
   whyYouLoveIt: DescriptionSection;
 }
@@ -18,21 +19,32 @@ export interface JobDescription {
 export interface JobFormData {
   title: string;
   sizingPeople: number;
-  majorId: string[];
-  salaryRange: number;
+  majorId: { value: string }[];
+  minRange: number;
+  maxRange: number;
   description: JobDescription;
   image?: File | null;
+  location: string;
+  experience: number;
+  startDate: string;
+  applicationDeadline: string;
 }
 
 // For API responses
 export interface JobResponse {
   _id: string;
-  account_staff_id: string;
+  accountId: string;
   title: string;
   sizingPeople: number;
+  location: string;
+  applicationDeadline: string;
   companyId: string;
-  majorId: string[];
-  salaryRange: number;
+  experience: number;
+  startDate: string;
+  majorId: { name: string }[];
+  status: string;
+  minRange: number;
+  maxRange: number;
   description: JobDescription;
   listAccountId?: string[];
   createdAt: string;

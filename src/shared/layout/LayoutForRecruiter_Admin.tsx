@@ -23,6 +23,8 @@ import { CompanyType } from "../../types/CompanyType";
 import { useLogout } from "../../hooks/useLogout";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { getUserInfo } from "../../redux/feature/user/userSlice";
+import { useDispatch } from "react-redux";
 const drawerWidth = 270;
 
 export type setting_types = {
@@ -42,6 +44,7 @@ export function LayoutForRecruiter_Admin({
 }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const getCurrentPath = () => {
     const currentPath = location.pathname.split("/").pop();
     const changeCurrentPathToCapitalize = currentPath
@@ -64,6 +67,11 @@ export function LayoutForRecruiter_Admin({
     );
   };
   const { handleLogout, isLoading } = useLogout();
+  useEffect(() => {
+    if (user) {
+      dispatch(getUserInfo(user));
+    }
+  }, [user]);
   useEffect(() => {
     if (isLoading) {
       navigate("/recruiter/login", { replace: true });

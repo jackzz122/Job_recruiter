@@ -15,18 +15,14 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { colorButtonOrange } from "../../themeContext";
 import { UserType } from "../../types/UserType";
+import { useDeleteRecruiterMutation } from "../../redux/feature/user/userApiSlice";
 
 interface SimpleInforStaffProps {
   staff: UserType[];
-  deleteStaff: (id: string) => void;
-  deleteStaffLoading: boolean;
 }
 
-export const SimpleInforStaff = ({
-  staff,
-  deleteStaff,
-  deleteStaffLoading,
-}: SimpleInforStaffProps) => {
+export const SimpleInforStaff = ({ staff }: SimpleInforStaffProps) => {
+  const [deleteStaff, { isLoading }] = useDeleteRecruiterMutation();
   return (
     <TableContainer>
       <Table>
@@ -109,8 +105,10 @@ export const SimpleInforStaff = ({
                       <Button
                         variant="outlined"
                         size="small"
-                        onClick={() => deleteStaff(item._id)}
-                        disabled={deleteStaffLoading}
+                        onClick={() => {
+                          deleteStaff(item._id);
+                        }}
+                        loading={isLoading}
                         sx={{
                           minWidth: "36px",
                           p: "6px 12px",

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
@@ -21,7 +21,6 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import BusinessIcon from "@mui/icons-material/Business";
 import WorkIcon from "@mui/icons-material/Work";
-
 import { CompanyDetailst } from "./pages/CompanyDetails/CompanyDetailst";
 import { BasicInfo } from "./pages/BasicInfo/BasicInfo";
 
@@ -44,92 +43,11 @@ export const UpdateCompany = () => {
     skills: [] as string[],
   });
 
-  const [newSkill, setNewSkill] = useState("");
-
-  // Check if company is populated
-  const isCompanyPopulated = (
-    companyId: string | { _id: string; companyName?: string } | undefined
-  ): companyId is { _id: string; companyName?: string } => {
-    return (
-      typeof companyId === "object" && companyId !== null && "_id" in companyId
-    );
-  };
-
-  // Initialize form with company data
-  useEffect(() => {
-    // In a real app, you would fetch the company data from your API
-    // For now, we'll use the user data or default values
-    const companyName = isCompanyPopulated(user?.companyId)
-      ? user.companyId.companyName
-      : user?.fullname || "Company Name";
-
-    const companyEmail = "email@company.com";
-
-    setFormData({
-      companyName,
-      email: companyEmail,
-      phone: "0909090909",
-      established: "21/03/2004",
-      address: "12 Duy Tan Cau Giay",
-      industry: "Technology",
-      size: "51-200 employees",
-      country: "Vietnam",
-      workingDays: "Monday - Friday",
-      overtimePolicy: "Standard overtime policy",
-      about:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quos. Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ad officia odit, natus quam itaque, asperiores nihil repellat optio officiis voluptas totam? Iusto, debitis? Fuga perspiciatis asperiores placeat ratione, aliquid sed.",
-      skills: [
-        "React",
-        "Node",
-        "MongoDB",
-        "Express",
-        "JavaScript",
-        "TypeScript",
-        "Python",
-      ],
-    });
-  }, [user]);
-
-  // Handle form input changes
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  // Add a new skill
-  const handleAddSkill = () => {
-    if (newSkill.trim() && !formData.skills.includes(newSkill.trim())) {
-      setFormData({
-        ...formData,
-        skills: [...formData.skills, newSkill.trim()],
-      });
-      setNewSkill("");
-    }
-  };
-
-  // Remove a skill
-  const handleRemoveSkill = (skillToRemove: string) => {
-    setFormData({
-      ...formData,
-      skills: formData.skills.filter((skill) => skill !== skillToRemove),
-    });
-  };
-
-  // Handle form submission
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    // In a real app, you would send the form data to your API
-    console.log("Form submitted:", formData);
-
-    // Navigate back to the company info page
-    navigate("/recruiter/settings");
-  };
+  // const {
+  //   register,
+  //   handleSubmit,
+  //   formState: { errors },
+  // } = methods;
 
   return (
     <ContainerBox>
@@ -167,7 +85,6 @@ export const UpdateCompany = () => {
           {/* Form */}
           <Box
             component="form"
-            onSubmit={handleSubmit}
             sx={{
               backgroundColor: "white",
               borderRadius: 3,
@@ -257,7 +174,6 @@ export const UpdateCompany = () => {
                     label="About Company"
                     name="about"
                     value={formData.about}
-                    onChange={handleChange}
                     variant="outlined"
                     multiline
                     rows={6}
@@ -289,14 +205,11 @@ export const UpdateCompany = () => {
                       <TextField
                         fullWidth
                         label="Add Skill"
-                        value={newSkill}
-                        onChange={(e) => setNewSkill(e.target.value)}
                         variant="outlined"
                         size="small"
                       />
                       <Button
                         variant="contained"
-                        onClick={handleAddSkill}
                         sx={{
                           backgroundColor: colorButtonOrange,
                           "&:hover": {
@@ -313,7 +226,6 @@ export const UpdateCompany = () => {
                         <Chip
                           key={index}
                           label={skill}
-                          onDelete={() => handleRemoveSkill(skill)}
                           deleteIcon={<DeleteIcon />}
                           sx={{
                             backgroundColor: colorButtonOrange,

@@ -24,6 +24,14 @@ export const majorApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Majors", id: "LIST" }],
     }),
+    getMajorbyName: builder.query<string[], void>({
+      query: () => "getNameMajors",
+      providesTags: [{ type: "Majors", id: "LIST" }],
+    }),
+    getMajorbyLevel: builder.query<string[], void>({
+      query: () => "getLevelMajors",
+      providesTags: [{ type: "Majors", id: "LIST" }],
+    }),
     updateMajor: builder.mutation<MajorType, { _id: string; body: MajorType }>({
       query: (data) => ({
         url: `updateMajorCate/${data._id}`,
@@ -48,4 +56,6 @@ export const {
   useDeleteMajorMutation,
   useGetMajorsQuery,
   useUpdateMajorMutation,
+  useGetMajorbyNameQuery,
+  useGetMajorbyLevelQuery,
 } = majorApiSlice;

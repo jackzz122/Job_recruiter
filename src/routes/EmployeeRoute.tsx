@@ -20,7 +20,7 @@ import { MyInfo } from "../user/information/Profile/MyInfo";
 
 export const EmployeeRoute = [
   // <Route key="employee" element={<ProtectedUser />}>
-  <Route element={<LayoutHome />}>
+  <Route key="employee" element={<LayoutHome />}>
     <Route path="/homepage" element={<HomePage />} />
     {/* Information pages */}
     <Route element={<LayoutUser />}>

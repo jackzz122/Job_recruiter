@@ -1,23 +1,13 @@
 import { pendingType } from "../../../types/pendingType";
 import ApiSlice from "../../api/apiSlice";
+import { generateProvidesTags } from "../../generateProvideTags";
 
 export const pendingApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPendingList: builder.query<pendingType[], void>({
       query: () => "/getPendingList",
-      providesTags: (results) => {
-        if (results) {
-          const final = [
-            ...results.map(({ accountID }) => ({
-              type: "Pendings" as const,
-              id: accountID._id,
-            })),
-            { type: "Pendings" as const, id: "LISt" },
-          ];
-          return final;
-        }
-        return [{ type: "Pendings" as const, id: "LIST" }];
-      },
+      providesTags: (results) =>
+        generateProvidesTags("Pendings", results, (item) => item.accountID._id),
     }),
     confirmPending: builder.mutation<
       string,

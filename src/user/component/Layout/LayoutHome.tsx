@@ -110,7 +110,11 @@ export const LayoutHome = () => {
                 cursor: "pointer",
                 textDecoration: "underline",
               }}
-              onClick={() => navigate("/recruiter/register")}
+              onClick={() =>
+                navigate("/recruiter/login", {
+                  state: "user",
+                })
+              }
             >
               Đăng tuyển ngay
             </Typography>

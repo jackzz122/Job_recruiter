@@ -26,7 +26,7 @@ export const DialogCreateJobRecruiter = ({
             Cancel
           </Button>
           <Button
-            onClick={() => navigate("/recruiter/create/123")}
+            onClick={() => navigate("/recruiter/job_management/create/123")}
             fullWidth
             variant="contained"
           >

@@ -2,6 +2,7 @@ import { regisData } from "./../../../types/AuthType";
 import { UserType } from "../../../types/UserType";
 import ApiSlice from "../../api/apiSlice";
 import { CompanyType } from "../../../types/CompanyType";
+import { generateProvidesTags } from "../../generateProvideTags";
 
 type UserResponse = {
   success: boolean;
@@ -16,16 +17,8 @@ export const userApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getAllUsers: builder.query<UserType[], void>({
       query: () => "getListUser",
-      providesTags: (results) => {
-        if (results) {
-          const final = [
-            ...results.map(({ _id }) => ({ type: "Users" as const, id: _id })),
-            { type: "Users" as const, id: "LIST" },
-          ];
-          return final;
-        }
-        return [{ type: "Users", id: "LIST" }];
-      },
+      providesTags: (results) =>
+        generateProvidesTags("Users" as const, results, (item) => item._id),
     }),
     getUserInfo: builder.query<UserResponse, void>({
       query: () => "getAccount",
@@ -33,7 +26,8 @@ export const userApiSlice = ApiSlice.injectEndpoints({
     }),
     getRecruiter: builder.query<UserType[], string>({
       query: (id) => `getRecruiter/${id}`,
-      providesTags: () => [{ type: "Recruiter", id: "LIST" }],
+      providesTags: (results) =>
+        generateProvidesTags("Recruiter", results, (item) => item._id),
     }),
     createRecruiter: builder.mutation<UserType, recruiterAddType>({
       query: (data) => ({
@@ -48,7 +42,7 @@ export const userApiSlice = ApiSlice.injectEndpoints({
         url: `deleteStaffAccount/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (results, error, id) => [{ type: "Users", id }],
+      invalidatesTags: (results, error, id) => [{ type: "Recruiter", id }],
     }),
   }),
 });

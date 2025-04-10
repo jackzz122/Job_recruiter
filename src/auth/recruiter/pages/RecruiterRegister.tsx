@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
 import Grid2 from "@mui/material/Grid2";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Business } from "@mui/icons-material";
 import { colorButtonOrange } from "../../../themeContext";
@@ -23,6 +23,8 @@ interface RegisterFormData {
 }
 
 export const RecruiterRegister = () => {
+  const { state } = useLocation();
+  console.log("State", state);
   const {
     register,
     handleSubmit,
