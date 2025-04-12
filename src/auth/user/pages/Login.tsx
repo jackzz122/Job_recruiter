@@ -9,9 +9,11 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { handleError } from "../../../helper/HandleError/handleError";
 import { useUserLoginMutation } from "../../../redux/feature/auth/authApiSlice";
+import { RoleName } from "../../../types/UserType";
 export type FormField = {
   email: string;
   password: string;
+  roleGroup: string[];
 };
 
 export const Login = () => {
@@ -29,7 +31,10 @@ export const Login = () => {
   const [login, { isLoading }] = useUserLoginMutation();
   const onSubmitTing: SubmitHandler<FormField> = async (data) => {
     try {
-      await login(data).unwrap();
+      await login({
+        ...data,
+        roleGroup: [RoleName.GUEST],
+      }).unwrap();
       if (!isLoading) {
         toast.success("Login successful");
         navigate("/homepage", {

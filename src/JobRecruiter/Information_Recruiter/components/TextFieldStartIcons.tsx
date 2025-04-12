@@ -3,8 +3,7 @@ import { TextField } from "@mui/material";
 export const TextFieldStartIcons = ({
   label,
   name,
-  value,
-  listenChange,
+
   children,
 }: {
   label: string;
@@ -18,8 +17,6 @@ export const TextFieldStartIcons = ({
       fullWidth
       label={label}
       name={name}
-      value={value}
-      onChange={listenChange}
       variant="outlined"
       sx={{ mb: 3 }}
       slotProps={{

@@ -67,7 +67,7 @@ export const PendingItem = () => {
       console.error("Delete error:", err);
     }
   };
-  const filterForPending = pendingList?.filter(
+  const filterForPending = pendingList?.data?.filter(
     (pending) => pending.status === PendingStatus.PENDING
   );
   const getPending = filterForPending?.map((pending) => {

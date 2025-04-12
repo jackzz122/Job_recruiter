@@ -56,7 +56,7 @@ export const ApprovedItem = () => {
       console.error("Delete error:", err);
     }
   };
-  const filterForApproved = pendingList?.filter(
+  const filterForApproved = pendingList?.data?.filter(
     (approved) => approved.status === PendingStatus.APPROVED
   );
   const getApproved = filterForApproved?.map((approved) => {

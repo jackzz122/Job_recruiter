@@ -1,3 +1,5 @@
+import { ResponseType } from "./ResponseType";
+
 export type pendingType = {
   _id: string;
   accountID: { _id: string; fullname: string; email: string };
@@ -9,3 +11,4 @@ export type pendingType = {
   websiteUrl: string;
   createdAt: Date;
 };
+export type PendingTypeResponse<T> = ResponseType<T>;

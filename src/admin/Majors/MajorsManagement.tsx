@@ -140,7 +140,7 @@ export const MajorsManagement = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {majors?.map((major) => (
+                {majors?.data?.map((major) => (
                   <TableRow key={major._id} hover>
                     <TableCell>
                       {major.name.charAt(0).toUpperCase() + major.name.slice(1)}

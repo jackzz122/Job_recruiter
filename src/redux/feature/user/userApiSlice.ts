@@ -24,7 +24,7 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       query: () => "getAccount",
       providesTags: () => [{ type: "Users", id: "LIST" }],
     }),
-    getRecruiter: builder.query<UserType[], string>({
+    getRecruiters: builder.query<UserType[], string>({
       query: (id) => `getRecruiter/${id}`,
       providesTags: (results) =>
         generateProvidesTags("Recruiter", results, (item) => item._id),
@@ -42,7 +42,7 @@ export const userApiSlice = ApiSlice.injectEndpoints({
         url: `deleteStaffAccount/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (results, error, id) => [{ type: "Recruiter", id }],
+      invalidatesTags: [{ type: "Recruiter", id: "LIST" }],
     }),
   }),
 });
@@ -51,6 +51,6 @@ export const {
   useGetAllUsersQuery,
   useGetUserInfoQuery,
   useCreateRecruiterMutation,
-  useGetRecruiterQuery,
+  useGetRecruitersQuery,
   useDeleteRecruiterMutation,
 } = userApiSlice;

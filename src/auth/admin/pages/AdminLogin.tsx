@@ -9,8 +9,9 @@ import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { handleError } from "../../../helper/HandleError/handleError";
-import { useAdminLoginMutation } from "../../../redux/feature/auth/authApiSlice";
+import { useUserLoginMutation } from "../../../redux/feature/auth/authApiSlice";
 import { FormField } from "../../user/pages/Login";
+import { RoleName } from "../../../types/UserType";
 
 export const AdminLogin = () => {
   const {
@@ -24,10 +25,13 @@ export const AdminLogin = () => {
     },
   });
   const navigate = useNavigate();
-  const [adminLogin, { isLoading }] = useAdminLoginMutation();
+  const [login, { isLoading }] = useUserLoginMutation();
   const onSubmitTing: SubmitHandler<FormField> = async (data) => {
     try {
-      await adminLogin(data).unwrap();
+      await login({
+        ...data,
+        roleGroup: [RoleName.ADMIN],
+      }).unwrap();
       toast.success("Login successful");
       navigate("/admin");
     } catch (err) {

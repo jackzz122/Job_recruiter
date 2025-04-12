@@ -7,21 +7,23 @@ import Divider from "@mui/material/Divider";
 import { colorButtonOrange } from "../../../../themeContext";
 import { Grid2, InputAdornment } from "@mui/material";
 import BusinessIcon from "@mui/icons-material/Business";
-import { TextFieldStartIcons } from "../../components/TextFieldStartIcons";
+import { useFormContext } from "react-hook-form";
+import TextField from "@mui/material/TextField";
 
 export const BasicInfo = () => {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
   const inputFieldUpdating: {
     label: string;
     name: string;
-    value: string;
-    listenChange: () => void;
+    type?: string;
     icons: React.ReactNode;
   }[] = [
     {
       label: "Company Name",
       name: "CompanyName",
-      value: "",
-      listenChange: () => {},
       icons: (
         <InputAdornment position="start">
           <BusinessIcon sx={{ color: colorButtonOrange }} />
@@ -31,8 +33,6 @@ export const BasicInfo = () => {
     {
       label: "Email",
       name: "Email",
-      value: "",
-      listenChange: () => {},
       icons: (
         <InputAdornment position="start">
           <EmailIcon sx={{ color: colorButtonOrange }} />
@@ -42,8 +42,6 @@ export const BasicInfo = () => {
     {
       label: "Phone",
       name: "Phone",
-      value: "",
-      listenChange: () => {},
       icons: (
         <InputAdornment position="start">
           <PhoneIcon sx={{ color: colorButtonOrange }} />
@@ -53,8 +51,7 @@ export const BasicInfo = () => {
     {
       label: "Established Date",
       name: "established",
-      value: "",
-      listenChange: () => {},
+      type: "date",
       icons: (
         <InputAdornment position="start">
           <CalendarTodayIcon sx={{ color: colorButtonOrange }} />
@@ -64,8 +61,6 @@ export const BasicInfo = () => {
     {
       label: "Address",
       name: "address",
-      value: "",
-      listenChange: () => {},
       icons: (
         <InputAdornment position="start">
           <LocationOnIcon sx={{ color: colorButtonOrange }} />
@@ -93,16 +88,47 @@ export const BasicInfo = () => {
         <Divider sx={{ mb: 3 }} />
       </Grid2>
       {inputFieldUpdating.map((input, index) => {
+        if (input.type === "date") {
+          return (
+            <Grid2 key={index} size={{ xs: 12, md: 6 }}>
+              <TextField
+                fullWidth
+                type="date"
+                label={input.label}
+                variant="outlined"
+                {...register(input.name, {
+                  required: "This field is required",
+                })}
+                error={!!errors[input.name]}
+                helperText={errors[input.name]?.message as string}
+                sx={{ mb: 3 }}
+                InputProps={{
+                  startAdornment: input.icons,
+                }}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid2>
+          );
+        }
+
         return (
           <Grid2 key={index} size={{ xs: 12, md: 6 }}>
-            <TextFieldStartIcons
+            <TextField
+              fullWidth
               label={input.label}
-              name={input.name}
-              value={input.value}
-              listenChange={input.listenChange}
-            >
-              {input.icons}
-            </TextFieldStartIcons>
+              variant="outlined"
+              {...register(input.name, {
+                required: "This field is required",
+              })}
+              error={!!errors[input.name]}
+              helperText={errors[input.name]?.message as string}
+              sx={{ mb: 3 }}
+              InputProps={{
+                startAdornment: input.icons,
+              }}
+            />
           </Grid2>
         );
       })}

@@ -6,12 +6,10 @@ export const ProtectedUser = () => {
     refetchOnMountOrArgChange: true,
   });
 
-  // Add loading state handling
   if (isLoading) {
-    return <div>Loading...</div>; // Or a loading spinner component
+    return <div>Loading...</div>;
   }
-
-  // Only redirect if we have confirmation the user is NOT a guest
+  console.log(data?.user.role);
   return isSuccess && data?.user.role === "guest" ? (
     <Outlet />
   ) : (

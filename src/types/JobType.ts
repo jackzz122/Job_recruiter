@@ -1,3 +1,5 @@
+import { ResponseType } from "./ResponseType";
+
 export type JobType = {
   title: string;
   sizingPeople: number;
@@ -41,11 +43,12 @@ export interface JobResponse {
   companyId: string;
   experience: number;
   startDate: string;
-  majorId: { name: string }[];
+  majorId: { value: string }[];
   status: string;
   minRange: number;
   maxRange: number;
-  description: JobDescription;
+  description: JobDescription[];
   listAccountId?: string[];
   createdAt: string;
 }
+export type JobTypeResponse<T> = ResponseType<T>;

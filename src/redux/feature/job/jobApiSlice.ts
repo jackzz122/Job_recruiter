@@ -1,15 +1,19 @@
-import { JobFormData, JobResponse } from "../../../types/JobType";
+import {
+  JobFormData,
+  JobResponse,
+  JobTypeResponse,
+} from "../../../types/JobType";
 import ApiSlice from "../../api/apiSlice";
 import { generateProvidesTags } from "../../generateProvideTags";
 
 export const jobApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getJobPostings: builder.query<JobResponse[], void>({
+    getJobPostings: builder.query<JobTypeResponse<JobResponse[]>, void>({
       query: () => "/jobPostingList",
       providesTags: (results) =>
-        generateProvidesTags("Jobs", results, (item) => item._id),
+        generateProvidesTags("Jobs", results?.data, (item) => item._id),
     }),
-    createJobs: builder.mutation<JobResponse, JobFormData>({
+    createJobs: builder.mutation<JobTypeResponse<JobResponse>, JobFormData>({
       query: (body) => ({
         url: "createJobPosting",
         method: "POST",
@@ -17,19 +21,25 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Jobs", id: "LIST" }],
     }),
-    updateJobs: builder.mutation<JobResponse, Partial<JobResponse>>({
-      query: (body) => ({
-        url: "",
+    getJobById: builder.query<JobTypeResponse<JobResponse>, string>({
+      query: (id: string) => `getDetailJob/${id}`,
+    }),
+    updateJobs: builder.mutation<
+      JobTypeResponse<JobResponse>,
+      JobFormData & { _id: string }
+    >({
+      query: ({ _id, ...body }) => ({
+        url: `updateJobPosting/${_id}`,
         method: "PUT",
-        body,
+        body: body,
       }),
       invalidatesTags: (results, error, data) => [
         { type: "Jobs", id: data._id },
       ],
     }),
-    deleteJob: builder.mutation<JobResponse, string>({
+    deleteJob: builder.mutation<JobTypeResponse<JobResponse>, string>({
       query: (id) => ({
-        url: `/post/${id}`,
+        url: `/deleteJobPosting/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: (results, error, id) => [{ type: "Jobs", id }],
@@ -42,4 +52,5 @@ export const {
   useCreateJobsMutation,
   useDeleteJobMutation,
   useUpdateJobsMutation,
+  useGetJobByIdQuery,
 } = jobApiSlice;

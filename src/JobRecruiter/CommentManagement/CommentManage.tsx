@@ -16,6 +16,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
 import { useGetCommentsQuery } from "../../redux/feature/comment/commentApiSlice";
 import { CompanyType } from "../../types/CompanyType";
+import { CommentType } from "../../types/CommentType";
 
 export const CommentManage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -28,7 +29,6 @@ export const CommentManage = () => {
   const { data: commentList } = useGetCommentsQuery(companyId, {
     skip: !companyId,
   });
-  console.log(commentList);
   const handleSortClick = (event: React.MouseEvent<HTMLElement>) => {
     setSortAnchorEl(event.currentTarget);
   };
@@ -101,7 +101,7 @@ export const CommentManage = () => {
 
         {/* Comments List */}
         <Stack spacing={2}>
-          {commentList?.map((comment) => (
+          {(commentList?.data as CommentType[])?.map((comment) => (
             <CommentItem key={comment._id} comment={comment} />
           ))}
         </Stack>

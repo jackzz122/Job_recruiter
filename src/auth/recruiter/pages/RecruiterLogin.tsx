@@ -4,15 +4,16 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import authApi from "../../../api/auth/auth";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { LoginOutlined } from "@mui/icons-material";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { FormField } from "../../user/pages/Login";
 import { toast } from "react-toastify";
 import { colorButtonOrange } from "../../../themeContext";
 import { handleError } from "../../../helper/HandleError/handleError";
+import { useUserLoginMutation } from "../../../redux/feature/auth/authApiSlice";
+import { RoleName } from "../../../types/UserType";
 export const RecruiterLogin = () => {
   const navigate = useNavigate();
   const {
@@ -20,12 +21,18 @@ export const RecruiterLogin = () => {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<FormField>();
-  const onSubmitTing = async (data: FormField) => {
+  const [login, { isLoading }] = useUserLoginMutation();
+  const onSubmitTing: SubmitHandler<FormField> = async (data: FormField) => {
     try {
-      const response = await authApi.recruiterLogin(data);
-      if (response.status === 200) {
+      await login({
+        ...data,
+        roleGroup: [RoleName.RECRUIT, RoleName.STAFF_RECRUIT],
+      }).unwrap();
+      if (!isLoading) {
         toast.success("Login successfull");
-        navigate("/recruiter");
+        navigate("/recruiter", {
+          replace: true,
+        });
       }
     } catch (err) {
       const error = handleError(err);

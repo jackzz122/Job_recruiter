@@ -6,8 +6,8 @@ import { RecruiterEditJob } from "../JobRecruiter/RecuiterJob/pages/RecruiterEdi
 import { Dashboard } from "../JobRecruiter/HomeSettings/Dashboard";
 import { StaffManage } from "../JobRecruiter/StaffManagement/StaffManage";
 import { CommentManage } from "../JobRecruiter/CommentManagement/CommentManage";
-import { CompanyInfo } from "../JobRecruiter/Information_Recruiter/CompanyInfo";
-import { UpdateCompany } from "../JobRecruiter/Information_Recruiter/UpdateCompany";
+import { CompanyInfo } from "../JobRecruiter/Information_Recruiter/pages/CompanyInfo";
+import { UpdateCompany } from "../JobRecruiter/Information_Recruiter/pages/UpdateCompany";
 
 export const RecruiterRoute = [
   <Route key="recruiter" path="recruiter">
@@ -18,7 +18,14 @@ export const RecruiterRoute = [
       <Route path="candidate_management" element={<List_employ />} />
       <Route path="comment_management" element={<CommentManage />} />
       <Route path="staff_management" element={<StaffManage />} />
-      <Route path="job_management/create/:id" element={<RecruiterEditJob />} />
+      <Route
+        path="job_management/create"
+        element={<RecruiterEditJob mode="create" />}
+      />
+      <Route
+        path="job_management/:id/update"
+        element={<RecruiterEditJob mode="update" />}
+      />
       <Route path="settings" element={<CompanyInfo />} />
       <Route
         path="settings/update_company/:companyId"

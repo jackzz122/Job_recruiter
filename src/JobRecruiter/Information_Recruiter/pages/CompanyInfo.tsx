@@ -3,15 +3,15 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { ContainerBox } from "../component/ContainerBox";
-import { colorButtonOrange } from "../../themeContext";
+import { ContainerBox } from "../../component/ContainerBox";
+import { colorButtonOrange } from "../../../themeContext";
 import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Grid2 from "@mui/material/Grid2";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/feature/user/userSlice";
-import { CompanyType } from "../../types/CompanyType";
+import { selectUser } from "../../../redux/feature/user/userSlice";
+import { CompanyType } from "../../../types/CompanyType";
 import EditIcon from "@mui/icons-material/Edit";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -23,39 +23,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import WorkIcon from "@mui/icons-material/Work";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { alpha } from "@mui/material/styles";
-
-const companyInformation = [
-  {
-    title: "Company Information",
-    value: "12",
-    icon: <BusinessIcon />,
-  },
-  {
-    title: "Company Industry",
-    value: "12",
-    icon: <WorkIcon />,
-  },
-  {
-    title: "Company Size",
-    value: "12",
-    icon: <PeopleIcon />,
-  },
-  {
-    title: "Country",
-    value: "12",
-    icon: <PublicIcon />,
-  },
-  {
-    title: "Working days",
-    value: "12",
-    icon: <CalendarTodayIcon />,
-  },
-  {
-    title: "Overtime policy",
-    value: "12",
-    icon: <AccessTimeIcon />,
-  },
-];
+import { useEffect, useState } from "react";
 
 // This would come from your API
 const chipSkills = [
@@ -70,23 +38,42 @@ const chipSkills = [
 
 export const CompanyInfo = () => {
   const user = useSelector(selectUser);
+  const [companyInfor, setCompanyInfor] = useState<CompanyType>();
+  useEffect(() => {
+    if (user) {
+      setCompanyInfor(user?.companyId as CompanyType);
+    }
+  }, [user]);
   const navigate = useNavigate();
+  // const companyInfor = user?.companyId as CompanyType;
+  const companyInformation = [
+    {
+      title: "Company Information",
+      value: companyInfor?.companyName || ".........",
+      icon: <BusinessIcon />,
+    },
 
-  const isCompanyPopulated = (
-    companyId: string | CompanyType | undefined
-  ): companyId is CompanyType => {
-    return (
-      typeof companyId === "object" &&
-      companyId !== null &&
-      "companyName" in companyId
-    );
-  };
-
-  const companyName = isCompanyPopulated(user?.companyId)
-    ? user.companyId.companyName
-    : user?.fullname || "Company Name";
-
-  const companyEmail = "email@company.com";
+    {
+      title: "Company Size",
+      value: companyInfor?.description?.[0]?.companySize || ".........",
+      icon: <PeopleIcon />,
+    },
+    {
+      title: "Country",
+      value: companyInfor?.description?.[0]?.country || ".........",
+      icon: <PublicIcon />,
+    },
+    {
+      title: "Working days",
+      value: companyInfor?.description?.[0]?.workingDays || ".........",
+      icon: <CalendarTodayIcon />,
+    },
+    {
+      title: "Overtime policy",
+      value: companyInfor?.overTime ? "Yes" : "No",
+      icon: <AccessTimeIcon />,
+    },
+  ];
   return (
     <ContainerBox>
       <Container maxWidth="lg">
@@ -131,14 +118,14 @@ export const CompanyInfo = () => {
                   color="white"
                   sx={{ textShadow: "0 2px 4px rgba(0,0,0,0.2)" }}
                 >
-                  {companyName}
+                  {companyInfor?.companyName}
                 </Typography>
                 <Typography
                   variant="h6"
                   color="white"
                   sx={{ mt: 1, textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
                 >
-                  {companyEmail}
+                  {companyInfor?.emailCompany || ".......@company.com"}
                 </Typography>
               </Box>
             </Box>
@@ -208,7 +195,7 @@ export const CompanyInfo = () => {
                             Email
                           </Typography>
                           <Typography variant="body1" fontWeight="medium">
-                            {companyEmail}
+                            {user?.email}
                           </Typography>
                         </Box>
                       </Box>
@@ -229,10 +216,10 @@ export const CompanyInfo = () => {
                         </Box>
                         <Box>
                           <Typography variant="body2" color="text.secondary">
-                            Phone
+                            Hotline
                           </Typography>
                           <Typography variant="body1" fontWeight="medium">
-                            0909090909
+                            {companyInfor?.phoneNumberCompany || "........."}
                           </Typography>
                         </Box>
                       </Box>
@@ -256,7 +243,7 @@ export const CompanyInfo = () => {
                             Personal Phone
                           </Typography>
                           <Typography variant="body1" fontWeight="medium">
-                            {user?.companyId?.phone}
+                            {companyInfor?.phoneNumber || "........."}
                           </Typography>
                         </Box>
                       </Box>
@@ -282,7 +269,7 @@ export const CompanyInfo = () => {
                             Established
                           </Typography>
                           <Typography variant="body1" fontWeight="medium">
-                            21/03/2004
+                            {companyInfor?.years || "........."}
                           </Typography>
                         </Box>
                       </Box>
@@ -306,7 +293,7 @@ export const CompanyInfo = () => {
                             Address
                           </Typography>
                           <Typography variant="body1" fontWeight="medium">
-                            {user?.companyId?.address}
+                            {companyInfor?.address || "........."}
                           </Typography>
                         </Box>
                       </Box>
@@ -330,7 +317,7 @@ export const CompanyInfo = () => {
                             Personal Phone
                           </Typography>
                           <Typography variant="body1" fontWeight="medium">
-                            {user?.companyId?.websiteUrl}
+                            {companyInfor?.websiteUrl || "........."}
                           </Typography>
                         </Box>
                       </Box>

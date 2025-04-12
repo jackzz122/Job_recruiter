@@ -12,14 +12,15 @@ import {
   Add as AddIcon,
   FilterList as FilterIcon,
 } from "@mui/icons-material";
-import { DialogCreateJobRecruiter } from "../component/DialogJob/DialogCreateJobRecruiter";
 import { colorButtonOrange } from "../../../themeContext";
 import { ContainerBox } from "../../component/ContainerBox";
 import { SingleJobModel } from "../component/SingleJobModel";
 import { useGetJobPostingsQuery } from "../../../redux/feature/job/jobApiSlice";
+import { JobResponse } from "../../../types/JobType";
+import { useNavigate } from "react-router-dom";
 export const RecruiterCompany = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [openCreateDialog, setCreateOpenDialog] = useState(false);
+  const navigate = useNavigate();
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -27,7 +28,7 @@ export const RecruiterCompany = () => {
   };
 
   const handleCreateJob = () => {
-    setCreateOpenDialog(true);
+    navigate("/recruiter/job_management/create");
   };
 
   const { data: jobs, isLoading } = useGetJobPostingsQuery();
@@ -42,7 +43,10 @@ export const RecruiterCompany = () => {
             alignItems: "center",
           }}
         >
-          <Typography variant="h5" sx={{ fontWeight: 600 }}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: 600, color: colorButtonOrange }}
+          >
             Job Management
           </Typography>
           <Button
@@ -101,7 +105,7 @@ export const RecruiterCompany = () => {
             <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
               <CircularProgress />
             </Box>
-          ) : jobs?.length === 0 ? (
+          ) : (jobs?.data as JobResponse[])?.length === 0 ? (
             <Paper
               elevation={0}
               sx={{
@@ -117,7 +121,7 @@ export const RecruiterCompany = () => {
             </Paper>
           ) : (
             <Grid2 container spacing={3}>
-              {jobs?.map((job) => (
+              {(jobs?.data as JobResponse[])?.map((job) => (
                 <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={job._id}>
                   <SingleJobModel jobs={job} />
                 </Grid2>
@@ -126,11 +130,6 @@ export const RecruiterCompany = () => {
           )}
         </Box>
       </Stack>
-
-      <DialogCreateJobRecruiter
-        handleClose={() => setCreateOpenDialog(false)}
-        open={openCreateDialog}
-      />
     </ContainerBox>
   );
 };

@@ -8,7 +8,7 @@ import { DialogEmployeeAccount } from "./component/DialogEmployeeAccount";
 import { ContainerBox } from "../component/ContainerBox";
 import { SimpleInforStaff } from "./SimpleInforStaff";
 
-import { useGetRecruiterQuery } from "../../redux/feature/user/userApiSlice";
+import { useGetRecruitersQuery } from "../../redux/feature/user/userApiSlice";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
 
@@ -32,7 +32,7 @@ export const StaffManage = () => {
       ? recruiter.companyId._id
       : undefined;
 
-  const { data: staff, isLoading } = useGetRecruiterQuery(companyId || "", {
+  const { data: staff, isLoading } = useGetRecruitersQuery(companyId || "", {
     skip: !companyId,
   });
 

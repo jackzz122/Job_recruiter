@@ -1,15 +1,22 @@
-import { CommentType } from "../../../types/CommentType";
+import { CommentType, CommentTypeResponse } from "../../../types/CommentType";
 import ApiSlice from "../../api/apiSlice";
 import { generateProvidesTags } from "../../generateProvideTags";
 
 export const commentApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getComments: builder.query<CommentType[], string>({
+    getComments: builder.query<CommentTypeResponse<CommentType[]>, string>({
       query: (id) => `/comments/${id}`,
       providesTags: (results) =>
-        generateProvidesTags("Comments", results, (item) => item.companyId),
+        generateProvidesTags(
+          "Comments",
+          results?.data,
+          (item) => item.companyId
+        ),
     }),
-    createComment: builder.mutation<CommentType, CommentType>({
+    createComment: builder.mutation<
+      CommentTypeResponse<CommentType>,
+      CommentType
+    >({
       query: (data) => ({
         url: "comments",
         method: "POST",
@@ -17,7 +24,7 @@ export const commentApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Comments", id: "LIST" }],
     }),
-    deleteComment: builder.mutation<CommentType, string>({
+    deleteComment: builder.mutation<CommentTypeResponse<CommentType>, string>({
       query: (id) => ({
         url: `comments/${id}`,
         method: "DELETE",

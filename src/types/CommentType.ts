@@ -1,3 +1,4 @@
+import { ResponseType } from "./ResponseType";
 import { UserType } from "./UserType";
 
 export type CommentType = {
@@ -16,3 +17,4 @@ export type CommentType = {
   ];
   createdDate: string;
 };
+export type CommentTypeResponse<T> = ResponseType<T>;

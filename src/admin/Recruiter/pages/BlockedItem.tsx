@@ -58,7 +58,7 @@ export const BlockedItem = () => {
     }
   };
 
-  const filterForBlocked = pendingList?.filter(
+  const filterForBlocked = pendingList?.data?.filter(
     (recruiter) => recruiter.status === PendingStatus.BLOCKED
   );
   const getBlocked = filterForBlocked?.map((blocked) => {

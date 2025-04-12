@@ -1,22 +1,18 @@
-import { MajorType } from "../../../types/MajorType";
+import { MajorType, MajorTypeResponse } from "../../../types/MajorType";
 import ApiSlice from "../../api/apiSlice";
+import { generateProvidesTags } from "../../generateProvideTags";
 
 export const majorApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getMajors: builder.query<MajorType[], void>({
+    getMajors: builder.query<MajorTypeResponse<MajorType[]>, void>({
       query: () => "getAllMajorCate",
-      providesTags: (result) => {
-        if (result) {
-          const final = [
-            ...result.map(({ _id }) => ({ type: "Majors" as const, id: _id })),
-            { type: "Majors" as const, id: "LIST" },
-          ];
-          return final;
-        }
-        return [{ type: "Majors", id: "LIST" }];
-      },
+      providesTags: (result) =>
+        generateProvidesTags("Majors", result?.data, (item) => item._id),
     }),
-    addMajor: builder.mutation<string, Omit<MajorType, "_id">>({
+    addMajor: builder.mutation<
+      MajorTypeResponse<MajorType>,
+      Omit<MajorType, "_id">
+    >({
       query: (body) => ({
         url: "createMajor",
         method: "POST",
@@ -24,15 +20,18 @@ export const majorApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Majors", id: "LIST" }],
     }),
-    getMajorbyName: builder.query<string[], void>({
+    getMajorbyName: builder.query<MajorTypeResponse<string[]>, void>({
       query: () => "getNameMajors",
       providesTags: [{ type: "Majors", id: "LIST" }],
     }),
-    getMajorbyLevel: builder.query<string[], void>({
+    getMajorbyLevel: builder.query<MajorTypeResponse<string[]>, void>({
       query: () => "getLevelMajors",
       providesTags: [{ type: "Majors", id: "LIST" }],
     }),
-    updateMajor: builder.mutation<MajorType, { _id: string; body: MajorType }>({
+    updateMajor: builder.mutation<
+      MajorTypeResponse<MajorType>,
+      { _id: string; body: MajorType }
+    >({
       query: (data) => ({
         url: `updateMajorCate/${data._id}`,
         method: "PUT",
@@ -42,7 +41,7 @@ export const majorApiSlice = ApiSlice.injectEndpoints({
         { type: "Majors", id: data._id },
       ],
     }),
-    deleteMajor: builder.mutation<string, string>({
+    deleteMajor: builder.mutation<MajorTypeResponse<MajorType>, string>({
       query: (id) => ({
         url: `deleteMajorCate/${id}`,
         method: "DELETE",

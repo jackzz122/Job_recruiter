@@ -5,44 +5,50 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
-import { JobResponse } from "../../../../types/JobType";
-
-interface DialogDeleteJobProps {
-  open: boolean;
-  handleClose: () => void;
-  job: JobResponse;
-  onConfirm: () => void;
-  isLoading: boolean;
-}
-
+import { useDeleteJobMutation } from "../../../../redux/feature/job/jobApiSlice";
+import { handleError } from "../../../../helper/HandleError/handleError";
+import { toast } from "react-toastify";
 export const DialogDeleteJob = ({
+  id,
   open,
   handleClose,
-  job,
-  onConfirm,
-  isLoading,
-}: DialogDeleteJobProps) => {
+  title,
+}: {
+  id: string;
+  open: boolean;
+  handleClose: () => void;
+  title: string;
+}) => {
+  const [deleteJob, { isLoading }] = useDeleteJobMutation();
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await deleteJob(id).unwrap();
+      if (response.success) {
+        toast.success(response.message);
+        handleClose();
+      }
+    } catch (err) {
+      const error = handleError(err);
+      console.log(error);
+    }
+  };
   return (
     <Dialog open={open} onClose={handleClose}>
       <DialogTitle>Delete Job</DialogTitle>
       <DialogContent>
         <Box sx={{ minWidth: 300 }}>
           <Typography>
-            Are you sure you want to delete the job "{job.title}"? This action
+            Are you sure you want to delete the job "{title}"? This action
             cannot be undone.
           </Typography>
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} disabled={isLoading}>
-          Cancel
-        </Button>
+        <Button onClick={handleClose}>Cancel</Button>
         <Button
-          onClick={onConfirm}
+          loading={isLoading}
+          onClick={() => handleDelete(id)}
           color="error"
-          disabled={isLoading}
-          startIcon={isLoading ? <CircularProgress size={20} /> : null}
         >
           Delete
         </Button>

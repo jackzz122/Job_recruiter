@@ -12,19 +12,13 @@ import CalendarToday from "@mui/icons-material/CalendarToday";
 import Group from "@mui/icons-material/Group";
 import { JobResponse } from "../../../types/JobType";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogActions from "@mui/material/DialogActions";
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import { useDeleteJobMutation } from "../../../redux/feature/job/jobApiSlice";
-import { toast } from "react-toastify";
+import { DialogDeleteJob } from "./DialogJob/DialogDeleteJob";
+import { DialogViewJob } from "./DialogJob/DialogViewJob";
+import { useNavigate } from "react-router-dom";
 
 export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [deleteJob, { isLoading: isDeleting }] = useDeleteJobMutation();
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -38,17 +32,7 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
         return "primary";
     }
   };
-
-  const handleDeleteJob = async () => {
-    try {
-      await deleteJob(jobs._id).unwrap();
-      toast.success("Job deleted successfully");
-      setOpenDeleteDialog(false);
-    } catch (error) {
-      toast.error("Failed to delete job");
-    }
-  };
-
+  const navigate = useNavigate();
   return (
     <>
       <Box
@@ -57,6 +41,7 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
           border: "1px solid",
           borderColor: "divider",
           borderRadius: 2,
+          backgroundColor: "white",
           "&:hover": {
             boxShadow: 2,
             borderColor: "primary.main",
@@ -112,7 +97,12 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Edit">
-            <IconButton size="small">
+            <IconButton
+              onClick={() =>
+                navigate(`/recruiter/job_management/${jobs._id}/update`)
+              }
+              size="small"
+            >
               <Edit fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -129,145 +119,18 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
       </Box>
 
       {/* View Dialog */}
-      <Dialog
+      <DialogViewJob
+        job={jobs}
         open={openViewDialog}
-        onClose={() => setOpenViewDialog(false)}
-        maxWidth="md"
-        fullWidth
-      >
-        <DialogTitle>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <Typography variant="h6">{jobs.title}</Typography>
-            <Chip
-              label={jobs.status}
-              color={getStatusColor(jobs.status)}
-              size="small"
-              sx={{ textTransform: "capitalize" }}
-            />
-          </Box>
-        </DialogTitle>
-        <DialogContent>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {/* Basic Information */}
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <LocationOn fontSize="small" color="action" />
-                <Typography variant="body1">{jobs.location}</Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <CalendarToday fontSize="small" color="action" />
-                <Typography variant="body1">
-                  Posted: {new Date(jobs.startDate).toLocaleDateString()} •
-                  Deadline:{" "}
-                  {new Date(jobs.applicationDeadline).toLocaleDateString()}
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Group fontSize="small" color="action" />
-                <Typography variant="body1">
-                  {jobs.sizingPeople} applicants
-                </Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <AttachMoneyIcon sx={{ color: "green" }} />
-                <Typography
-                  sx={{ color: "green", fontWeight: "bold" }}
-                  variant="body1"
-                >
-                  Min: {jobs.minRange}$ • Max: {jobs.maxRange}$
-                </Typography>
-              </Box>
-            </Box>
-
-            {/* Description */}
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                Job Summary
-              </Typography>
-              <Typography variant="body1">
-                {jobs.description.summary}
-              </Typography>
-            </Box>
-
-            {/* Key Skills */}
-            <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                Key Skills
-              </Typography>
-              {/* <Typography variant="body1">
-                {jobs.description.keySkills.mainText}
-              </Typography> */}
-              {/* <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-                {jobs.description.keySkills.bulletPoints.map((point, index) => (
-                  <Typography component="li" key={index} variant="body1">
-                    {point.value}
-                  </Typography>
-                ))}
-              </Box> */}
-            </Box>
-
-            {/* Why You'll Love It */}
-            {/* <Box>
-              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-                Why You'll Love It
-              </Typography>
-              <Typography variant="body1">
-                {jobs.description.whyYouLoveIt.mainText}
-              </Typography>
-              <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-                {jobs.description.whyYouLoveIt.bulletPoints.map(
-                  (point, index) => (
-                    <Typography component="li" key={index} variant="body1">
-                      {point.value}
-                    </Typography>
-                  )
-                )}
-              </Box>
-            </Box> */}
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenViewDialog(false)}>Close</Button>
-        </DialogActions>
-      </Dialog>
-
+        handleClose={() => setOpenViewDialog(false)}
+      />
       {/* Delete Dialog */}
-      <Dialog
+      <DialogDeleteJob
+        id={jobs._id}
         open={openDeleteDialog}
-        onClose={() => setOpenDeleteDialog(false)}
-      >
-        <DialogTitle>Delete Job</DialogTitle>
-        <DialogContent>
-          <Box sx={{ minWidth: 300 }}>
-            <Typography>
-              Are you sure you want to delete the job "{jobs.title}"? This
-              action cannot be undone.
-            </Typography>
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => setOpenDeleteDialog(false)}
-            disabled={isDeleting}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleDeleteJob}
-            color="error"
-            disabled={isDeleting}
-            startIcon={isDeleting ? <CircularProgress size={20} /> : null}
-          >
-            Delete
-          </Button>
-        </DialogActions>
-      </Dialog>
+        handleClose={() => setOpenDeleteDialog(false)}
+        title={jobs.title}
+      />
     </>
   );
 };

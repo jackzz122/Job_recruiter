@@ -1,4 +1,3 @@
-// import { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -13,7 +12,7 @@ import {
   ArrowBack as ArrowBackIcon,
   Save as SaveIcon,
 } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { JobFormData } from "../../../types/JobType";
 import { colorButtonOrange } from "../../../themeContext";
 import { useForm, SubmitHandler, FormProvider } from "react-hook-form";
@@ -24,46 +23,32 @@ import { BasicInformation } from "../component/BasicInformation";
 // import { UploadImage } from "../component/UploadImage";
 import { handleError } from "../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
-// import { useCreateJobsMutation } from "../../../redux/feature/job/jobApiSlice";
 
-import { useCreateJobsMutation } from "../../../redux/feature/job/jobApiSlice";
+import {
+  useCreateJobsMutation,
+  useGetJobByIdQuery,
+  useUpdateJobsMutation,
+} from "../../../redux/feature/job/jobApiSlice";
+import { formDetail, getJobDefaultValues } from "../helper/getJobDefaultValues";
+import { useEffect } from "react";
 
-export const RecruiterEditJob = () => {
+export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
   const navigate = useNavigate();
-  const methods = useForm<JobFormData>({
-    defaultValues: {
-      title: "",
-      sizingPeople: 1,
-      majorId: [{ value: "" }],
-      minRange: 1,
-      maxRange: 1,
-      location: "",
-      startDate: "",
-      experience: 1,
-      applicationDeadline: "",
-      description: {
-        summary: "",
-        keySkills: {
-          mainText: "",
-          bulletPoints: [{ value: "" }],
-        },
-        whyYouLoveIt: {
-          mainText: "",
-          bulletPoints: [{ value: "" }],
-        },
-      },
-    },
+  const { id } = useParams();
+  const { data: jobData } = useGetJobByIdQuery(id as string, {
+    skip: !id || mode === "create",
   });
-  const {
-    // register,
-    handleSubmit,
-    reset,
-
-    // setValue,
-  } = methods;
+  const methods = useForm<JobFormData>({
+    defaultValues: formDetail,
+  });
+  useEffect(() => {
+    if (mode === "update" && jobData) {
+      methods.reset(getJobDefaultValues(jobData));
+    }
+  }, [jobData, mode, methods]);
+  const { handleSubmit, reset } = methods;
 
   // const [previewImage, setPreviewImage] = useState<string | null>(null);
-  // const [createJob, { isLoading }] = useCreateJobsMutation();
   // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   const file = event.target.files?.[0];
   //   if (file) {
@@ -76,19 +61,24 @@ export const RecruiterEditJob = () => {
   //   setPreviewImage(null);
   // };
   const [createJob, { isLoading }] = useCreateJobsMutation();
+  const [updateJob, { isLoading: isUpdating }] = useUpdateJobsMutation();
   const onSubmit: SubmitHandler<JobFormData> = async (data) => {
     try {
-      // const companyId = (user?.companyId as CompanyType)?._id;
-      // const accountId = user?._id as string;
-      // const newJobs = {
-      //   ...data,
-      //   companyId,
-      //   accountId,
-      // };
-      const response = await createJob(data);
-      console.log("response", response);
-      toast.success("Job created successfully");
-      // navigate("/recruiter/recruiter_job");
+      if (mode === "create") {
+        const response = await createJob(data);
+        if (response?.data?.success) {
+          toast.success("Job created successfully");
+          navigate("/recruiter/job_management");
+        }
+      }
+      if (mode === "update") {
+        const idJob = jobData?.data._id as string;
+        const response = await updateJob({ _id: idJob, ...data });
+        if (response?.data?.success) {
+          toast.success("Job created successfully");
+          navigate("/recruiter/job_management");
+        }
+      }
     } catch (err) {
       const error = handleError(err);
       console.log(error);
@@ -165,7 +155,7 @@ export const RecruiterEditJob = () => {
 
               <Divider />
 
-              <SelectMajorField majors={majors || []} />
+              <SelectMajorField majors={majors?.data || []} />
 
               {/* Image Upload */}
               {/* <UploadImage
@@ -187,19 +177,36 @@ export const RecruiterEditJob = () => {
                 >
                   Cancel
                 </Button>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  startIcon={<SaveIcon />}
-                  loading={isLoading}
-                  onClick={handleSubmit(onSubmit)}
-                  sx={{
-                    backgroundColor: "primary.main",
-                    "&:hover": { backgroundColor: "primary.dark" },
-                  }}
-                >
-                  Save Changes
-                </Button>
+                {mode === "update" && (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                    loading={isUpdating}
+                    onClick={handleSubmit(onSubmit)}
+                    sx={{
+                      backgroundColor: "primary.main",
+                      "&:hover": { backgroundColor: "primary.dark" },
+                    }}
+                  >
+                    Update
+                  </Button>
+                )}
+                {mode === "create" && (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    startIcon={<SaveIcon />}
+                    loading={isLoading}
+                    onClick={handleSubmit(onSubmit)}
+                    sx={{
+                      backgroundColor: "primary.main",
+                      "&:hover": { backgroundColor: "primary.dark" },
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                )}
               </Box>
             </Stack>
           </FormProvider>

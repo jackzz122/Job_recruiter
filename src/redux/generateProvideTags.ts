@@ -11,7 +11,7 @@ export const generateProvidesTags = <T, K extends TagTypes>(
   results: T[] | undefined,
   idSelector: (item: T) => string
 ) => {
-  if (results) {
+  if (results && results.length > 0) {
     return [
       ...results.map((item) => ({ type, id: idSelector(item) })),
       { type, id: "LIST" },

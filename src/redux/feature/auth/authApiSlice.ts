@@ -11,9 +11,9 @@ function dataForLogin_Register<T>(data: T, url: string) {
 
 export const authApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    userLogin: builder.mutation<string, loginData>({
+    userLogin: builder.mutation<string, loginData & { roleGroup: string[] }>({
       query: (credentials: loginData) => ({
-        url: "/loginAccount",
+        url: "/login",
         method: "POST",
         body: credentials,
       }),
@@ -22,17 +22,9 @@ export const authApiSlice = ApiSlice.injectEndpoints({
       query: (userData: regisData) =>
         dataForLogin_Register(userData, "createAccount"),
     }),
-    recruiterLogin: builder.mutation({
-      query: (recruitCredentials: loginData) =>
-        dataForLogin_Register(recruitCredentials, "loginRecruiter"),
-    }),
     recruiterRegister: builder.mutation({
       query: (recruiterData: recruiterData) =>
         dataForLogin_Register(recruiterData, "RegisterRecruiter"),
-    }),
-    adminLogin: builder.mutation({
-      query: (adminCredentials: loginData) =>
-        dataForLogin_Register(adminCredentials, "adminLogin"),
     }),
     userLogOut: builder.mutation<void, void>({
       query: () => ({
@@ -46,8 +38,6 @@ export const authApiSlice = ApiSlice.injectEndpoints({
 export const {
   useUserLoginMutation,
   useUserRegisterMutation,
-  useRecruiterLoginMutation,
   useRecruiterRegisterMutation,
-  useAdminLoginMutation,
   useUserLogOutMutation,
 } = authApiSlice;

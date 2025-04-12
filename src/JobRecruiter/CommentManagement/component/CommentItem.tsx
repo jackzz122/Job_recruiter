@@ -69,7 +69,7 @@ export const CommentItem = ({ comment }: { comment: CommentType }) => {
     setReportReason("inappropriate");
     setReportDetails("");
   };
-
+  console.log("comment", comment);
   return (
     <>
       <Paper

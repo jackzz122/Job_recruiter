@@ -11,7 +11,9 @@ import CalendarToday from "@mui/icons-material/CalendarToday";
 import Group from "@mui/icons-material/Group";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { JobResponse } from "../../../../types/JobType";
-
+import CircleIcon from "@mui/icons-material/Circle";
+import { colorButtonOrange } from "../../../../themeContext";
+import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 interface DialogViewJobProps {
   open: boolean;
   handleClose: () => void;
@@ -35,7 +37,6 @@ export const DialogViewJob = ({
         return "primary";
     }
   };
-
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>
@@ -90,23 +91,37 @@ export const DialogViewJob = ({
 
           {/* Description */}
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-              Job Summary
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: 600, mb: 1, color: colorButtonOrange }}
+            >
+              <PlayArrowIcon sx={{ fontSize: 16 }} /> Job Summary
             </Typography>
-            <Typography variant="body1">{job.description.summary}</Typography>
+            <Typography variant="body1">
+              {job.description[0].summary}
+            </Typography>
           </Box>
 
           {/* Key Skills */}
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-              Key Skills
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: 600, mb: 1, color: colorButtonOrange }}
+            >
+              <PlayArrowIcon sx={{ fontSize: 16 }} /> Key Skills
             </Typography>
             <Typography variant="body1">
-              {job.description.keySkills.mainText}
+              {job.description[0].keySkills.mainText}
             </Typography>
             <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-              {job.description.keySkills.bulletPoints.map((point, index) => (
-                <Typography component="li" key={index} variant="body1">
+              {job.description[0].keySkills.bulletPoints.map((point, index) => (
+                <Typography
+                  sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                  component="li"
+                  key={index}
+                  variant="body1"
+                >
+                  <CircleIcon sx={{ fontSize: 9, color: colorButtonOrange }} />{" "}
                   {point.value}
                 </Typography>
               ))}
@@ -115,18 +130,31 @@ export const DialogViewJob = ({
 
           {/* Why You'll Love It */}
           <Box>
-            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 1 }}>
-              Why You'll Love It
+            <Typography
+              variant="subtitle1"
+              sx={{ fontWeight: 600, mb: 1, color: colorButtonOrange }}
+            >
+              <PlayArrowIcon sx={{ fontSize: 16 }} /> Why You'll Love It
             </Typography>
             <Typography variant="body1">
-              {job.description.whyYouLoveIt.mainText}
+              {job.description[0].whyYouLoveIt.mainText}
             </Typography>
             <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-              {job.description.whyYouLoveIt.bulletPoints.map((point, index) => (
-                <Typography component="li" key={index} variant="body1">
-                  {point.value}
-                </Typography>
-              ))}
+              {job.description[0].whyYouLoveIt.bulletPoints.map(
+                (point, index) => (
+                  <Typography
+                    sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                    component="li"
+                    key={index}
+                    variant="body1"
+                  >
+                    <CircleIcon
+                      sx={{ fontSize: 9, color: colorButtonOrange }}
+                    />{" "}
+                    {point.value}
+                  </Typography>
+                )
+              )}
             </Box>
           </Box>
         </Box>
