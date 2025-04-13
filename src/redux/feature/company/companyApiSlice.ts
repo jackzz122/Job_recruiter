@@ -1,10 +1,19 @@
-import ApiSlice from "../../api/apiSlice";
+// import { CompanyType, CompanyTypeResponse } from "../../../types/CompanyType";
+// import ApiSlice from "../../api/apiSlice";
 
-export const companyApiSlice = ApiSlice.injectEndpoints({
-  endpoints: (builder) => ({
-    getCompany: builder.query({
-      query: (id) => `companyInfo/${id}`,
-    }),
-  }),
-});
-export const { useGetCompanyQuery } = companyApiSlice;
+// export const companyApiSlice = ApiSlice.injectEndpoints({
+//   endpoints: (builder) => ({
+//     updateCompanyInfo: builder.mutation<
+//       CompanyTypeResponse<CompanyType>,
+//       CompanyType
+//     >({
+//       query: (data) => ({
+//         url: `updateCompany/${data._id}`,
+//         method: "PUT",
+//         body: data,
+//       }),
+//       invalidatesTags: [{ type: "Users", id: "LIST" }],
+//     }),
+//   }),
+// });
+// export const { useUpdateCompanyInfoMutation } = companyApiSlice;

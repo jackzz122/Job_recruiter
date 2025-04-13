@@ -68,6 +68,7 @@ export const CompanyDetailst = () => {
                 <InputLabel>Company Size</InputLabel>
                 <Select
                   {...field}
+                  value={field.value || ""}
                   label="Company Size"
                   startAdornment={
                     <InputAdornment position="start">
@@ -97,6 +98,7 @@ export const CompanyDetailst = () => {
                 <InputLabel>Country</InputLabel>
                 <Select
                   {...field}
+                  value={field.value || " "}
                   label="Country"
                   startAdornment={
                     <InputAdornment position="start">

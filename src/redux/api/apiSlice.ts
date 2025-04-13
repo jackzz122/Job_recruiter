@@ -10,6 +10,7 @@ export const ApiSlice = createApi({
     "Reports",
     "Pendings",
     "Recruiter",
+    "Company",
   ],
   baseQuery: fetchBaseQuery({
     baseUrl: "http://localhost:3000/api",

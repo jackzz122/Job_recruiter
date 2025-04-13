@@ -24,27 +24,60 @@ import { BasicInfo } from "../components/BasicInfo/BasicInfo";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { KeySkills } from "../components/keySkill/KeySkills";
 import { CompanyType } from "../../../types/CompanyType";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { handleError } from "../../../helper/HandleError/handleError";
+import { useUpdateCompanyInfoMutation } from "../../../redux/feature/user/userApiSlice";
+import { toast } from "react-toastify";
+
+const defaultCompanyInfo: Omit<CompanyType, "_id"> = {
+  companyName: "",
+  address: "",
+  phoneNumber: "",
+  websiteUrl: "",
+  createdAt: "",
+  emailCompany: "",
+  phoneNumberCompany: "",
+  logo: "",
+  years: 0,
+  overTime: false,
+  keySkills: [],
+  description: [
+    {
+      about: "",
+      companySize: 0,
+      country: "",
+      workingDays: 0,
+    },
+  ],
+};
 
 export const UpdateCompany = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
-  const [companyInfo, setCompanyInfo] = useState<CompanyType>();
-
+  const [updateCompanyInfo, { isLoading }] = useUpdateCompanyInfoMutation();
   const methods = useForm<CompanyType>({
-    defaultValues: companyInfo || {},
+    defaultValues: defaultCompanyInfo || {},
   });
   useEffect(() => {
     if (user?.companyId) {
       const companyInfo = user.companyId as CompanyType;
-      setCompanyInfo(companyInfo);
       methods.reset(companyInfo);
     }
-  }, [user?.companyId]);
+  }, [user?.companyId, methods]);
 
   const { handleSubmit, register } = methods;
-  const onSubmit: SubmitHandler<CompanyType> = (data) => {
-    console.log("data", data);
+  const onSubmit: SubmitHandler<CompanyType> = async (data) => {
+    try {
+      console.log(data._id);
+      const response = await updateCompanyInfo(data);
+      if (response?.data?.success) {
+        toast.success(response.data.message);
+        navigate("/recruiter/settings");
+      }
+    } catch (err) {
+      const error = handleError(err);
+      console.log(error);
+    }
   };
   return (
     <ContainerBox>
@@ -198,6 +231,7 @@ export const UpdateCompany = () => {
                   variant="contained"
                   startIcon={<SaveIcon />}
                   onClick={handleSubmit(onSubmit)}
+                  loading={isLoading}
                   sx={{
                     backgroundColor: colorButtonOrange,
                     color: "white",

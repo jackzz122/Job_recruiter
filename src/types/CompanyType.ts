@@ -21,6 +21,5 @@ export type CompanyType = {
   overTime: boolean;
   keySkills: string[];
   description: DescriptionCompanyType[];
-  updatedAt: string;
 };
-export type CompanyTypeResponse = ResponseType<CompanyType[]>;
+export type CompanyTypeResponse<T> = ResponseType<T>;

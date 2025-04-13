@@ -1,7 +1,7 @@
 import { regisData } from "./../../../types/AuthType";
 import { UserType } from "../../../types/UserType";
 import ApiSlice from "../../api/apiSlice";
-import { CompanyType } from "../../../types/CompanyType";
+import { CompanyType, CompanyTypeResponse } from "../../../types/CompanyType";
 import { generateProvidesTags } from "../../generateProvideTags";
 
 type UserResponse = {
@@ -37,6 +37,17 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Recruiter", id: "LIST" }],
     }),
+    updateCompanyInfo: builder.mutation<
+      CompanyTypeResponse<CompanyType>,
+      CompanyType
+    >({
+      query: (data) => ({
+        url: `updateCompany/${data._id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
     deleteRecruiter: builder.mutation<UserType, string>({
       query: (id) => ({
         url: `deleteStaffAccount/${id}`,
@@ -53,4 +64,5 @@ export const {
   useCreateRecruiterMutation,
   useGetRecruitersQuery,
   useDeleteRecruiterMutation,
+  useUpdateCompanyInfoMutation,
 } = userApiSlice;

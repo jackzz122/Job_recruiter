@@ -23,7 +23,7 @@ export const BasicInfo = () => {
   }[] = [
     {
       label: "Company Name",
-      name: "CompanyName",
+      name: "companyName",
       icons: (
         <InputAdornment position="start">
           <BusinessIcon sx={{ color: colorButtonOrange }} />
@@ -32,7 +32,7 @@ export const BasicInfo = () => {
     },
     {
       label: "Email",
-      name: "Email",
+      name: "emailCompany",
       icons: (
         <InputAdornment position="start">
           <EmailIcon sx={{ color: colorButtonOrange }} />
@@ -40,8 +40,8 @@ export const BasicInfo = () => {
       ),
     },
     {
-      label: "Phone",
-      name: "Phone",
+      label: "Hotline",
+      name: "phoneNumberCompany",
       icons: (
         <InputAdornment position="start">
           <PhoneIcon sx={{ color: colorButtonOrange }} />
@@ -49,8 +49,8 @@ export const BasicInfo = () => {
       ),
     },
     {
-      label: "Established Date",
-      name: "established",
+      label: "Years",
+      name: "years",
       type: "date",
       icons: (
         <InputAdornment position="start">
@@ -91,24 +91,25 @@ export const BasicInfo = () => {
         if (input.type === "date") {
           return (
             <Grid2 key={index} size={{ xs: 12, md: 6 }}>
-              <TextField
-                fullWidth
+              <input
+                className="w-full border border-gray-400 rounded-md px-2 py-3"
                 type="date"
-                label={input.label}
-                variant="outlined"
                 {...register(input.name, {
-                  required: "This field is required",
+                  setValueAs: (value) => {
+                    if (!value) return null;
+                    if (typeof value === "string") {
+                      const [year] = value.split("-");
+                      return parseInt(year, 10);
+                    }
+                    return value;
+                  },
                 })}
-                error={!!errors[input.name]}
-                helperText={errors[input.name]?.message as string}
-                sx={{ mb: 3 }}
-                InputProps={{
-                  startAdornment: input.icons,
-                }}
-                InputLabelProps={{
-                  shrink: true,
-                }}
               />
+              {errors[input.name]?.message && (
+                <Typography variant="body2" color="error">
+                  {errors[input.name]?.message as string}
+                </Typography>
+              )}
             </Grid2>
           );
         }
