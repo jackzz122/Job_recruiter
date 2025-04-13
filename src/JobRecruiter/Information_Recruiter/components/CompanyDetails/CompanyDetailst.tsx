@@ -60,7 +60,7 @@ export const CompanyDetailst = () => {
 
       <Grid2 size={{ xs: 12, md: 6 }}>
         <Controller
-          name="companySize"
+          name="description.0.companySize"
           control={control}
           render={({ field }) => {
             return (
@@ -122,7 +122,7 @@ export const CompanyDetailst = () => {
         <TextField
           fullWidth
           label="Working Days"
-          {...register("workingDays")}
+          {...register("description.0.workingDays")}
           variant="outlined"
           sx={{ mb: 3 }}
         />

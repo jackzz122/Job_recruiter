@@ -3,7 +3,6 @@ import { ResponseType } from "./ResponseType";
 export type DescriptionCompanyType = {
   about: string;
   companySize: number;
-  country: string;
   workingDays: number;
 };
 
@@ -14,12 +13,13 @@ export type CompanyType = {
   phoneNumber: string;
   websiteUrl: string;
   createdAt: string;
+  country: string;
   emailCompany: string;
   phoneNumberCompany: string;
   logo: string;
   years: number;
   overTime: boolean;
-  keySkills: string[];
+  keySkills: { value: string }[];
   description: DescriptionCompanyType[];
 };
 export type CompanyTypeResponse<T> = ResponseType<T>;

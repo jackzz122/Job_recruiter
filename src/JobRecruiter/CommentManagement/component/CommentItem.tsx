@@ -12,18 +12,9 @@ import { CommentType } from "../../../types/CommentType";
 import Avatar from "@mui/material/Avatar";
 import Divider from "@mui/material/Divider";
 import Chip from "@mui/material/Chip";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import RadioGroup from "@mui/material/RadioGroup";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Radio from "@mui/material/Radio";
+
 import { useState } from "react";
+import { DialogReportComment } from "./DialogReportComment";
 
 export const CommentItem = ({ comment }: { comment: CommentType }) => {
   // Get first letter of fullname for avatar
@@ -33,8 +24,6 @@ export const CommentItem = ({ comment }: { comment: CommentType }) => {
 
   // Report dialog state
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
-  const [reportReason, setReportReason] = useState("inappropriate");
-  const [reportDetails, setReportDetails] = useState("");
 
   const handleOpenReportDialog = () => {
     setReportDialogOpen(true);
@@ -44,32 +33,6 @@ export const CommentItem = ({ comment }: { comment: CommentType }) => {
     setReportDialogOpen(false);
   };
 
-  const handleReportReasonChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setReportReason(event.target.value);
-  };
-
-  const handleReportDetailsChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setReportDetails(event.target.value);
-  };
-
-  const handleSubmitReport = () => {
-    // Here you would implement the actual report submission
-    console.log("Submitting report:", {
-      commentId: comment._id,
-      reason: reportReason,
-      details: reportDetails,
-    });
-
-    // Close the dialog and reset form
-    setReportDialogOpen(false);
-    setReportReason("inappropriate");
-    setReportDetails("");
-  };
-  console.log("comment", comment);
   return (
     <>
       <Paper
@@ -214,161 +177,11 @@ export const CommentItem = ({ comment }: { comment: CommentType }) => {
       </Paper>
 
       {/* Report Dialog */}
-      <Dialog
-        open={reportDialogOpen}
-        onClose={handleCloseReportDialog}
-        fullWidth
-        maxWidth="sm"
-      >
-        <DialogTitle
-          sx={{
-            borderBottom: "1px solid",
-            borderColor: "divider",
-            pb: 2,
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          }}
-        >
-          <FlagIcon color="error" />
-          <Typography variant="h6" component="span">
-            Report Comment
-          </Typography>
-        </DialogTitle>
-        <DialogContent sx={{ mt: 2 }}>
-          <DialogContentText sx={{ mb: 3 }}>
-            Please provide details about why you're reporting this comment from{" "}
-            <Box component="span" sx={{ fontWeight: "bold" }}>
-              {comment.account_id.fullname}
-            </Box>
-            .
-          </DialogContentText>
-
-          <FormControl component="fieldset" sx={{ mb: 3, width: "100%" }}>
-            <FormLabel component="legend" sx={{ mb: 1, fontWeight: 600 }}>
-              Reason for Report
-            </FormLabel>
-            <RadioGroup
-              value={reportReason}
-              onChange={handleReportReasonChange}
-              name="report-reason"
-            >
-              <FormControlLabel
-                value="inappropriate"
-                control={
-                  <Radio
-                    sx={{
-                      color: "orange",
-                      "&.Mui-checked": { color: "orange" },
-                    }}
-                  />
-                }
-                label="Inappropriate Content"
-              />
-              <FormControlLabel
-                value="spam"
-                control={
-                  <Radio
-                    sx={{
-                      color: "orange",
-                      "&.Mui-checked": { color: "orange" },
-                    }}
-                  />
-                }
-                label="Spam"
-              />
-              <FormControlLabel
-                value="offensive"
-                control={
-                  <Radio
-                    sx={{
-                      color: "orange",
-                      "&.Mui-checked": { color: "orange" },
-                    }}
-                  />
-                }
-                label="Offensive Language"
-              />
-              <FormControlLabel
-                value="false"
-                control={
-                  <Radio
-                    sx={{
-                      color: "orange",
-                      "&.Mui-checked": { color: "orange" },
-                    }}
-                  />
-                }
-                label="False Information"
-              />
-              <FormControlLabel
-                value="other"
-                control={
-                  <Radio
-                    sx={{
-                      color: "orange",
-                      "&.Mui-checked": { color: "orange" },
-                    }}
-                  />
-                }
-                label="Other"
-              />
-            </RadioGroup>
-          </FormControl>
-
-          <TextField
-            label="Additional Details"
-            multiline
-            rows={4}
-            fullWidth
-            variant="outlined"
-            value={reportDetails}
-            onChange={handleReportDetailsChange}
-            placeholder="Please provide any additional information about this report..."
-            sx={{
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "orange",
-                },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "orange",
-              },
-            }}
-          />
-        </DialogContent>
-        <DialogActions
-          sx={{ px: 3, py: 2, borderTop: "1px solid", borderColor: "divider" }}
-        >
-          <Button
-            onClick={handleCloseReportDialog}
-            variant="outlined"
-            sx={{
-              borderRadius: 2,
-              borderColor: "divider",
-              color: "text.primary",
-              "&:hover": {
-                borderColor: "divider",
-                backgroundColor: "action.hover",
-              },
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSubmitReport}
-            variant="contained"
-            sx={{
-              borderRadius: 2,
-              bgcolor: "error.main",
-              "&:hover": {
-                bgcolor: "error.dark",
-              },
-            }}
-          >
-            Submit Report
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <DialogReportComment
+        comment={comment}
+        reportDialogOpen={reportDialogOpen}
+        handleCloseReportDialog={handleCloseReportDialog}
+      />
     </>
   );
 };

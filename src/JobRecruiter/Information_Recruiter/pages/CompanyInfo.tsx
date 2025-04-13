@@ -25,17 +25,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { alpha } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 
-// This would come from your API
-const chipSkills = [
-  "React",
-  "Node",
-  "MongoDB",
-  "Express",
-  "JavaScript",
-  "TypeScript",
-  "Python",
-];
-
 export const CompanyInfo = () => {
   const user = useSelector(selectUser);
   const [companyInfor, setCompanyInfor] = useState<CompanyType>();
@@ -60,7 +49,7 @@ export const CompanyInfo = () => {
     },
     {
       title: "Country",
-      value: companyInfor?.description?.[0]?.country || ".........",
+      value: companyInfor?.country || ".........",
       icon: <PublicIcon />,
     },
     {
@@ -425,12 +414,7 @@ export const CompanyInfo = () => {
                       <BusinessIcon /> About Us
                     </Typography>
                     <Typography textAlign="justify" sx={{ lineHeight: 1.8 }}>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Quisquam, quos. Lorem ipsum dolor sit amet consectetur,
-                      adipisicing elit. Ad officia odit, natus quam itaque,
-                      asperiores nihil repellat optio officiis voluptas totam?
-                      Iusto, debitis? Fuga perspiciatis asperiores placeat
-                      ratione, aliquid sed.
+                      {companyInfor?.description?.[0]?.about || "........."}
                     </Typography>
                   </Box>
                 </Grid2>
@@ -464,10 +448,10 @@ export const CompanyInfo = () => {
                       <WorkIcon /> Key Skills
                     </Typography>
                     <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1.5 }}>
-                      {chipSkills.map((skill, index) => (
+                      {companyInfor?.keySkills.map((skill, index) => (
                         <Chip
                           key={index}
-                          label={skill}
+                          label={skill.value as string}
                           sx={{
                             backgroundColor: colorButtonOrange,
                             color: "white",

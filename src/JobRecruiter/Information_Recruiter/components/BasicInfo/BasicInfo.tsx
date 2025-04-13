@@ -94,16 +94,7 @@ export const BasicInfo = () => {
               <input
                 className="w-full border border-gray-400 rounded-md px-2 py-3"
                 type="date"
-                {...register(input.name, {
-                  setValueAs: (value) => {
-                    if (!value) return null;
-                    if (typeof value === "string") {
-                      const [year] = value.split("-");
-                      return parseInt(year, 10);
-                    }
-                    return value;
-                  },
-                })}
+                {...register(input.name)}
               />
               {errors[input.name]?.message && (
                 <Typography variant="body2" color="error">

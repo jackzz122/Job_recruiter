@@ -37,6 +37,7 @@ const defaultCompanyInfo: Omit<CompanyType, "_id"> = {
   createdAt: "",
   emailCompany: "",
   phoneNumberCompany: "",
+  country: "",
   logo: "",
   years: 0,
   overTime: false,
@@ -45,7 +46,6 @@ const defaultCompanyInfo: Omit<CompanyType, "_id"> = {
     {
       about: "",
       companySize: 0,
-      country: "",
       workingDays: 0,
     },
   ],
@@ -67,6 +67,7 @@ export const UpdateCompany = () => {
 
   const { handleSubmit, register } = methods;
   const onSubmit: SubmitHandler<CompanyType> = async (data) => {
+    console.log(data);
     try {
       console.log(data._id);
       const response = await updateCompanyInfo(data);
