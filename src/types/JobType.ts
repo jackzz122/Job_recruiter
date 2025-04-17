@@ -35,7 +35,7 @@ export interface JobFormData {
 // For API responses
 export interface JobResponse {
   _id: string;
-  accountId: string;
+  accountId: { _id: string; fullname: string };
   title: string;
   sizingPeople: number;
   location: string;
@@ -47,7 +47,7 @@ export interface JobResponse {
   status: string;
   minRange: number;
   maxRange: number;
-  description: JobDescription[];
+  description: JobDescription;
   listAccountId?: string[];
   createdAt: string;
 }

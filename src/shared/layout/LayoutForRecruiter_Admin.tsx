@@ -45,6 +45,8 @@ export function LayoutForRecruiter_Admin({
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { user } = useGetCurrentUser();
+  const { handleLogout, isLoading } = useLogout();
   const getCurrentPath = () => {
     const currentPath = location.pathname.split("/").pop();
     const changeCurrentPathToCapitalize = currentPath
@@ -56,7 +58,6 @@ export function LayoutForRecruiter_Admin({
       }, "");
     return changeCurrentPathToCapitalize;
   };
-  const { user } = useGetCurrentUser();
   const isCompanyPopulated = (
     companyId: string | CompanyType | undefined
   ): companyId is CompanyType => {
@@ -66,7 +67,6 @@ export function LayoutForRecruiter_Admin({
       "companyName" in companyId
     );
   };
-  const { handleLogout, isLoading } = useLogout();
   useEffect(() => {
     if (user) {
       dispatch(getUserInfo(user));
@@ -74,7 +74,11 @@ export function LayoutForRecruiter_Admin({
   }, [user]);
   useEffect(() => {
     if (isLoading) {
-      navigate("/recruiter/login", { replace: true });
+      if (user?.role === "admin") {
+        navigate("/admin/login", { replace: true });
+      } else {
+        navigate("/recruiter/login", { replace: true });
+      }
       toast.success("Logged out successfully");
     }
   }, [isLoading]);

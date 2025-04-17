@@ -14,6 +14,7 @@ import { JobResponse } from "../../../../types/JobType";
 import CircleIcon from "@mui/icons-material/Circle";
 import { colorButtonOrange } from "../../../../themeContext";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
+import PersonIcon from "@mui/icons-material/Person";
 interface DialogViewJobProps {
   open: boolean;
   handleClose: () => void;
@@ -61,6 +62,12 @@ export const DialogViewJob = ({
           {/* Basic Information */}
           <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <PersonIcon fontSize="small" color="action" />
+              <Typography fontWeight="bold" variant="body1">
+                Poster: {job.accountId.fullname}
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <LocationOn fontSize="small" color="action" />
               <Typography variant="body1">{job.location}</Typography>
             </Box>
@@ -97,9 +104,7 @@ export const DialogViewJob = ({
             >
               <PlayArrowIcon sx={{ fontSize: 16 }} /> Job Summary
             </Typography>
-            <Typography variant="body1">
-              {job.description[0].summary}
-            </Typography>
+            <Typography variant="body1">{job.description.summary}</Typography>
           </Box>
 
           {/* Key Skills */}
@@ -111,10 +116,10 @@ export const DialogViewJob = ({
               <PlayArrowIcon sx={{ fontSize: 16 }} /> Key Skills
             </Typography>
             <Typography variant="body1">
-              {job.description[0].keySkills.mainText}
+              {job.description.keySkills.mainText}
             </Typography>
             <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-              {job.description[0].keySkills.bulletPoints.map((point, index) => (
+              {job.description.keySkills.bulletPoints.map((point, index) => (
                 <Typography
                   sx={{ display: "flex", alignItems: "center", gap: 2 }}
                   component="li"
@@ -137,24 +142,20 @@ export const DialogViewJob = ({
               <PlayArrowIcon sx={{ fontSize: 16 }} /> Why You'll Love It
             </Typography>
             <Typography variant="body1">
-              {job.description[0].whyYouLoveIt.mainText}
+              {job.description.whyYouLoveIt.mainText}
             </Typography>
             <Box component="ul" sx={{ pl: 2, mt: 1 }}>
-              {job.description[0].whyYouLoveIt.bulletPoints.map(
-                (point, index) => (
-                  <Typography
-                    sx={{ display: "flex", alignItems: "center", gap: 2 }}
-                    component="li"
-                    key={index}
-                    variant="body1"
-                  >
-                    <CircleIcon
-                      sx={{ fontSize: 9, color: colorButtonOrange }}
-                    />{" "}
-                    {point.value}
-                  </Typography>
-                )
-              )}
+              {job.description.whyYouLoveIt.bulletPoints.map((point, index) => (
+                <Typography
+                  sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                  component="li"
+                  key={index}
+                  variant="body1"
+                >
+                  <CircleIcon sx={{ fontSize: 9, color: colorButtonOrange }} />{" "}
+                  {point.value}
+                </Typography>
+              ))}
             </Box>
           </Box>
         </Box>

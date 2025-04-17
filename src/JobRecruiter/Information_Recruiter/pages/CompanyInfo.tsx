@@ -24,9 +24,11 @@ import WorkIcon from "@mui/icons-material/Work";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { alpha } from "@mui/material/styles";
 import { useEffect, useState } from "react";
+import { RoleName } from "../../../types/UserType";
 
 export const CompanyInfo = () => {
   const user = useSelector(selectUser);
+
   const [companyInfor, setCompanyInfor] = useState<CompanyType>();
   useEffect(() => {
     if (user) {
@@ -34,7 +36,7 @@ export const CompanyInfo = () => {
     }
   }, [user]);
   const navigate = useNavigate();
-  // const companyInfor = user?.companyId as CompanyType;
+
   const companyInformation = [
     {
       title: "Company Information",
@@ -475,31 +477,33 @@ export const CompanyInfo = () => {
 
             {/* Update Button */}
             <Box sx={{ p: 3, display: "flex", justifyContent: "center" }}>
-              <Button
-                variant="contained"
-                startIcon={<EditIcon />}
-                sx={{
-                  backgroundColor: colorButtonOrange,
-                  color: "white",
-                  px: 5,
-                  py: 1.5,
-                  borderRadius: 3,
-                  fontSize: "1rem",
-                  fontWeight: "bold",
-                  boxShadow: `0 4px 14px ${alpha(colorButtonOrange, 0.4)}`,
-                  "&:hover": {
-                    backgroundColor: "#ff6c2f",
-                    boxShadow: `0 6px 20px ${alpha(colorButtonOrange, 0.6)}`,
-                    transform: "translateY(-2px)",
-                  },
-                  transition: "all 0.3s",
-                }}
-                onClick={() => {
-                  navigate("/recruiter/settings/update_company/123");
-                }}
-              >
-                Update Information
-              </Button>
+              {user?.role === RoleName.RECRUIT && (
+                <Button
+                  variant="contained"
+                  startIcon={<EditIcon />}
+                  sx={{
+                    backgroundColor: colorButtonOrange,
+                    color: "white",
+                    px: 5,
+                    py: 1.5,
+                    borderRadius: 3,
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                    boxShadow: `0 4px 14px ${alpha(colorButtonOrange, 0.4)}`,
+                    "&:hover": {
+                      backgroundColor: "#ff6c2f",
+                      boxShadow: `0 6px 20px ${alpha(colorButtonOrange, 0.6)}`,
+                      transform: "translateY(-2px)",
+                    },
+                    transition: "all 0.3s",
+                  }}
+                  onClick={() => {
+                    navigate("/recruiter/settings/update_company/123");
+                  }}
+                >
+                  Update Information
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>

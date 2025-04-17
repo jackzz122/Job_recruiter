@@ -15,6 +15,11 @@ import { selectUser } from "../../redux/feature/user/userSlice";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { UserType } from "../../types/UserType";
+import { CompanyType } from "../../types/CompanyType";
+import { RoleName } from "../../types/UserType";
+import Typography from "@mui/material/Typography";
+import LockIcon from "@mui/icons-material/Lock";
+
 export const StaffManage = () => {
   const [openAccout, setOpenAccount] = useState(false);
   const handleOpenAccount = () => {
@@ -25,18 +30,37 @@ export const StaffManage = () => {
   };
   const recruiter = useSelector(selectUser);
 
-  const companyId =
-    recruiter?.companyId &&
-    typeof recruiter.companyId === "object" &&
-    "_id" in recruiter.companyId
-      ? recruiter.companyId._id
-      : undefined;
+  const companyId = (recruiter?.companyId as CompanyType)?._id;
 
   const { data: staff, isLoading } = useGetRecruitersQuery(companyId || "", {
     skip: !companyId,
   });
 
-  // Handle loading state
+  if (recruiter?.role !== RoleName.RECRUIT) {
+    return (
+      <ContainerBox>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "400px",
+            gap: 2,
+          }}
+        >
+          <LockIcon sx={{ fontSize: 60, color: "gray" }} />
+          <Typography variant="h5" color="text.secondary">
+            Access Denied
+          </Typography>
+          <Typography variant="body1" color="text.secondary">
+            You do not have permission to view this page.
+          </Typography>
+        </Box>
+      </ContainerBox>
+    );
+  }
+
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", p: 4 }}>
@@ -47,7 +71,7 @@ export const StaffManage = () => {
 
   return (
     <ContainerBox>
-      <form action="">
+      <form>
         <Stack direction="row" spacing={2}>
           <TextField label="Search" fullWidth />
           <Button
@@ -79,7 +103,7 @@ export const StaffManage = () => {
         />
       </Stack>
       <br />
-      <SimpleInforStaff staff={staff as UserType[]} />
+      <SimpleInforStaff staff={staff?.data as UserType[]} />
     </ContainerBox>
   );
 };

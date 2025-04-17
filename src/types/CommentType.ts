@@ -7,14 +7,10 @@ export type CommentType = {
   companyId: string;
   title: string;
   rating: number;
-  details: [
-    {
-      whylove: string;
-    },
-    {
-      suggest: string;
-    }
-  ];
+  details: {
+    whyLove: string;
+    suggest: string;
+  };
   createdDate: string;
 };
 export type CommentTypeResponse<T> = ResponseType<T>;

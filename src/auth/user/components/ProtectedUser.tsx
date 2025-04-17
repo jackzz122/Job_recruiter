@@ -2,15 +2,19 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useGetUserInfoQuery } from "../../../redux/feature/user/userApiSlice";
 
 export const ProtectedUser = () => {
-  const { data, isSuccess, isLoading } = useGetUserInfoQuery(undefined, {
+  const {
+    data: user,
+    isSuccess,
+    isLoading,
+  } = useGetUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
-  console.log(data?.user.role);
-  return isSuccess && data?.user.role === "guest" ? (
+
+  return isSuccess && user?.data?.role === "guest" ? (
     <Outlet />
   ) : (
     <Navigate replace to="/" />

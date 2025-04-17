@@ -14,8 +14,11 @@ import Radio from "@mui/material/Radio";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { CommentType } from "../../../types/CommentType";
-import { Controller, useForm } from "react-hook-form";
-import { ReportType } from "../../../types/ReportType";
+import { useForm } from "react-hook-form";
+import { ReportType, targetType } from "../../../types/ReportType";
+import { useCreateReportMutation } from "../../../redux/feature/report/reportApiSlice";
+import { handleError } from "../../../helper/HandleError/handleError";
+import { toast } from "react-toastify";
 export const DialogReportComment = ({
   comment,
   reportDialogOpen,
@@ -25,12 +28,41 @@ export const DialogReportComment = ({
   reportDialogOpen: boolean;
   handleCloseReportDialog: () => void;
 }) => {
-  //   const methods = useForm<ReportType>({
-  //     defaultValues: {
-  //       reason: [],
-  //     },
-  //   });
-  //   const { register, handleSubmit } = methods;
+  const { register, handleSubmit, reset } = useForm<ReportType>({
+    defaultValues: {
+      reason: { reasonTitle: "", additionalReason: "" },
+    },
+  });
+  const handleCloseReportDialogFixed = () => {
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+    handleCloseReportDialog();
+    reset();
+  };
+
+  const [createReport, { isLoading }] = useCreateReportMutation();
+  const handleReport = async (data: ReportType) => {
+    try {
+      const report = {
+        target_id: comment.account_id._id,
+        target_type: targetType.COMMENT,
+        reportTarget: comment._id,
+        reason: {
+          reasonTitle: data.reason.reasonTitle,
+          additionalReason: data.reason.additionalReason,
+        },
+      };
+      const response = await createReport(report);
+      if (response?.data?.success) {
+        toast.success("Report created successfully");
+        handleCloseReportDialogFixed();
+      }
+    } catch (err) {
+      const error = handleError(err);
+      toast.error(error.message);
+    }
+  };
   return (
     <>
       <Dialog
@@ -70,6 +102,7 @@ export const DialogReportComment = ({
             <RadioGroup defaultValue="inappropriate" name="report-reason">
               <FormControlLabel
                 value="inappropriate"
+                {...register("reason.reasonTitle")}
                 control={
                   <Radio
                     sx={{
@@ -82,6 +115,7 @@ export const DialogReportComment = ({
               />
               <FormControlLabel
                 value="spam"
+                {...register("reason.reasonTitle")}
                 control={
                   <Radio
                     sx={{
@@ -94,6 +128,7 @@ export const DialogReportComment = ({
               />
               <FormControlLabel
                 value="offensive"
+                {...register("reason.reasonTitle")}
                 control={
                   <Radio
                     sx={{
@@ -106,6 +141,7 @@ export const DialogReportComment = ({
               />
               <FormControlLabel
                 value="false"
+                {...register("reason.reasonTitle")}
                 control={
                   <Radio
                     sx={{
@@ -118,6 +154,7 @@ export const DialogReportComment = ({
               />
               <FormControlLabel
                 value="other"
+                {...register("reason.reasonTitle")}
                 control={
                   <Radio
                     sx={{
@@ -136,17 +173,9 @@ export const DialogReportComment = ({
             multiline
             rows={4}
             fullWidth
+            {...register("reason.additionalReason")}
             variant="outlined"
             placeholder="Please provide any additional information about this report..."
-            sx={{
-              "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
-                {
-                  borderColor: "orange",
-                },
-              "& .MuiInputLabel-root.Mui-focused": {
-                color: "orange",
-              },
-            }}
           />
         </DialogContent>
         <DialogActions
@@ -168,6 +197,8 @@ export const DialogReportComment = ({
             Cancel
           </Button>
           <Button
+            onClick={handleSubmit(handleReport)}
+            loading={isLoading}
             variant="contained"
             sx={{
               borderRadius: 2,

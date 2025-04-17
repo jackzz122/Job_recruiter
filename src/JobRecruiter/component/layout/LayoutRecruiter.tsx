@@ -9,6 +9,7 @@ import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 const recruiter_settings: setting_types[] = [
   {
     name: "dashboard",
@@ -39,6 +40,11 @@ const recruiter_settings: setting_types[] = [
     name: "Settings",
     href: "settings",
     icons: <SettingsIcon />,
+  },
+  {
+    name: "Manage Account",
+    href: "manage_account",
+    icons: <ManageAccountsIcon />,
   },
 ];
 

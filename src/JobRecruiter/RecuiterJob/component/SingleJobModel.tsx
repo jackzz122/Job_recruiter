@@ -15,11 +15,14 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { DialogDeleteJob } from "./DialogJob/DialogDeleteJob";
 import { DialogViewJob } from "./DialogJob/DialogViewJob";
 import { useNavigate } from "react-router-dom";
-
+import PersonIcon from "@mui/icons-material/Person";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/feature/user/userSlice";
 export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
+  const recruiter = useSelector(selectUser);
+  const poster_id = jobs.accountId._id;
   const getStatusColor = (status: string) => {
     switch (status) {
       case "OnGoing":
@@ -62,6 +65,12 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <PersonIcon fontSize="small" color="action" />
+            <Typography variant="body2">
+              Poster: {jobs.accountId.fullname}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <LocationOn fontSize="small" color="action" />
             <Typography variant="body2">{jobs.location}</Typography>
           </Box>
@@ -98,6 +107,7 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
           </Tooltip>
           <Tooltip title="Edit">
             <IconButton
+              disabled={poster_id !== recruiter?._id}
               onClick={() =>
                 navigate(`/recruiter/job_management/${jobs._id}/update`)
               }
@@ -108,6 +118,7 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
           </Tooltip>
           <Tooltip title="Delete">
             <IconButton
+              disabled={poster_id !== recruiter?._id}
               size="small"
               color="error"
               onClick={() => setOpenDeleteDialog(true)}

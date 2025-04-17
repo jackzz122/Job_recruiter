@@ -1,26 +1,43 @@
+import { CommentType } from "./CommentType";
+import { CompanyType } from "./CompanyType";
+import { JobType } from "./JobType";
 import { ResponseType } from "./ResponseType";
 
 export enum targetType {
-  JOB = "job",
-  COMPANY = "company",
-  CANDIDATE = "comment",
+  JOB = "jobPosting",
+  COMPANY = "companyInfo",
+  COMMENT = "comment",
 }
 export enum statusTypeReport {
   PENDING = "pending",
-  REVOLVED = "revolved",
-  RESOLVE = "resolve",
+  RESOLVED = "resolved",
+  REJECTED = "rejected",
 }
 
 export type ReasonType = {
-  reason: string;
-  additional: string;
+  reasonTitle: string;
+  additionalReason: string;
 };
 
 export type ReportType = {
   _id: string;
   accountId: string;
-  targetId: targetType;
-  reason: ReasonType[];
+  target_id: string;
+  target_type: targetType;
+  reportTarget: string;
+  reason: ReasonType;
   status: statusTypeReport;
+  createdAt: string;
 };
 export type ReportResponseType<T> = ResponseType<T>;
+
+export type getReportItem = {
+  _id: string;
+  accountId: { _id: string; fullname: string; email: string };
+  createdAt: string;
+  reportTarget: CommentType | JobType | CompanyType;
+  reason: { reasonTitle: string; additionalReason: string; email: string };
+  target_id: { _id: string; email: string; fullname: string };
+  target_type: targetType;
+  status: string;
+};

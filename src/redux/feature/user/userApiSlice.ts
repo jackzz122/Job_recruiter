@@ -1,13 +1,9 @@
 import { regisData } from "./../../../types/AuthType";
-import { UserType } from "../../../types/UserType";
+import { ResponseUserType, UserType } from "../../../types/UserType";
 import ApiSlice from "../../api/apiSlice";
 import { CompanyType, CompanyTypeResponse } from "../../../types/CompanyType";
 import { generateProvidesTags } from "../../generateProvideTags";
-
-type UserResponse = {
-  success: boolean;
-  user: UserType;
-};
+import { userEdit } from "../../../JobRecruiter/EmployeeInfor/EmployeeEdit";
 
 interface recruiterAddType extends regisData {
   companyId: string | CompanyType;
@@ -15,21 +11,32 @@ interface recruiterAddType extends regisData {
 
 export const userApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllUsers: builder.query<UserType[], void>({
+    getAllUsers: builder.query<ResponseUserType<UserType[]>, void>({
       query: () => "getListUser",
       providesTags: (results) =>
-        generateProvidesTags("Users" as const, results, (item) => item._id),
+        generateProvidesTags("Users", results?.data, (item) => item._id),
     }),
-    getUserInfo: builder.query<UserResponse, void>({
+    getUserInfo: builder.query<ResponseUserType<UserType>, void>({
       query: () => "getAccount",
       providesTags: () => [{ type: "Users", id: "LIST" }],
     }),
-    getRecruiters: builder.query<UserType[], string>({
+    updateUserInfo: builder.mutation<ResponseUserType<UserType[]>, userEdit>({
+      query: (data) => ({
+        url: "updateAccount",
+        method: "PATCH",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
+    getRecruiters: builder.query<ResponseUserType<UserType[]>, string>({
       query: (id) => `getRecruiter/${id}`,
       providesTags: (results) =>
-        generateProvidesTags("Recruiter", results, (item) => item._id),
+        generateProvidesTags("Recruiter", results?.data, (item) => item._id),
     }),
-    createRecruiter: builder.mutation<UserType, recruiterAddType>({
+    createRecruiter: builder.mutation<
+      ResponseUserType<UserType>,
+      recruiterAddType
+    >({
       query: (data) => ({
         url: "createStaff",
         method: "POST",
@@ -48,7 +55,7 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
-    deleteRecruiter: builder.mutation<UserType, string>({
+    deleteRecruiter: builder.mutation<ResponseUserType<UserType>, string>({
       query: (id) => ({
         url: `deleteStaffAccount/${id}`,
         method: "DELETE",
@@ -65,4 +72,5 @@ export const {
   useGetRecruitersQuery,
   useDeleteRecruiterMutation,
   useUpdateCompanyInfoMutation,
+  useUpdateUserInfoMutation,
 } = userApiSlice;

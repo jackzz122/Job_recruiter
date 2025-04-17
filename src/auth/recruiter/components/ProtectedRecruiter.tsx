@@ -2,7 +2,11 @@ import { Navigate, Outlet } from "react-router-dom";
 import { useGetUserInfoQuery } from "../../../redux/feature/user/userApiSlice";
 
 export const ProtectedRecruiter = () => {
-  const { data, isSuccess, isLoading } = useGetUserInfoQuery(undefined, {
+  const {
+    data: user,
+    isSuccess,
+    isLoading,
+  } = useGetUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true,
   });
 
@@ -11,8 +15,8 @@ export const ProtectedRecruiter = () => {
   }
 
   return isSuccess &&
-    (data?.user.role === "recruiter" ||
-      data?.user.role === "staffRecruiter") ? (
+    (user?.data?.role === "recruiter" ||
+      user?.data?.role === "staffRecruiter") ? (
     <Outlet />
   ) : (
     <Navigate replace to="/recruiter/login" />

@@ -119,7 +119,7 @@ export const CommentItem = ({ comment }: { comment: CommentType }) => {
               <Box component="span" sx={{ fontWeight: 600 }}>
                 Reason why love:{" "}
               </Box>
-              {comment.details[0].whylove}
+              {comment.details.whyLove}
             </Typography>
 
             <Divider sx={{ my: 2 }} />
@@ -128,7 +128,7 @@ export const CommentItem = ({ comment }: { comment: CommentType }) => {
               <Box component="span" sx={{ fontWeight: 600 }}>
                 Suggestion:{" "}
               </Box>
-              {comment.details[1].suggest}
+              {comment.details.suggest}
             </Typography>
           </Box>
 

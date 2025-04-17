@@ -48,23 +48,21 @@ export const getJobDefaultValues = (
     applicationDeadline:
       formatDateForDatetimeLocal(jobData.data.applicationDeadline) || "",
     description: {
-      summary: jobData.data.description?.[0]?.summary || "",
+      summary: jobData.data.description?.summary || "",
       keySkills: {
-        mainText: jobData.data.description?.[0]?.keySkills?.mainText || "",
-        bulletPoints: jobData.data.description?.[0]?.keySkills?.bulletPoints
-          ? jobData.data.description[0].keySkills.bulletPoints.map((point) => ({
+        mainText: jobData.data.description?.keySkills?.mainText || "",
+        bulletPoints: jobData.data.description?.keySkills?.bulletPoints
+          ? jobData.data.description.keySkills.bulletPoints.map((point) => ({
               value: typeof point === "string" ? point : point.value,
             }))
           : [{ value: "" }],
       },
       whyYouLoveIt: {
-        mainText: jobData.data.description?.[0]?.whyYouLoveIt?.mainText || "",
-        bulletPoints: jobData.data.description?.[0]?.whyYouLoveIt?.bulletPoints
-          ? jobData.data.description[0].whyYouLoveIt.bulletPoints.map(
-              (point) => ({
-                value: typeof point === "string" ? point : point.value,
-              })
-            )
+        mainText: jobData.data.description?.whyYouLoveIt?.mainText || "",
+        bulletPoints: jobData.data.description?.whyYouLoveIt?.bulletPoints
+          ? jobData.data.description.whyYouLoveIt.bulletPoints.map((point) => ({
+              value: typeof point === "string" ? point : point.value,
+            }))
           : [{ value: "" }],
       },
     },

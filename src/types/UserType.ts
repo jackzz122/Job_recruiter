@@ -1,5 +1,5 @@
 import { CompanyType } from "./CompanyType";
-
+import { ResponseType } from "./ResponseType";
 export const RoleName = {
   ADMIN: "admin",
   RECRUIT: "recruit",
@@ -30,3 +30,4 @@ export interface UserType {
   companyId?: string | CompanyType; // Can be either string (ID) or populated CompanyType
   linkingProfile: string;
 }
+export type ResponseUserType<T> = ResponseType<T>;
