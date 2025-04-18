@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import KeyboardArrowRightOutlinedIcon from "@mui/icons-material/KeyboardArrowRightOutlined";
 import CardContent from "@mui/material/CardContent";
 import AdjustIcon from "@mui/icons-material/Adjust";
+
 const listTypeCompany = [
   "Javascript",
   "Swift",
@@ -15,20 +16,24 @@ const listTypeCompany = [
   "ReactJS",
   "Kotlin",
 ];
+
 export default function CardCompVip() {
   const text = "Công ty cổ phần Đồng Tâm";
   return (
-    <Link to={`/company/${text}`}>
-      <Card
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          border: "2px solid #e5e5e5",
-          alignItems: "center",
-          paddingBlock: "3.2rem",
-          paddingInline: "3rem",
-        }}
-        elevation={0}
+    <Card
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        border: "2px solid #e5e5e5",
+        alignItems: "center",
+        paddingBlock: "3.2rem",
+        paddingInline: "3rem",
+      }}
+      elevation={0}
+    >
+      <Link
+        to={`/company/${text}`}
+        style={{ textDecoration: "none", color: "inherit" }}
       >
         <CardMedia
           component="img"
@@ -70,7 +75,7 @@ export default function CardCompVip() {
             })}
           </Box>
         </CardContent>
-      </Card>
+      </Link>
       <Box
         sx={{
           backgroundColor: "#e5e5e5",
@@ -78,17 +83,20 @@ export default function CardCompVip() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          width: "100%",
         }}
       >
-        <Typography variant="body2" sx={{}}>
-          Ho Chi Minh - Ha Noi
-        </Typography>
-        <Link to="history" className="flex items-center gap-2">
+        <Typography variant="body2">Ho Chi Minh - Ha Noi</Typography>
+        <Link
+          to="history"
+          className="flex items-center gap-2"
+          style={{ textDecoration: "none", color: "inherit" }}
+        >
           <AdjustIcon sx={{ color: "red" }} />
           <strong>2</strong> việc làm{" "}
           <KeyboardArrowRightOutlinedIcon fontSize="small" />
         </Link>
       </Box>
-    </Link>
+    </Card>
   );
 }

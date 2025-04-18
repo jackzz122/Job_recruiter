@@ -14,7 +14,11 @@ export const LayoutFooter = () => {
         background: "linear-gradient(to right, #000000, #5b0e0e)",
         color: "white",
         py: 6,
-        mt: "auto",
+        width: "100%",
+        position: "relative",
+        bottom: 0,
+        left: 0,
+        right: 0,
       }}
     >
       <Container maxWidth="lg">

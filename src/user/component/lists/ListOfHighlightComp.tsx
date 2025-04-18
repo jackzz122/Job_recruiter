@@ -3,7 +3,7 @@ import Typography from "@mui/material/Typography";
 export const ListOfHighlightComp = ({
   listHighlights,
 }: {
-  listHighlights: string[];
+  listHighlights?: { value: string }[];
 }) => {
   const stylesForBox = {
     marginBlock: "0.75rem",
@@ -13,11 +13,11 @@ export const ListOfHighlightComp = ({
   };
   return (
     <Box sx={{ marginTop: "0.25rem" }}>
-      {listHighlights.map((highlight, index) => {
+      {listHighlights?.map((highlight, index) => {
         return (
           <Box sx={stylesForBox} key={index}>
             <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-            <Typography>{highlight}</Typography>
+            <Typography>{highlight.value}</Typography>
           </Box>
         );
       })}

@@ -40,7 +40,7 @@ export interface JobResponse {
   sizingPeople: number;
   location: string;
   applicationDeadline: string;
-  companyId: string;
+  companyId: string | { _id: string; companyName: string; logo: string };
   experience: number;
   startDate: string;
   majorId: { value: string }[];

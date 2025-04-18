@@ -3,8 +3,16 @@ import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
+import { useParams } from "react-router-dom";
+import { useGetJobByIdQuery } from "../../../redux/feature/job/jobApiSlice";
+import { ListOfHighlightComp } from "../../component/lists/ListOfHighlightComp";
 
 export default function DetailsJobBody() {
+  const params = useParams();
+  const { data: job } = useGetJobByIdQuery(params.id as string, {
+    skip: !params.id,
+  });
+  console.log(job);
   return (
     <Box
       sx={{
@@ -38,13 +46,7 @@ export default function DetailsJobBody() {
         >
           <Typography variant="h6">Mô Tả công việc</Typography>
           <Typography variant="body1">
-            As a Support Site Reliability Engineer (SRE), you’ll work closely
-            with Money Forward Japan’s Product SRE team to increase their
-            productivity. The ideal candidate will address operational tasks by
-            both directly supporting Product SRE teams as well as designing
-            standardized solutions to streamline operational work. The role
-            requires technical expertise and a passion for improving operational
-            efficiency.
+            {job?.data?.description.summary}
           </Typography>
         </ListItem>
         <Divider />
@@ -57,6 +59,12 @@ export default function DetailsJobBody() {
           }}
         >
           <Typography variant="h6">Yêu cầu công việc</Typography>
+          <Typography variant="body1">
+            {job?.data?.description.keySkills.mainText}
+          </Typography>
+          <ListOfHighlightComp
+            listHighlights={job?.data?.description.keySkills.bulletPoints || []}
+          />
         </ListItem>
         <Divider />
         <ListItem
@@ -69,28 +77,16 @@ export default function DetailsJobBody() {
         >
           {" "}
           <Typography variant="h6">Tại sao bạn thích làm ở đây</Typography>
+          <Typography variant="body1">
+            {job?.data?.description.whyYouLoveIt.mainText}
+          </Typography>
+          <ListOfHighlightComp
+            listHighlights={
+              job?.data?.description.whyYouLoveIt.bulletPoints || []
+            }
+          />
         </ListItem>
       </List>
-      {/* <Box>
-        <Typography variant="h6">3 lý do để gia nhập công ty</Typography>
-      </Box>
-      <Box>
-        <Typography variant="h6">Mô Tả công việc</Typography>
-        <Typography variant="body1">
-          As a Support Site Reliability Engineer (SRE), you’ll work closely with
-          Money Forward Japan’s Product SRE team to increase their productivity.
-          The ideal candidate will address operational tasks by both directly
-          supporting Product SRE teams as well as designing standardized
-          solutions to streamline operational work. The role requires technical
-          expertise and a passion for improving operational efficiency.
-        </Typography>
-      </Box>
-      <Box>
-        <Typography variant="h6">Yêu cầu công việc</Typography>
-      </Box>
-      <Box>
-        <Typography variant="h6">Tại sao bạn thích làm ở đây</Typography>
-      </Box> */}
     </Box>
   );
 }

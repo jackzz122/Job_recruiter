@@ -6,14 +6,22 @@ import Stack from "@mui/material/Stack";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ImageList from "@mui/material/ImageList";
 import ImageListItem from "@mui/material/ImageListItem";
-
 import { ListOfRequirement } from "../../component/lists/ListOfRequirement";
 import { ListOfInformation } from "../../component/lists/ListOfInformation";
 import { DialogApplication } from "../components/DialogApplication";
 import { useState } from "react";
-const listOfReq = ["Devops", "AWS", "Cloud"];
+import { useParams } from "react-router-dom";
+import { useGetJobByIdQuery } from "../../../redux/feature/job/jobApiSlice";
+import { vi } from "date-fns/locale";
+import { formatDistanceToNow } from "date-fns";
 export default function DetailsJobHeader() {
+  const { id } = useParams();
   const [openApplication, setOpenApplication] = useState(false);
+  const { data: job } = useGetJobByIdQuery(id as string, {
+    skip: !id,
+  });
+  const company = job?.data.companyId;
+  const isString = typeof company === "string";
   return (
     <Box
       sx={{
@@ -27,17 +35,17 @@ export default function DetailsJobHeader() {
       }}
     >
       <Typography variant="h5" fontWeight="bold">
-        [Hanoi] Senior SRE (DevOps Engineer, AWS)
+        {job?.data?.title}
       </Typography>
-      <Typography variant="body1" sx={{ marginTop: "1rem" }}>
-        MONEY FORWARD VIETNAM CO.,LTD
+      <Typography variant="body1" sx={{ marginBlock: "1rem" }}>
+        {isString ? company : company?.companyName}
       </Typography>
       <Typography
         sx={{ color: "green", marginBlock: "0.5rem" }}
         fontWeight="bold"
       >
         {" "}
-        <MonetizationOnIcon /> You will love it
+        <MonetizationOnIcon /> {job?.data.minRange}$ - {job?.data.maxRange}$
       </Typography>
       <Stack direction="row" spacing={1}>
         <Button
@@ -79,13 +87,22 @@ export default function DetailsJobHeader() {
       </ImageList>
       <Box>
         <ListOfInformation
-          place="11th Floor, ROX Tower, No 54A Nguyen Chi Thanh, Lang Thuong Ward, Dong Da, Ha Noi"
-          workType="Linh hoạt"
-          time="Đăng 2 giờ trước"
+          place={job?.data?.location}
+          workType="Tại công ty"
+          time={
+            job?.data?.createdAt
+              ? formatDistanceToNow(new Date(job.data.createdAt), {
+                  addSuffix: true,
+                  locale: vi,
+                })
+              : "Đang tải..."
+          }
         />
         <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
           <Typography variant="body2">Kỹ năng</Typography>
-          <ListOfRequirement listOfRequire={listOfReq} />
+          <ListOfRequirement
+            listOfRequire={job?.data?.description.keySkills.bulletPoints}
+          />
         </Box>
       </Box>
     </Box>

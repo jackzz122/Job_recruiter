@@ -29,5 +29,11 @@ export interface UserType {
   majorId?: string;
   companyId?: string | CompanyType; // Can be either string (ID) or populated CompanyType
   linkingProfile: string;
+  listFavouritesCompanyID?: string[];
+  listFavouritesJobsID?: string[];
 }
 export type ResponseUserType<T> = ResponseType<T>;
+
+export type FavouriteCompany = {
+  id: string[];
+};

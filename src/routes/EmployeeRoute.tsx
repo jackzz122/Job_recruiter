@@ -34,14 +34,14 @@ export const EmployeeRoute = [
       <Route path="CV/edit/:id" element={<CreateCVPage />} />
     </Route>
     <Route path="list_company" element={<ListOfCompany />} />
-    <Route path="job/:name" element={<DetailsJob />} />
+    <Route path="job/:id" element={<DetailsJob />} />
     {/* Company related routes */}
     <Route element={<LayoutListComp />}>
       <Route path="list_job/:name/:nameComp" element={<ListCompCareer />}>
         <Route index element={<ShortInfoComp />} />
       </Route>
     </Route>
-    <Route path="company/:name" element={<LayoutDetailsComp />}>
+    <Route path="company/:id" element={<LayoutDetailsComp />}>
       <Route index element={<DetailsComp />} />
       <Route path="reviews" element={<ReviewComp />} />
     </Route>

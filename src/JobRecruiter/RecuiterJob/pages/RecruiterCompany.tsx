@@ -18,6 +18,9 @@ import { SingleJobModel } from "../component/SingleJobModel";
 import { useGetJobPostingsQuery } from "../../../redux/feature/job/jobApiSlice";
 import { JobResponse } from "../../../types/JobType";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/feature/user/userSlice";
+import { CompanyType } from "../../../types/CompanyType";
 export const RecruiterCompany = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
@@ -30,8 +33,13 @@ export const RecruiterCompany = () => {
   const handleCreateJob = () => {
     navigate("/recruiter/job_management/create");
   };
-
-  const { data: jobs, isLoading } = useGetJobPostingsQuery();
+  const user = useSelector(selectUser);
+  const { data: jobs, isLoading } = useGetJobPostingsQuery(
+    (user?.companyId as CompanyType)?._id || "",
+    {
+      skip: !user?.companyId,
+    }
+  );
   return (
     <ContainerBox>
       <Stack spacing={3}>

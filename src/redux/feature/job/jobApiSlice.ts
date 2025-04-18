@@ -8,8 +8,8 @@ import { generateProvidesTags } from "../../generateProvideTags";
 
 export const jobApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getJobPostings: builder.query<JobTypeResponse<JobResponse[]>, void>({
-      query: () => "/jobPostingList",
+    getJobPostings: builder.query<JobTypeResponse<JobResponse[]>, string>({
+      query: (id) => `/jobPostingList/${id}`,
       providesTags: (results) =>
         generateProvidesTags("Jobs", results?.data, (item) => item._id),
     }),

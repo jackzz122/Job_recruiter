@@ -38,7 +38,14 @@ export const LayoutHome = () => {
 
   const { user, isLoading } = useGetCurrentUser();
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "00vh" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        minHeight: "100vh",
+        position: "relative",
+      }}
+    >
       <AppBar
         elevation={1}
         sx={{
@@ -160,11 +167,12 @@ export const LayoutHome = () => {
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Box sx={{ mt: "64px" }} />
-      <Box>
+      <Box sx={{ mt: "64px", flex: "1 0 auto" }}>
         <Outlet />
       </Box>
-      <LayoutFooter />
+      <Box sx={{ flexShrink: 0 }}>
+        <LayoutFooter />
+      </Box>
     </Box>
   );
 };

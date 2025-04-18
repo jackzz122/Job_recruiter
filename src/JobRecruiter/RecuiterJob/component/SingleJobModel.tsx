@@ -106,25 +106,29 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
             </IconButton>
           </Tooltip>
           <Tooltip title="Edit">
-            <IconButton
-              disabled={poster_id !== recruiter?._id}
-              onClick={() =>
-                navigate(`/recruiter/job_management/${jobs._id}/update`)
-              }
-              size="small"
-            >
-              <Edit fontSize="small" />
-            </IconButton>
+            <span>
+              <IconButton
+                disabled={poster_id !== recruiter?._id}
+                onClick={() =>
+                  navigate(`/recruiter/job_management/${jobs._id}/update`)
+                }
+                size="small"
+              >
+                <Edit fontSize="small" />
+              </IconButton>
+            </span>
           </Tooltip>
           <Tooltip title="Delete">
-            <IconButton
-              disabled={poster_id !== recruiter?._id}
-              size="small"
-              color="error"
-              onClick={() => setOpenDeleteDialog(true)}
-            >
-              <Delete fontSize="small" />
-            </IconButton>
+            <span>
+              <IconButton
+                disabled={poster_id !== recruiter?._id}
+                size="small"
+                color="error"
+                onClick={() => setOpenDeleteDialog(true)}
+              >
+                <Delete fontSize="small" />
+              </IconButton>
+            </span>
           </Tooltip>
         </Box>
       </Box>

@@ -5,7 +5,8 @@ type TagTypes =
   | "Majors"
   | "Reports"
   | "Pendings"
-  | "Recruiter";
+  | "Recruiter"
+  | "Companies";
 export const generateProvidesTags = <T, K extends TagTypes>(
   type: K,
   results: T[] | undefined,

@@ -6,7 +6,17 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Grid2 from "@mui/material/Grid2";
 import { CardItemCompanyList } from "../../job/components/Card/CardItemCompanyList";
+import { useGetCompanyQuery } from "../../../redux/feature/company/companyApiSlice";
+import { CircularProgress } from "@mui/material";
 export const ListOfCompany = () => {
+  const { data: companyList, isLoading } = useGetCompanyQuery();
+  const listOfCompany = companyList?.data.map((company) => {
+    return (
+      <Grid2 size={3} key={company._id}>
+        <CardItemCompanyList company={company} />
+      </Grid2>
+    );
+  });
   return (
     <Container maxWidth="xl" sx={{ padding: "2rem" }}>
       <Box>
@@ -29,20 +39,13 @@ export const ListOfCompany = () => {
       <Typography marginTop={2} variant="h5" marginBottom={2} fontWeight="bold">
         List Of Company
       </Typography>
-      <Grid2 spacing={2} container>
-        <Grid2 size={3}>
-          <CardItemCompanyList />
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <Grid2 spacing={2} container>
+          {listOfCompany}
         </Grid2>
-        <Grid2 size={3}>
-          <CardItemCompanyList />
-        </Grid2>
-        <Grid2 size={3}>
-          <CardItemCompanyList />
-        </Grid2>
-        <Grid2 size={3}>
-          <CardItemCompanyList />
-        </Grid2>
-      </Grid2>
+      )}
     </Container>
   );
 };

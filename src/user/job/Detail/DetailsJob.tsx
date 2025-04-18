@@ -9,14 +9,14 @@ import DetailsJobHeader from "./DetailsJobHeader";
 export const DetailsJob = () => {
   // const params = useLocation();
   const breadCrumbs = [
-    <Link className="text-red-300" to="/">
+    <Link key="home" className="text-red-300" to="/">
       Trang chủ
     </Link>,
-    <Link className="text-red-300" to="/">
+    <Link key="all" className="text-red-300" to="/">
       Tất cả việc làm IT
     </Link>,
 
-    <p>Tuyển thực tập sinh React/NodeJS </p>,
+    <p key="job">Tuyển thực tập sinh React/NodeJS </p>,
   ];
   return (
     <>

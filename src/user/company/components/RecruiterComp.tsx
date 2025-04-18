@@ -8,54 +8,82 @@ import { ListOfRequirement } from "../../component/lists/ListOfRequirement";
 import { ListOfHighlightComp } from "../../component/lists/ListOfHighlightComp";
 import { Link } from "react-router-dom";
 import { ListOfInformation } from "../../component/lists/ListOfInformation";
+import { JobResponse } from "../../../types/JobType";
+import { formatDistanceToNow } from "date-fns";
+import { vi } from "date-fns/locale";
 export const RecruiterComp = ({
+  jobDetail,
   isChoose,
   isHotOrNot,
 }: {
+  jobDetail: JobResponse;
   isChoose?: boolean;
   isHotOrNot?: boolean;
 }) => {
-  const requires = ["ProjectManager", "Bridge Engineer", "Japanese"];
   const highlights = [
-    "Nâng cao kĩ thuật với các kĩ sư giàu kinh nghiệm",
-    "Làm việc trong công nghệ Nhật Bản chuyên nghiệp",
-    "Thu nhập cạnh tranh, nhiều chế độ hấp dẫn",
+    { value: "Nâng cao kĩ thuật với các kĩ sư giàu kinh nghiệm" },
+    { value: "Làm việc trong công nghệ Nhật Bản chuyên nghiệp" },
+    { value: "Thu nhập cạnh tranh, nhiều chế độ hấp dẫn" },
   ];
+  const company = jobDetail.companyId;
+  const isString = typeof company === "string";
   return (
-    <Link to="/list_job/.net/HaNoi">
+    <Link to={`/job/${jobDetail._id}`}>
       <Box
         padding={3}
         sx={{
           border: "1px solid #fff4ec",
           borderRadius: "0.75rem",
-          backgroundColor: `${isHotOrNot ? "#fff4ec" : ""}`,
+          backgroundColor: `${isHotOrNot ? "#fff4ec" : "white"}`,
           borderColor: `${isChoose && "red"}`,
           marginBottom: "1rem",
         }}
       >
         <Typography variant="body2" sx={{ color: "gray" }}>
-          Đăng 3 ngày trước
+          {formatDistanceToNow(new Date(jobDetail?.startDate), {
+            addSuffix: true,
+            locale: vi,
+          })}
         </Typography>
-        <Typography variant="h6" fontWeight="bold" sx={{ marginBlock: "1rem" }}>
-          [HAN] C#/.Net Technical Leader | Upto 2000
+        <Typography variant="h6" fontWeight="bold">
+          {jobDetail.title}
         </Typography>
         <Stack direction="row" spacing={2} alignItems="center">
-          <img src="/bss_avatar.png" alt="" className="w-1/6" />
-          <Typography variant="body2">Hybrid Techonologies</Typography>
+          <img
+            src={
+              isString
+                ? "/bss_avatar.png"
+                : company.logo
+                ? company.logo
+                : "/bss_avatar.png"
+            }
+            alt={isString ? company : company.companyName}
+            className="w-1/6 border "
+          />
+          <Typography variant="body2">
+            {isString ? company : company.companyName}
+          </Typography>
         </Stack>
-        <Typography sx={{ color: "green", marginBlock: "1rem" }}>
+        <Typography
+          fontWeight="bold"
+          sx={{ color: "green", marginBlock: "0.5rem" }}
+        >
           <MonetizationOnIcon />
-          1,500 - 2,000 USD
+          {jobDetail.minRange} - {jobDetail.maxRange} USD
         </Typography>
-        <Divider />
+        <Divider
+          sx={{
+            borderBottomStyle: "dotted",
+            borderColor: "rgba(0, 0, 0, 0.2)",
+          }}
+        />
         <Box marginTop={2}>
           <ListOfInformation
-            workType="Linh hoạt"
-            place="Ho Chi Minh - Ha Noi - Da Nang"
+            workType="Tại công ty"
+            place={jobDetail.location}
           />
         </Box>
-        <ListOfRequirement listOfRequire={requires} />
-        <Divider />
+        <ListOfRequirement listOfRequire={jobDetail.majorId} />
         {isHotOrNot && <ListOfHighlightComp listHighlights={highlights} />}
       </Box>
     </Link>

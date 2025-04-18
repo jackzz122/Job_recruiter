@@ -3,12 +3,12 @@ import Stack from "@mui/material/Stack";
 export const ListOfRequirement = ({
   listOfRequire,
 }: {
-  listOfRequire: string[];
+  listOfRequire?: { value: string }[];
 }) => {
   return (
-    <Stack direction="row" spacing={1} marginBlock={2}>
-      {listOfRequire.map((require) => {
-        return <Chip key={require} label={require} />;
+    <Stack direction="row" spacing={1} marginBlock={1}>
+      {listOfRequire?.map((require, index) => {
+        return <Chip key={index} label={require.value} />;
       })}
     </Stack>
   );

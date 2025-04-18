@@ -32,8 +32,8 @@ export const CandidateManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const { data } = useGetAllUsersQuery();
-  const listOfUser = data?.map((user) => {
+  const { data: user } = useGetAllUsersQuery();
+  const listOfUser = user?.data.map((user) => {
     return <CandidateItem key={user._id} candidate={user} />;
   });
   return (
@@ -91,7 +91,7 @@ export const CandidateManagement = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={data?.length || 0}
+          count={user?.data.length || 0}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={(_, newPage) => setPage(newPage)}

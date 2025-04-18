@@ -2,26 +2,32 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import CardActions from "@mui/material/CardActions";
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-export const CardItemCompanyList = () => {
+import { CompanyType } from "../../../../types/CompanyType";
+import { Link } from "react-router-dom";
+export const CardItemCompanyList = ({ company }: { company: CompanyType }) => {
   return (
     <Card sx={{ maxHeight: "30rem" }}>
       <CardMedia
         sx={{ height: 250, border: "1px solid gray" }}
-        image="/bss_avatar.png"
-        title="Company name"
+        image={company.logo || "/bss_avatar.png"}
+        title={company.companyName}
       />
       <CardContent>
-        <Typography textAlign="justify">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi enim
-          harum blanditiis dolor tempora. Error at delectus unde minus nobis
-          praesentium distinctio exercitationem, inventore voluptates? Animi
-          saepe aspernatur veniam reiciendis.
+        <Typography variant="h5" fontWeight="bold">
+          {company.companyName}
+        </Typography>
+        <Typography display="block" marginTop={1} textAlign="justify">
+          {company.description[0].about}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button>Details</Button>
+        <Link
+          className="bg-orange-500 text-white p-2 rounded-lg hover:bg-orange-600 transition-all duration-300 min-w-20 text-center"
+          to={`/company/${company._id}`}
+        >
+          Details
+        </Link>
       </CardActions>
     </Card>
   );
