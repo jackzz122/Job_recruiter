@@ -9,6 +9,25 @@ export const RoleName = {
 
 export type UserRole = (typeof RoleName)[keyof typeof RoleName];
 
+export type JobSaveResponse = {
+  _id: string;
+  companyId: { _id: string; companyName: string };
+  location: string;
+  maxRange: number;
+  minRange: number;
+  title: string;
+  startDate: string;
+  applicationDeadline: string;
+};
+
+export type CompanySaveResponse = {
+  _id: string;
+  companyName: string;
+  address: string;
+  country: string;
+  logo: string;
+};
+
 export interface UserType {
   _id: string;
   email: string;
@@ -29,8 +48,8 @@ export interface UserType {
   majorId?: string;
   companyId?: string | CompanyType; // Can be either string (ID) or populated CompanyType
   linkingProfile: string;
-  listFavouritesCompanyID?: string[];
-  listFavouritesJobsID?: string[];
+  listFavouritesCompanyID?: string[] | CompanySaveResponse[];
+  listFavouritesJobsID?: string[] | JobSaveResponse[];
 }
 export type ResponseUserType<T> = ResponseType<T>;
 

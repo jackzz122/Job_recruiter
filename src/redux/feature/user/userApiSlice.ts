@@ -72,6 +72,13 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
+    addFavouriteJob: builder.mutation<ResponseUserType<string[]>, string>({
+      query: (id: string) => ({
+        url: `jobFavourite/${id}`,
+        method: "POST",
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
     removeFavouriteJob: builder.mutation<ResponseUserType<string[]>, string>({
       query: (id: string) => ({
         url: `removeFavouriteJob/${id}`,
@@ -100,4 +107,5 @@ export const {
   useAddFavouriteCompanyMutation,
   useRemoveFavouriteCompanyMutation,
   useRemoveFavouriteJobMutation,
+  useAddFavouriteJobMutation,
 } = userApiSlice;

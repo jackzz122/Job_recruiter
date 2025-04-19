@@ -9,19 +9,70 @@ import ImageListItem from "@mui/material/ImageListItem";
 import { ListOfRequirement } from "../../component/lists/ListOfRequirement";
 import { ListOfInformation } from "../../component/lists/ListOfInformation";
 import { DialogApplication } from "../components/DialogApplication";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useGetJobByIdQuery } from "../../../redux/feature/job/jobApiSlice";
 import { vi } from "date-fns/locale";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { formatDistanceToNow } from "date-fns";
+import IconButton from "@mui/material/IconButton";
+import {
+  useAddFavouriteJobMutation,
+  useRemoveFavouriteJobMutation,
+} from "../../../redux/feature/user/userApiSlice";
+import { handleError } from "../../../helper/HandleError/handleError";
+import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/feature/user/userSlice";
+import { JobSaveResponse } from "../../../types/UserType";
 export default function DetailsJobHeader() {
+  const [isFavourite, setIsFavourite] = useState(false);
   const { id } = useParams();
   const [openApplication, setOpenApplication] = useState(false);
+  const [addFavouriteJob, { isLoading: addLoading }] =
+    useAddFavouriteJobMutation();
+  const [removeFavouriteJob, { isLoading: removeLoading }] =
+    useRemoveFavouriteJobMutation();
   const { data: job } = useGetJobByIdQuery(id as string, {
     skip: !id,
   });
+  const user = useSelector(selectUser);
+  useEffect(() => {
+    if (user) {
+      const isFavourite = (
+        user.listFavouritesJobsID as JobSaveResponse[]
+      )?.some((job) => job._id === id);
+      if (isFavourite) setIsFavourite(true);
+    }
+  }, [user, id]);
   const company = job?.data.companyId;
   const isString = typeof company === "string";
+  const handleAddFavourite = async () => {
+    if (!id) return;
+    try {
+      const response = await addFavouriteJob(id).unwrap();
+      if (response.success) {
+        toast.success(response.message);
+        setIsFavourite(true);
+      }
+    } catch (err) {
+      const error = handleError(err);
+      console.log(error);
+    }
+  };
+  const handleRemoveFavourite = async () => {
+    if (!id) return;
+    try {
+      const response = await removeFavouriteJob(id).unwrap();
+      if (response.success) {
+        toast.success(response.message);
+        setIsFavourite(false);
+      }
+    } catch (err) {
+      const error = handleError(err);
+      console.log(error);
+    }
+  };
   return (
     <Box
       sx={{
@@ -65,9 +116,23 @@ export default function DetailsJobHeader() {
           title="Ứng tuyển cho vị trí"
           open={openApplication}
         />
-        <Button sx={{ flexGrow: 0, border: "1px solid red" }}>
-          <FavoriteIcon sx={{ color: "#e50000" }} fontSize="large" />
-        </Button>
+        {isFavourite ? (
+          <IconButton
+            loading={addLoading}
+            onClick={handleRemoveFavourite}
+            sx={{ flexGrow: 0 }}
+          >
+            <FavoriteIcon sx={{ color: "#e50000" }} fontSize="large" />
+          </IconButton>
+        ) : (
+          <IconButton
+            loading={removeLoading}
+            onClick={handleAddFavourite}
+            sx={{ flexGrow: 0 }}
+          >
+            <FavoriteBorderIcon color="warning" fontSize="large" />
+          </IconButton>
+        )}
       </Stack>
       <br />
       <ImageList

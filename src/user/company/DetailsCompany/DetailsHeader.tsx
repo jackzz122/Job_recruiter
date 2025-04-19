@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Rating from "@mui/material/Rating";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useGetDetailCompanyQuery } from "../../../redux/feature/company/companyApiSlice";
 import { useGetJobPostingsQuery } from "../../../redux/feature/job/jobApiSlice";
 import {
@@ -18,6 +19,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
 import { useEffect, useState } from "react";
 export const DetailsHeader = () => {
+  const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState(false);
   const { id } = useParams<{ id: string }>();
   const { data: companyDetail } = useGetDetailCompanyQuery(id ?? "", {
@@ -37,6 +39,7 @@ export const DetailsHeader = () => {
       const response = await addFavouriteCompany(id).unwrap();
       if (response.success) {
         toast.success("Add favourite success");
+        setIsFavourite(true);
       }
     } catch (err) {
       const error = handleError(err);
@@ -94,6 +97,11 @@ export const DetailsHeader = () => {
           </Stack>
           <br />
           <Button
+            onClick={() =>
+              navigate(
+                `/writeReview?companyName=${companyDetail?.data.companyName}&companyId=${companyDetail?.data._id}`
+              )
+            }
             sx={{
               backgroundColor: "red",
               color: "white",

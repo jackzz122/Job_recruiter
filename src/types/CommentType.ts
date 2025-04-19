@@ -4,7 +4,7 @@ import { UserType } from "./UserType";
 export type CommentType = {
   _id: string;
   account_id: UserType;
-  companyId: string;
+  company_id: string;
   title: string;
   rating: number;
   details: {

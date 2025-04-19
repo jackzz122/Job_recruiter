@@ -2,8 +2,7 @@ import { Route } from "react-router-dom";
 import { LayoutHome } from "../user/component/Layout/LayoutHome";
 import { HomePage } from "../user/homepage/HomePage";
 import { LayoutUser } from "../user/component/Layout/LayoutUser";
-import { Information } from "../user/information/Dashboard/Information";
-import { ChangePass } from "../user/information/ChangePass/ChangePass";
+import { ChangePass } from "../user/information/UserSetting/ChangePass";
 import { CVPages } from "../user/CV/pages/CVPages";
 import { LayoutCreateCV } from "../user/CV/components/LayoutCreateCV";
 import { CreateCVPage } from "../user/CV/pages/CreateCVPage";
@@ -16,6 +15,12 @@ import { LayoutDetailsComp } from "../user/company/components/LayoutDetailsComp"
 import { DetailsComp } from "../user/company/DetailsCompany/DetailsComp";
 import { ReviewComp } from "../user/company/Review/ReviewComp";
 import { MyInfo } from "../user/information/Profile/MyInfo";
+import { WriteReview } from "../user/company/Review/WriteReview";
+import { JobManage } from "../user/information/JobManage/JobManage";
+import { JobApplied } from "../user/information/JobManage/pages/JobApplied";
+import { JobSaves } from "../user/information/JobManage/pages/JobSaves";
+import { CompanySave } from "../user/information/JobManage/pages/CompanySave";
+import { Setting } from "../user/information/UserSetting/Setting";
 // import { ProtectedUser } from "../auth/user/components/ProtectedUser";
 
 export const EmployeeRoute = [
@@ -24,8 +29,13 @@ export const EmployeeRoute = [
     <Route path="/homepage" element={<HomePage />} />
     {/* Information pages */}
     <Route element={<LayoutUser />}>
-      <Route path="information" element={<Information />} />
       <Route path="myInfo" element={<MyInfo />} />
+      <Route path="jobManage" element={<JobManage />}>
+        <Route index element={<JobApplied />} />
+        <Route path="saved" element={<JobSaves />} />
+        <Route path="companySaves" element={<CompanySave />} />
+      </Route>
+      <Route path="settings" element={<Setting />} />
       <Route path="change_pass" element={<ChangePass />} />
     </Route>
     {/* CV page */}
@@ -41,6 +51,7 @@ export const EmployeeRoute = [
         <Route index element={<ShortInfoComp />} />
       </Route>
     </Route>
+    <Route path="writeReview" element={<WriteReview />} />
     <Route path="company/:id" element={<LayoutDetailsComp />}>
       <Route index element={<DetailsComp />} />
       <Route path="reviews" element={<ReviewComp />} />

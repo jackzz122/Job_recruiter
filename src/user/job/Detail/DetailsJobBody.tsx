@@ -12,7 +12,6 @@ export default function DetailsJobBody() {
   const { data: job } = useGetJobByIdQuery(params.id as string, {
     skip: !params.id,
   });
-  console.log(job);
   return (
     <Box
       sx={{

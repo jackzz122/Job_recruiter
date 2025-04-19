@@ -1,50 +1,45 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import DashboardIcon from "@mui/icons-material/Dashboard";
 import { NavLink, Outlet } from "react-router-dom";
 import WavingHandIcon from "@mui/icons-material/WavingHand";
-import AssignmentOutlinedIcon from "@mui/icons-material/AssignmentOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../redux/feature/user/userSlice";
+
 const listOfInformations: {
   name: string;
   href: string;
   icon: React.ReactNode;
 }[] = [
   {
-    name: "Tổng quan",
-    href: "information",
-    icon: <DashboardIcon />,
-  },
-  {
-    name: "Hồ sơ đính kèm",
+    name: "Hồ sơ",
     href: "myInfo",
-    icon: <AssignmentOutlinedIcon />,
-  },
-  {
-    name: "Hồ sơ ITviec",
-    href: "",
     icon: <PersonOutlineOutlinedIcon />,
   },
   {
     name: "Việc làm của tôi",
-    href: "myJobs",
+    href: "jobManage",
     icon: <WorkOutlineOutlinedIcon />,
   },
   {
     name: "Cài đặt",
-    href: "",
+    href: "settings",
     icon: <SettingsOutlinedIcon />,
   },
 ];
+
 export const LayoutUser = () => {
+  const user = useSelector(selectUser);
   return (
     <Box
       sx={{
         backgroundColor: "#f3f5f7",
-        height: "100vh",
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
         paddingTop: "2.5rem",
         paddingInline: "3.125rem",
       }}
@@ -54,15 +49,17 @@ export const LayoutUser = () => {
         sx={{
           display: "flex",
           gap: "2rem",
+          flex: 1,
+          position: "relative",
         }}
       >
-        <div className="w-1/4 max-h-96 bg-white p-4 rounded-lg border border-gray-200">
+        <div className="w-1/4 h-fit bg-white p-4 rounded-lg border border-gray-200 sticky top-20">
           <div className="flex items-center gap-2 mb-2">
             <WavingHandIcon sx={{ color: "red" }} />
             <p>Xin Chào </p>
           </div>
           <Typography variant="h5" fontWeight="bold">
-            Vương Đức Lương
+            {user?.fullname}
           </Typography>
           <Box marginTop={2}>
             {listOfInformations.map((user) => {
@@ -82,7 +79,7 @@ export const LayoutUser = () => {
             })}
           </Box>
         </div>
-        <div className="w-2/4 flex-grow">
+        <div className="w-2/4 flex-grow flex flex-col">
           <Outlet />
         </div>
       </Container>

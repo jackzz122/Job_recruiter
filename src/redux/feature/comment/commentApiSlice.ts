@@ -10,15 +10,15 @@ export const commentApiSlice = ApiSlice.injectEndpoints({
         generateProvidesTags(
           "Comments",
           results?.data,
-          (item) => item.companyId
+          (item) => item.company_id
         ),
     }),
     createComment: builder.mutation<
       CommentTypeResponse<CommentType>,
-      CommentType
+      Omit<CommentType , "_id">
     >({
       query: (data) => ({
-        url: "comments",
+        url: "createdComment",
         method: "POST",
         body: data,
       }),
@@ -26,7 +26,7 @@ export const commentApiSlice = ApiSlice.injectEndpoints({
     }),
     deleteComment: builder.mutation<CommentTypeResponse<CommentType>, string>({
       query: (id) => ({
-        url: `comments/${id}`,
+        url: `deleteComment/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: (results, error, id) => [{ type: "Comments", id }],

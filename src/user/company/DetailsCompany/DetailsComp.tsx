@@ -26,7 +26,6 @@ const listHiglights = [
 export const DetailsComp = () => {
   const { id } = useParams();
   const { data: companyDetail } = useGetDetailCompanyQuery(id || "");
-  console.log(companyDetail);
   return (
     <Box sx={{ backgroundColor: "#f3f5f7" }}>
       <HeaderOfDetails name="Thông tin chung">

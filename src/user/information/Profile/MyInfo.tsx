@@ -52,9 +52,23 @@ export const MyInfo = () => {
   const [openExperience, setOpenExperience] = useState(false);
 
   return (
-    <Box sx={{ py: 3, height: "100%" }}>
-      <Container maxWidth="lg">
-        <Stack spacing={3} sx={{ pb: 2 }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Container
+        maxWidth="lg"
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          pb: 3,
+        }}
+      >
+        <Stack spacing={3} sx={{ flex: 1 }}>
           <Paper sx={{ p: 3, position: "relative" }}>
             <IconButton
               sx={{ position: "absolute", right: 8, top: 8 }}
