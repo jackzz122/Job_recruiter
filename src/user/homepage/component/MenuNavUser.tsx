@@ -13,18 +13,18 @@ const listOfNavUser: {
   icon: React.ReactNode;
 }[] = [
   {
-    name: "Tổng quan",
-    href: "information",
+    name: "Information",
+    href: "myInfo",
     icon: <DashboardIcon />,
   },
   {
-    name: "Hồ sơ đính kèm",
-    href: "informations",
+    name: "Job manage",
+    href: "jobManage",
     icon: <PersonOutlineOutlinedIcon />,
   },
   {
-    name: "Đổi mật khẩu",
-    href: "change_pass",
+    name: "Settings",
+    href: "settings",
     icon: <DashboardIcon />,
   },
   {

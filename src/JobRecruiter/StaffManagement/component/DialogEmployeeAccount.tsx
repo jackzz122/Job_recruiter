@@ -4,7 +4,7 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { colorButtonOrange } from "../../../themeContext";
-import { useCreateRecruiterMutation } from "../../../redux/feature/user/userApiSlice";
+import { useCreateRecruiterMutation } from "../../../redux/feature/user/recruiterApiSlice";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FormRegisterField } from "../../../auth/user/pages/Register";
 import { handleError } from "../../../helper/HandleError/handleError";

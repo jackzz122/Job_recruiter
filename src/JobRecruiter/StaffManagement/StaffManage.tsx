@@ -8,7 +8,7 @@ import { DialogEmployeeAccount } from "./component/DialogEmployeeAccount";
 import { ContainerBox } from "../component/ContainerBox";
 import { SimpleInforStaff } from "./SimpleInforStaff";
 
-import { useGetRecruitersQuery } from "../../redux/feature/user/userApiSlice";
+import { useGetRecruitersQuery } from "../../redux/feature/user/recruiterApiSlice";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
 

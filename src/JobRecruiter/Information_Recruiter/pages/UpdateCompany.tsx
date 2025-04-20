@@ -26,7 +26,7 @@ import { KeySkills } from "../components/keySkill/KeySkills";
 import { CompanyType } from "../../../types/CompanyType";
 import { useEffect } from "react";
 import { handleError } from "../../../helper/HandleError/handleError";
-import { useUpdateCompanyInfoMutation } from "../../../redux/feature/user/userApiSlice";
+import { useUpdateCompanyInfoMutation } from "../../../redux/feature/user/recruiterApiSlice";
 import { toast } from "react-toastify";
 
 const defaultCompanyInfo: Omit<CompanyType, "_id"> = {

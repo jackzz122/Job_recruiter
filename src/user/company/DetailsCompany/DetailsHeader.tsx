@@ -18,6 +18,7 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
 import { useEffect, useState } from "react";
+import { CompanySaveResponse } from "../../../types/UserType";
 export const DetailsHeader = () => {
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState(false);
@@ -61,7 +62,11 @@ export const DetailsHeader = () => {
   };
   useEffect(() => {
     if (id) {
-      if (user?.listFavouritesCompanyID?.includes(id)) {
+      if (
+        (user?.listFavouritesCompanyID as CompanySaveResponse[])?.some(
+          (job) => job._id === id
+        )
+      ) {
         setIsFavourite(true);
       }
     }

@@ -1,13 +1,7 @@
-import { regisData } from "./../../../types/AuthType";
 import { ResponseUserType, UserType } from "../../../types/UserType";
 import ApiSlice from "../../api/apiSlice";
-import { CompanyType, CompanyTypeResponse } from "../../../types/CompanyType";
 import { generateProvidesTags } from "../../generateProvideTags";
 import { userEdit } from "../../../JobRecruiter/EmployeeInfor/EmployeeEdit";
-
-interface recruiterAddType extends regisData {
-  companyId: string | CompanyType;
-}
 
 export const userApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -28,28 +22,12 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
-    getRecruiters: builder.query<ResponseUserType<UserType[]>, string>({
-      query: (id) => `getRecruiter/${id}`,
-      providesTags: (results) =>
-        generateProvidesTags("Recruiter", results?.data, (item) => item._id),
-    }),
-    createRecruiter: builder.mutation<
+    changePassword: builder.mutation<
       ResponseUserType<UserType>,
-      recruiterAddType
+      { oldPassword: string; newPassword: string }
     >({
       query: (data) => ({
-        url: "createStaff",
-        method: "POST",
-        body: data,
-      }),
-      invalidatesTags: [{ type: "Recruiter", id: "LIST" }],
-    }),
-    updateCompanyInfo: builder.mutation<
-      CompanyTypeResponse<CompanyType>,
-      CompanyType
-    >({
-      query: (data) => ({
-        url: `updateCompany/${data._id}`,
+        url: "changePassword",
         method: "PUT",
         body: data,
       }),
@@ -86,12 +64,12 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
-    deleteRecruiter: builder.mutation<ResponseUserType<UserType>, string>({
-      query: (id) => ({
-        url: `deleteStaffAccount/${id}`,
+    deleteAccount: builder.mutation<ResponseUserType<UserType>, void>({
+      query: () => ({
+        url: "deleteAccount",
         method: "DELETE",
       }),
-      invalidatesTags: [{ type: "Recruiter", id: "LIST" }],
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
   }),
 });
@@ -99,13 +77,11 @@ export const userApiSlice = ApiSlice.injectEndpoints({
 export const {
   useGetAllUsersQuery,
   useGetUserInfoQuery,
-  useCreateRecruiterMutation,
-  useGetRecruitersQuery,
-  useDeleteRecruiterMutation,
-  useUpdateCompanyInfoMutation,
   useUpdateUserInfoMutation,
   useAddFavouriteCompanyMutation,
   useRemoveFavouriteCompanyMutation,
   useRemoveFavouriteJobMutation,
   useAddFavouriteJobMutation,
+  useChangePasswordMutation,
+  useDeleteAccountMutation,
 } = userApiSlice;

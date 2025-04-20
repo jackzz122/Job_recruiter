@@ -15,7 +15,7 @@ import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import { colorButtonOrange } from "../../themeContext";
 import { UserType } from "../../types/UserType";
-import { useDeleteRecruiterMutation } from "../../redux/feature/user/userApiSlice";
+import { useDeleteRecruiterMutation } from "../../redux/feature/user/recruiterApiSlice";
 
 interface SimpleInforStaffProps {
   staff: UserType[];
