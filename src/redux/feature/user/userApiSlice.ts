@@ -1,7 +1,13 @@
-import { ResponseUserType, UserType } from "../../../types/UserType";
+import {
+  certificateType,
+  educationType,
+  projectType,
+  ResponseUserType,
+  UserType,
+  workExType,
+} from "../../../types/UserType";
 import ApiSlice from "../../api/apiSlice";
 import { generateProvidesTags } from "../../generateProvideTags";
-import { userEdit } from "../../../JobRecruiter/EmployeeInfor/EmployeeEdit";
 
 export const userApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -14,7 +20,14 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       query: () => "getAccount",
       providesTags: () => [{ type: "Users", id: "LIST" }],
     }),
-    updateUserInfo: builder.mutation<ResponseUserType<UserType[]>, userEdit>({
+    updateUserInfo: builder.mutation<
+      ResponseUserType<UserType[]>,
+      | Partial<UserType>
+      | { education: Omit<educationType, "_id"> }
+      | { certificate: Omit<certificateType, "_id"> }
+      | { workEx: Omit<workExType, "_id"> }
+      | { projects: Omit<projectType, "_id"> }
+    >({
       query: (data) => ({
         url: "updateAccount",
         method: "PATCH",

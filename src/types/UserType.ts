@@ -27,7 +27,34 @@ export type CompanySaveResponse = {
   country: string;
   logo: string;
 };
-
+export type educationType = {
+  _id: string;
+  major: string;
+  school: string;
+  startDate: string;
+  endDate: string;
+};
+export type workExType = {
+  _id: string;
+  jobTitle: string;
+  company: string;
+  responsibilites: string;
+  startDate: string;
+  endDate: string;
+};
+export type certificateType = {
+  _id: string;
+  name: string;
+  organization: string;
+  month: number;
+  year: number;
+};
+export type projectType = {
+  _id: string;
+  projectName: string;
+  link: string;
+  description: string;
+};
 export interface UserType {
   _id: string;
   email: string;
@@ -35,18 +62,22 @@ export interface UserType {
   avatarImg?: string;
   role: string;
   dob?: Date;
+  aboutMe?: string;
   address?: string;
+  avatarIMG?: string;
   phone?: string;
   gender?: string;
-  education?: string;
+  education?: educationType[];
   skills?: string[];
-  certificate?: string[];
+  workEx?: workExType[];
+  projects?: projectType[];
+  certificate?: certificateType[];
   createdAt: string;
   updatedAt: string;
   lastLogin?: string;
   isActive: boolean;
   majorId?: string;
-  companyId?: string | CompanyType; // Can be either string (ID) or populated CompanyType
+  companyId?: string | CompanyType;
   linkingProfile: string;
   listFavouritesCompanyID?: string[] | CompanySaveResponse[];
   listFavouritesJobsID?: string[] | JobSaveResponse[];
