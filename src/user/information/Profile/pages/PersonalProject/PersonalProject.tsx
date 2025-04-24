@@ -12,6 +12,16 @@ import { projectType } from "../../../../../types/UserType";
 import { ProjectItem } from "./components/ProjectItem";
 export const PersonalProject = ({ projects }: { projects: projectType[] }) => {
   const [openProjects, setOpenProjects] = useState(false);
+  const [currentProject, setCurrentProject] = useState<projectType>();
+  const handleEdit = (id: string) => {
+    const getCurrent = projects.find((project) => {
+      return project._id === id;
+    });
+    if (getCurrent) {
+      setCurrentProject(getCurrent);
+      setOpenProjects(true);
+    }
+  };
   return (
     <>
       <Paper sx={{ p: 3, position: "relative" }}>
@@ -33,15 +43,22 @@ export const PersonalProject = ({ projects }: { projects: projectType[] }) => {
         </Box>
         <Stack spacing={3}>
           {projects.length === 0 ? (
-            <p>........</p>
+            <Typography>................</Typography>
           ) : (
             projects.map((project) => {
-              return <ProjectItem key={project._id} {...project} />;
+              return (
+                <ProjectItem
+                  handleEdit={handleEdit}
+                  key={project._id}
+                  {...project}
+                />
+              );
             })
           )}
         </Stack>
       </Paper>
       <DialogProject
+        currentProject={currentProject}
         openProjects={openProjects}
         setOpenProjects={setOpenProjects}
       />

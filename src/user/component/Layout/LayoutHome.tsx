@@ -138,9 +138,9 @@ export const LayoutHome = () => {
           >
             {!isLoading ? (
               <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Avatar src={user?.avatarImg ?? "/avatar.png"} />
+                <Avatar src={user?.avatarIMG || "/avatar.png"} />
                 <Typography sx={{ marginLeft: 2 }}>
-                  {user?.fullname ?? "Guest User"}
+                  {user?.fullname || "Guest User"}
                 </Typography>
               </Box>
             ) : (

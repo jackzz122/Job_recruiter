@@ -14,7 +14,7 @@ import { colorButtonOrange } from "../../themeContext";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useUpdateUserInfoMutation } from "../../redux/feature/user/userApiSlice";
 import { handleError } from "../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
@@ -24,11 +24,30 @@ export type userEdit = {
   phone: string;
   address: string;
   gender: string;
+  avatarIMG: string;
 };
 export const EmployeeEdit = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const [userInfo, setUserInfo] = useState<userEdit>();
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setPreviewImage(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
   useEffect(() => {
     if (user) {
       const formattedUserInfo = {
@@ -37,18 +56,38 @@ export const EmployeeEdit = () => {
         phone: user?.phone || "",
         address: user?.address || "",
         gender: user?.gender || "",
+        avatarIMG: user?.avatarIMG || "",
       };
       setUserInfo(formattedUserInfo);
       reset(formattedUserInfo);
+
+      if (user?.avatarIMG) {
+        setPreviewImage(user.avatarIMG);
+      }
     }
   }, [user]);
+
   const { register, handleSubmit, reset } = useForm<userEdit>({
     defaultValues: userInfo,
   });
+  const { ...rest } = register("avatarIMG");
   const [updateUserInfo, { isLoading }] = useUpdateUserInfoMutation();
+
   const onSubmit: SubmitHandler<userEdit> = async (data) => {
     try {
-      const response = await updateUserInfo(data).unwrap();
+      const formData = new FormData();
+      formData.append("fullname", data.fullname);
+      formData.append("address", data.address);
+      formData.append("email", data.email);
+      formData.append("gender", data.gender);
+      formData.append("phone", data.phone || "");
+
+      const file = fileInputRef.current?.files?.[0];
+      if (file) {
+        formData.append("avatarIMG", file);
+      }
+
+      const response = await updateUserInfo(formData).unwrap();
       if (response.success) {
         toast.success("Update user info successfully");
         navigate("/recruiter/manage_account");
@@ -56,8 +95,10 @@ export const EmployeeEdit = () => {
     } catch (err) {
       const error = handleError(err);
       console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
+
   return (
     <Box>
       <Container maxWidth="lg">
@@ -114,7 +155,7 @@ export const EmployeeEdit = () => {
               }}
             >
               <Avatar
-                src="/default_avatar.png"
+                src={previewImage || "/default_avatar.png"}
                 sx={{
                   width: 100,
                   height: 100,
@@ -133,19 +174,40 @@ export const EmployeeEdit = () => {
                 >
                   Upload a new profile picture
                 </Typography>
-                <Button
-                  variant="outlined"
-                  sx={{
-                    borderColor: colorButtonOrange,
-                    color: colorButtonOrange,
-                    "&:hover": {
+                <Stack direction="row" spacing={2}>
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    {...rest}
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleImageUpload}
+                  />
+                  <Button
+                    variant="outlined"
+                    sx={{
                       borderColor: colorButtonOrange,
-                      backgroundColor: alpha(colorButtonOrange, 0.05),
-                    },
-                  }}
-                >
-                  Change Picture
-                </Button>
+                      color: colorButtonOrange,
+                      "&:hover": {
+                        borderColor: colorButtonOrange,
+                        backgroundColor: alpha(colorButtonOrange, 0.05),
+                      },
+                    }}
+                    onClick={() => fileInputRef.current?.click()}
+                  >
+                    Change Picture
+                  </Button>
+                  {previewImage &&
+                    user?.avatarIMG !== "/default_avatar.png" && (
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        onClick={handleRemoveImage}
+                      >
+                        Remove Image
+                      </Button>
+                    )}
+                </Stack>
               </Box>
             </Box>
 

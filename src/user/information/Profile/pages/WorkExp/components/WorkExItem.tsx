@@ -2,21 +2,25 @@ import { ItemList } from "../../../components/ItemList";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 export const WorkExItem = ({
+  _id,
   jobTitle,
   company,
   startDate,
   endDate,
   responsibilites,
+  handleEdit,
 }: {
+  _id: string;
   jobTitle: string;
   company: string;
   startDate: string;
   endDate: string;
   responsibilites: string;
+  handleEdit: (id: string) => void;
 }) => {
   return (
     <>
-      <ItemList>
+      <ItemList id={_id} type="workEx" onEdit={handleEdit}>
         <Box>
           <Typography variant="subtitle1" fontWeight="bold">
             {jobTitle}

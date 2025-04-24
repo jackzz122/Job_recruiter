@@ -44,7 +44,7 @@ export const MyInfo = () => {
           {/* About me */}
           <AboutMe aboutMe={user?.aboutMe || ""} />
           {/* Skills */}
-          <Skills />
+          <Skills skills={user?.skills || []} />
           {/* Education */}
           <Education educationList={user?.education || []} />
           {/* Work Experience */}

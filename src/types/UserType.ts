@@ -55,6 +55,10 @@ export type projectType = {
   link: string;
   description: string;
 };
+export type skillType = {
+  _id: string;
+  value: string;
+};
 export interface UserType {
   _id: string;
   email: string;
@@ -68,7 +72,7 @@ export interface UserType {
   phone?: string;
   gender?: string;
   education?: educationType[];
-  skills?: string[];
+  skills?: skillType[];
   workEx?: workExType[];
   projects?: projectType[];
   certificate?: certificateType[];

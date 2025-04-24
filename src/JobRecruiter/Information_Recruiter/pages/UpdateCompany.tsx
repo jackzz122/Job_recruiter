@@ -18,13 +18,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import SaveIcon from "@mui/icons-material/Save";
 
 import BusinessIcon from "@mui/icons-material/Business";
-
 import { CompanyDetailst } from "../components/CompanyDetails/CompanyDetailst";
 import { BasicInfo } from "../components/BasicInfo/BasicInfo";
 import { useForm, FormProvider, SubmitHandler } from "react-hook-form";
 import { KeySkills } from "../components/keySkill/KeySkills";
 import { CompanyType } from "../../../types/CompanyType";
-import { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { handleError } from "../../../helper/HandleError/handleError";
 import { useUpdateCompanyInfoMutation } from "../../../redux/feature/user/recruiterApiSlice";
 import { toast } from "react-toastify";
@@ -55,6 +54,18 @@ export const UpdateCompany = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   const [updateCompanyInfo, { isLoading }] = useUpdateCompanyInfoMutation();
+  const imageRef = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const handleSetImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+    }
+  };
+  const handleRemoveImage = () => {
+    setPreviewImage(null);
+  };
   const methods = useForm<CompanyType>({
     defaultValues: defaultCompanyInfo || {},
   });
@@ -67,10 +78,43 @@ export const UpdateCompany = () => {
 
   const { handleSubmit, register } = methods;
   const onSubmit: SubmitHandler<CompanyType> = async (data) => {
-    console.log(data);
     try {
-      console.log(data._id);
-      const response = await updateCompanyInfo(data);
+      const formData = new FormData();
+      formData.append("_id", data._id);
+      formData.append("companyName", data.companyName);
+      formData.append("address", data.address);
+      formData.append("phoneNumber", data.phoneNumber);
+      formData.append("websiteUrl", data.websiteUrl);
+      formData.append("emailCompany", data.emailCompany);
+      formData.append("phoneNumberCompany", data.phoneNumberCompany);
+      formData.append("country", data.country);
+      formData.append("years", data.years.toString());
+      formData.append("overTime", data.overTime.toString());
+
+      // Company description
+      formData.append("description[0][about]", data.description[0].about);
+      formData.append(
+        "description[0][companySize]",
+        data.description[0].companySize.toString()
+      );
+      formData.append(
+        "description[0][workingDays]",
+        data.description[0].workingDays.toString()
+      );
+
+      // Key skills array
+      data.keySkills.forEach((skill, index) => {
+        formData.append(`keySkills[${index}][value]`, skill.value);
+      });
+
+      // Company logo
+      const file = imageRef.current?.files?.[0];
+      if (file) {
+        formData.append("logo", file);
+      }
+      const response = await updateCompanyInfo(
+        formData as FormData & { _id: string }
+      );
       if (response?.data?.success) {
         toast.success(response.data.message);
         navigate("/recruiter/settings");
@@ -138,7 +182,7 @@ export const UpdateCompany = () => {
                 }}
               >
                 <Avatar
-                  src="/bss_avatar.png"
+                  src={previewImage ? previewImage : "/default_avatar.png"}
                   sx={{
                     width: 100,
                     height: 100,
@@ -157,6 +201,13 @@ export const UpdateCompany = () => {
                   >
                     Upload a new logo for your company
                   </Typography>
+                  <input
+                    type="file"
+                    accept=".jpg,.jpeg,.png"
+                    ref={imageRef}
+                    style={{ display: "none" }}
+                    onChange={handleSetImage}
+                  />
                   <Button
                     variant="outlined"
                     sx={{
@@ -167,9 +218,21 @@ export const UpdateCompany = () => {
                         backgroundColor: alpha(colorButtonOrange, 0.05),
                       },
                     }}
+                    onClick={() => imageRef.current?.click()}
                   >
                     Change Logo
                   </Button>
+                  {previewImage &&
+                    user?.avatarIMG !== "/default_avatar.png" && (
+                      <Button
+                        variant="outlined"
+                        sx={{ marginLeft: 2 }}
+                        color="error"
+                        onClick={handleRemoveImage}
+                      >
+                        Remove Image
+                      </Button>
+                    )}
                 </Box>
               </Box>
 

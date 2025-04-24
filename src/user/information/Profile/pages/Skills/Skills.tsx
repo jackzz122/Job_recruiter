@@ -7,7 +7,8 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
 import { EditDialog } from "../../components/EditDialog";
-export const Skills = () => {
+import { skillType } from "../../../../../types/UserType";
+export const Skills = ({ skills }: { skills: skillType[] }) => {
   const [openSkills, setOpenSkills] = useState(false);
   return (
     <>

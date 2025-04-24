@@ -26,10 +26,10 @@ export const recruiterApiSlice = ApiSlice.injectEndpoints({
     }),
     updateCompanyInfo: builder.mutation<
       CompanyTypeResponse<CompanyType>,
-      CompanyType
+      FormData & { _id: string }
     >({
       query: (data) => ({
-        url: `updateCompany/${data._id}`,
+        url: `updateCompany/${data.get("_id")}`,
         method: "PUT",
         body: data,
       }),

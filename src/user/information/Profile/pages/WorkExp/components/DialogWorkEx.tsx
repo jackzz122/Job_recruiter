@@ -8,10 +8,13 @@ import { handleError } from "../../../../../../helper/HandleError/handleError";
 import Box from "@mui/material/Box";
 import { useUpdateUserInfoMutation } from "../../../../../../redux/feature/user/userApiSlice";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 export const DialogWorkEx = ({
+  currentEx,
   openExperience,
   setOpenExperience,
 }: {
+  currentEx?: workExType;
   openExperience: boolean;
   setOpenExperience: (check: boolean) => void;
 }) => {
@@ -25,19 +28,43 @@ export const DialogWorkEx = ({
     },
   };
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
-  const { register, handleSubmit } = useForm<{
+  const { register, handleSubmit, setValue, reset } = useForm<{
     workEx: Omit<workExType, "_id">;
   }>({
     defaultValues: defaultWorkValue,
   });
+  useEffect(() => {
+    if (currentEx) {
+      setValue("workEx.company", currentEx.company);
+      setValue("workEx.jobTitle", currentEx.jobTitle);
+      setValue("workEx.responsibilites", currentEx.responsibilites);
+      setValue("workEx.startDate", currentEx.startDate);
+      setValue("workEx.endDate", currentEx.endDate);
+    } else reset(defaultWorkValue);
+  }, [currentEx, setValue, reset]);
   const onSubmit: SubmitHandler<{ workEx: Omit<workExType, "_id"> }> = async (
     data
   ) => {
     try {
-      const response = await updateUser(data);
-      if (response.data?.success) {
-        toast.success(response.data?.message);
-        setOpenExperience(false);
+      if (currentEx) {
+        const response = await updateUser({
+          workEx: {
+            ...data.workEx,
+            _id: currentEx._id,
+          } as workExType,
+        });
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+          setOpenExperience(false);
+          reset();
+        }
+      } else {
+        const response = await updateUser(data);
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+          setOpenExperience(false);
+          reset();
+        }
       }
     } catch (err) {
       const error = handleError(err);

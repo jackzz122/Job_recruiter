@@ -11,6 +11,7 @@ type RecruitItemProps = {
     _id: string;
     fullname: string;
     email: string;
+    avatarIMG: string;
   };
   companyName: string;
   phoneNumber: string;
@@ -31,7 +32,7 @@ export const RecruitItem = ({
     <>
       <TableCell>
         <Stack direction="row" spacing={2} alignItems="center">
-          <Avatar src="/path-to-avatar.jpg" />
+          <Avatar src={props.accountID.avatarIMG} />
           <Box>
             <Typography variant="subtitle2">
               {props.accountID.fullname}

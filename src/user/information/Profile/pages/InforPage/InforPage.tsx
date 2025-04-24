@@ -5,13 +5,17 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import EditIcon from "@mui/icons-material/Edit";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import TextField from "@mui/material/TextField";
 import { EditDialog } from "../../components/EditDialog";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { handleError } from "../../../../../helper/HandleError/handleError";
 import { useUpdateUserInfoMutation } from "../../../../../redux/feature/user/userApiSlice";
 import { toast } from "react-toastify";
+import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+// import DeleteIcon from "@mui/icons-material/Delete";
 
 type basicInforType = {
   fullname: string;
@@ -34,6 +38,8 @@ export const InforPage = ({
   address: string;
   phone: string;
 }) => {
+  const imageRef = useRef<HTMLInputElement>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [openBasicInfo, setOpenBasicInfo] = useState(false);
   const defaultBasic = {
     fullname: fullname,
@@ -48,11 +54,25 @@ export const InforPage = ({
   useEffect(() => {
     if (fullname && email) {
       reset(defaultBasic);
+      if (avatarImg) {
+        setPreviewImage(avatarImg);
+      }
     }
   }, [fullname, phone, email, avatarImg]);
   const onSubmit: SubmitHandler<basicInforType> = async (data) => {
     try {
-      const response = await updateUser(data);
+      const formData = new FormData();
+      formData.append("fullname", data.fullname);
+      formData.append("address", data.address);
+      formData.append("email", data.email);
+      formData.append("phone", data.phone);
+
+      const file = imageRef.current?.files?.[0];
+      if (file) {
+        formData.append("avatarIMG", file);
+      }
+
+      const response = await updateUser(formData);
       if (response.data?.success) {
         toast.success(response.data?.message);
         setOpenBasicInfo(false);
@@ -60,6 +80,13 @@ export const InforPage = ({
     } catch (err) {
       const error = handleError(err);
       console.log(error);
+    }
+  };
+  const handleAddImage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const imgUrl = URL.createObjectURL(file);
+      setPreviewImage(imgUrl);
     }
   };
   return (
@@ -104,7 +131,56 @@ export const InforPage = ({
         submit={handleSubmit(onSubmit)}
         title="Edit Basic Information"
       >
-        <Stack spacing={2} sx={{ mt: 2 }}>
+        <Stack spacing={3} sx={{ mt: 2 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              mb: 2,
+            }}
+          >
+            <Avatar
+              src={previewImage ? previewImage : "/default_avatar.png"}
+              sx={{
+                width: 100,
+                height: 100,
+                mb: 2,
+                border: "4px solid white",
+                boxShadow: 3,
+              }}
+            />
+
+            <Stack direction="row" spacing={2} alignItems="center">
+              <input
+                ref={imageRef}
+                onChange={handleAddImage}
+                type="file"
+                accept="image/*"
+                hidden
+              />
+              <Button
+                variant="outlined"
+                component="label"
+                size="small"
+                onClick={() => imageRef.current?.click()}
+                startIcon={<CloudUploadIcon />}
+                sx={{ borderRadius: 2 }}
+              >
+                Upload Photo
+              </Button>
+
+              {/* <IconButton
+                color="error"
+                sx={{ border: "1px solid", borderColor: "error.light", p: 1 }}
+              >
+                <DeleteIcon />
+              </IconButton> */}
+            </Stack>
+          </Box>
+
+          <Divider sx={{ my: 1 }}>Profile Information</Divider>
+
           <TextField label="Full Name" {...register("fullname")} fullWidth />
           <TextField label="Phone" {...register("phone")} fullWidth />
           <TextField label="Address" {...register("address")} fullWidth />

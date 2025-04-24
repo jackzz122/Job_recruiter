@@ -16,6 +16,15 @@ export const Certificate = ({
   certificate: certificateType[];
 }) => {
   const [openCertificates, setOpenCertificates] = useState(false);
+  const [currentCertificate, setCurrentCertificate] =
+    useState<certificateType>();
+  const handleEdit = (id: string) => {
+    const find = certificate.find((cer) => cer._id === id);
+    if (find) {
+      setCurrentCertificate(find);
+      setOpenCertificates(true);
+    }
+  };
   return (
     <>
       <Paper sx={{ p: 3, position: "relative" }}>
@@ -40,12 +49,19 @@ export const Certificate = ({
             <p>Not found list</p>
           ) : (
             certificate.map((certi) => {
-              return <CertificateItem key={certi._id} {...certi} />;
+              return (
+                <CertificateItem
+                  key={certi._id}
+                  {...certi}
+                  handleEdit={handleEdit}
+                />
+              );
             })
           )}
         </Stack>
       </Paper>
       <DialogCerti
+        currentCerti={currentCertificate}
         openCertificates={openCertificates}
         setOpenCertificates={setOpenCertificates}
       />

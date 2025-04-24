@@ -12,7 +12,7 @@ export const CandidateItem = ({ candidate }: { candidate: UserType }) => {
     <TableRow key={candidate._id} hover>
       <TableCell>
         <Stack direction="row" spacing={2} alignItems="center">
-          <Avatar src={candidate.avatarImg ? candidate.avatarImg : ""} />
+          <Avatar src={candidate.avatarIMG ? candidate.avatarIMG : ""} />
           <Box>
             <Typography variant="subtitle2">{candidate.fullname}</Typography>
             <Typography variant="body2" color="text.secondary">

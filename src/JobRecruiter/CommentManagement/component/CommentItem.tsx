@@ -17,12 +17,10 @@ import { useState } from "react";
 import { DialogReportComment } from "./DialogReportComment";
 
 export const CommentItem = ({ comment }: { comment: CommentType }) => {
-  // Get first letter of fullname for avatar
   const getInitials = (name: string) => {
     return name.charAt(0).toUpperCase();
   };
-
-  // Report dialog state
+  console.log("comment", comment);
   const [reportDialogOpen, setReportDialogOpen] = useState(false);
 
   const handleOpenReportDialog = () => {

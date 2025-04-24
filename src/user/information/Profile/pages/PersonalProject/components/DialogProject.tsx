@@ -7,10 +7,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { projectType } from "../../../../../../types/UserType";
 import { handleError } from "../../../../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 export const DialogProject = ({
+  currentProject,
   openProjects,
   setOpenProjects,
 }: {
+  currentProject?: projectType;
   openProjects: boolean;
   setOpenProjects: (check: boolean) => void;
 }) => {
@@ -22,19 +25,41 @@ export const DialogProject = ({
       link: "",
     },
   };
-  const { register, handleSubmit } = useForm<{
+  const { register, handleSubmit, setValue, reset } = useForm<{
     projects: Omit<projectType, "_id">;
   }>({
     defaultValues: defaultProject,
   });
+  useEffect(() => {
+    if (currentProject) {
+      setValue("projects.link", currentProject.link);
+      setValue("projects.description", currentProject.description);
+      setValue("projects.projectName", currentProject.projectName);
+    } else reset(defaultProject);
+  }, [currentProject, setValue, reset]);
   const onSubmit: SubmitHandler<{
     projects: Omit<projectType, "_id">;
   }> = async (data) => {
     try {
-      const response = await updateUser(data);
-      if (response.data?.success) {
-        toast.success(response.data?.message);
-        setOpenProjects(false);
+      if (currentProject) {
+        const response = await updateUser({
+          projects: {
+            _id: currentProject._id,
+            description: data.projects.description,
+            link: data.projects.link,
+            projectName: data.projects.projectName,
+          } as projectType,
+        });
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+          setOpenProjects(false);
+        }
+      } else {
+        const response = await updateUser(data);
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+          setOpenProjects(false);
+        }
       }
     } catch (err) {
       const error = handleError(err);

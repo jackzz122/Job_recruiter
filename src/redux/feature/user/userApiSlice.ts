@@ -22,17 +22,25 @@ export const userApiSlice = ApiSlice.injectEndpoints({
     }),
     updateUserInfo: builder.mutation<
       ResponseUserType<UserType[]>,
-      | Partial<UserType>
-      | { education: Omit<educationType, "_id"> }
+      | Partial<
+          Omit<UserType, "avatarIMG"> & {
+            avatarIMG: File | null;
+          }
+        >
+      | FormData
+      | { education: Partial<Omit<educationType, "_id">> & { _id: string } }
+      | { education: Partial<Omit<educationType, "_id">> }
       | { certificate: Omit<certificateType, "_id"> }
       | { workEx: Omit<workExType, "_id"> }
       | { projects: Omit<projectType, "_id"> }
     >({
-      query: (data) => ({
-        url: "updateAccount",
-        method: "PATCH",
-        body: data,
-      }),
+      query: (data) => {
+        return {
+          url: "updateAccount",
+          method: "PATCH",
+          body: data,
+        };
+      },
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
     changePassword: builder.mutation<

@@ -33,7 +33,12 @@ export type ReportResponseType<T> = ResponseType<T>;
 
 export type getReportItem = {
   _id: string;
-  accountId: { _id: string; fullname: string; email: string };
+  accountId: {
+    _id: string;
+    fullname: string;
+    email: string;
+    avatarIMG: string;
+  };
   createdAt: string;
   reportTarget: CommentType | JobType | CompanyType;
   reason: { reasonTitle: string; additionalReason: string; email: string };

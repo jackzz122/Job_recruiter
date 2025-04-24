@@ -16,13 +16,29 @@ export const Education = ({
   educationList: educationType[];
 }) => {
   const [openEducation, setOpenEducation] = useState(false);
+  const [currentEducation, setCurrentEducation] = useState<
+    educationType | undefined
+  >(undefined);
+
+  const handleAddEducation = () => {
+    setCurrentEducation(undefined);
+    setOpenEducation(true);
+  };
+
+  const handleEditEducation = (id: string) => {
+    const educationToEdit = educationList.find((edu) => edu._id === id);
+    if (educationToEdit) {
+      setCurrentEducation(educationToEdit);
+      setOpenEducation(true);
+    }
+  };
 
   return (
     <>
       <Paper sx={{ p: 3, position: "relative" }}>
         <IconButton
           sx={{ position: "absolute", right: 8, top: 8 }}
-          onClick={() => setOpenEducation(true)}
+          onClick={handleAddEducation}
         >
           {educationList.length === 0 ? (
             <EditIcon />
@@ -36,13 +52,16 @@ export const Education = ({
             Education
           </Typography>
         </Box>
-        {educationList.map((edu) => {
-          return <EducationItem key={edu._id} {...edu} />;
+        {educationList.map((edu, index) => {
+          return (
+            <EducationItem key={index} {...edu} onEdit={handleEditEducation} />
+          );
         })}
       </Paper>
       <DialogEdu
         openEducation={openEducation}
         setOpenEducation={setOpenEducation}
+        currentEducation={currentEducation}
       />
     </>
   );

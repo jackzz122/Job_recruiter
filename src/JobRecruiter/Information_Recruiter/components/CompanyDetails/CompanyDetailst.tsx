@@ -129,10 +129,23 @@ export const CompanyDetailst = () => {
       </Grid2>
 
       <Grid2 size={{ xs: 6 }}>
-        <FormControlLabel
-          control={<Switch {...register("overTime")} />}
-          label="OverTime"
-          sx={{ mb: 3 }}
+        <Controller
+          name="overTime"
+          control={control}
+          render={({ field }) => {
+            return (
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={field.value === true}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                  />
+                }
+                label="OverTime"
+                sx={{ mb: 3 }}
+              />
+            );
+          }}
         />
       </Grid2>
     </>

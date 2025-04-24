@@ -1,25 +1,27 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import DriveFileRenameOutlineOutlinedIcon from "@mui/icons-material/DriveFileRenameOutlineOutlined";
-import IconButton from "@mui/material/IconButton";
-import Stack from "@mui/material/Stack";
 import { ItemList } from "../../../components/ItemList";
-export const EducationItem = ({
-  major,
-  school,
-  startDate,
-  endDate,
-}: {
+
+type EducationItemProps = {
+  _id: string;
   major: string;
   school: string;
   startDate: string;
   endDate: string;
-}) => {
+  onEdit?: (id: string) => void;
+};
+
+export const EducationItem = ({
+  _id,
+  major,
+  school,
+  startDate,
+  endDate,
+  onEdit,
+}: EducationItemProps) => {
   return (
     <>
-      <ItemList>
+      <ItemList type="education" id={_id} onEdit={onEdit}>
         <Box marginBlock={2}>
           <Typography variant="subtitle1" fontWeight="bold">
             Ngành nghề: {major}

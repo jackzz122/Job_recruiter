@@ -25,6 +25,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import { getUserInfo } from "../../redux/feature/user/userSlice";
 import { useDispatch } from "react-redux";
+import { RoleName } from "../../types/UserType";
 const drawerWidth = 270;
 
 export type setting_types = {
@@ -147,7 +148,17 @@ export function LayoutForRecruiter_Admin({
                 <NotificationsActiveOutlinedIcon sx={{ color: "white" }} />
               </IconButton>
               <IconButton>
-                <Avatar alt="Company logo" src="/bss_avatar.png" />
+                {user?.role === RoleName.STAFF_RECRUIT ||
+                  (user?.role === RoleName.RECRUIT && (
+                    <Avatar
+                      alt="Company logo"
+                      src={
+                        (user?.companyId as CompanyType).logo
+                          ? (user?.companyId as CompanyType)?.logo
+                          : "/bss_avatar.png"
+                      }
+                    />
+                  ))}
                 <Typography
                   sx={{ color: "white" }}
                   fontSize={20}

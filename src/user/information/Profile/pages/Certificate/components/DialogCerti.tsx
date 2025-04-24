@@ -6,10 +6,13 @@ import { certificateType } from "../../../../../../types/UserType";
 import { useUpdateUserInfoMutation } from "../../../../../../redux/feature/user/userApiSlice";
 import { handleError } from "../../../../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 export const DialogCerti = ({
+  currentCerti,
   openCertificates,
   setOpenCertificates,
 }: {
+  currentCerti?: certificateType;
   openCertificates: boolean;
   setOpenCertificates: (check: boolean) => void;
 }) => {
@@ -25,21 +28,43 @@ export const DialogCerti = ({
   const listOfYear = [...Array(new Date().getFullYear() - 2000)].map(
     (_, i) => i + 0
   );
-  const { register, handleSubmit, control, reset } = useForm<{
+  const { register, handleSubmit, control, reset, setValue } = useForm<{
     certificate: certificateType;
   }>({
     defaultValues: defaultValue,
   });
+  useEffect(() => {
+    if (currentCerti) {
+      setValue("certificate.month", currentCerti.month);
+      setValue("certificate.name", currentCerti.name);
+      setValue("certificate.organization", currentCerti.organization);
+      setValue("certificate.year", currentCerti.year);
+    } else reset(defaultValue);
+  }, [reset, currentCerti, setValue]);
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
   const onSubmit: SubmitHandler<{ certificate: certificateType }> = async (
     data
   ) => {
     try {
-      const response = await updateUser(data);
-      if (response.data?.success) {
-        toast.success(response.data?.message);
-        setOpenCertificates(false);
-        reset();
+      if (currentCerti) {
+        const response = await updateUser({
+          certificate: {
+            ...data.certificate,
+            _id: currentCerti._id,
+          } as certificateType,
+        });
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+          setOpenCertificates(false);
+          reset();
+        }
+      } else {
+        const response = await updateUser(data);
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+          setOpenCertificates(false);
+          reset();
+        }
       }
     } catch (err) {
       const error = handleError(err);

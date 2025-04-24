@@ -12,7 +12,14 @@ import { workExType } from "../../../../../types/UserType";
 import { WorkExItem } from "./components/WorkExItem";
 export const WorkExp = ({ workEx }: { workEx: workExType[] }) => {
   const [openExperience, setOpenExperience] = useState(false);
-
+  const [currenEx, setCurrentEx] = useState<workExType>();
+  const handleEditEx = (id: string) => {
+    const findEx = workEx.find((work) => work._id === id);
+    if (findEx) {
+      setCurrentEx(findEx);
+      setOpenExperience(true);
+    }
+  };
   return (
     <>
       <Paper sx={{ p: 3, position: "relative" }}>
@@ -33,12 +40,19 @@ export const WorkExp = ({ workEx }: { workEx: workExType[] }) => {
             <p>............</p>
           ) : (
             workEx.map((work) => {
-              return <WorkExItem key={work._id} {...work} />;
+              return (
+                <WorkExItem
+                  key={work._id}
+                  {...work}
+                  handleEdit={handleEditEx}
+                />
+              );
             })
           )}
         </Stack>
       </Paper>
       <DialogWorkEx
+        currentEx={currenEx}
         openExperience={openExperience}
         setOpenExperience={setOpenExperience}
       />

@@ -36,7 +36,7 @@ export const CompanyInfo = () => {
     }
   }, [user]);
   const navigate = useNavigate();
-
+  console.log(companyInfor);
   const companyInformation = [
     {
       title: "Company Information",
@@ -94,7 +94,9 @@ export const CompanyInfo = () => {
               }}
             >
               <Avatar
-                src="/bss_avatar.png"
+                src={
+                  companyInfor?.logo ? companyInfor?.logo : "/bss_avatar.png"
+                }
                 sx={{
                   width: 160,
                   height: 160,

@@ -54,7 +54,7 @@ export const EmployeeInfor = () => {
               }}
             >
               <Avatar
-                src="/default_avatar.png"
+                src={user?.avatarIMG ? user?.avatarIMG : "/default_avatar.png"}
                 sx={{
                   width: 140,
                   height: 140,
