@@ -29,6 +29,7 @@ export const DialogEdu = ({
       school: "",
       startDate: "",
       endDate: "",
+      description: "",
     },
   };
 
@@ -45,6 +46,7 @@ export const DialogEdu = ({
       setValue("education.school", currentEducation.school);
       setValue("education.startDate", currentEducation.startDate);
       setValue("education.endDate", currentEducation.endDate);
+      setValue("education.description", currentEducation.description);
     } else {
       reset(defaultEducationValue);
     }
@@ -116,6 +118,11 @@ export const DialogEdu = ({
               type="date"
             />
           </Box>
+          <TextField
+            label="Description"
+            {...register("education.description")}
+            fullWidth
+          />
         </Stack>
       </EditDialog>
     </>

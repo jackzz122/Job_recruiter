@@ -12,9 +12,11 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
 import { Button } from "@mui/material";
 import { colorButtonOrange } from "../../../themeContext";
+import { useNavigate } from "react-router-dom";
 
 export const MyInfo = () => {
   const user = useSelector(selectUser);
+  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -57,6 +59,7 @@ export const MyInfo = () => {
         <Button
           sx={{ marginTop: 2, bgcolor: colorButtonOrange }}
           variant="contained"
+          onClick={() => navigate("/layoutCV")}
         >
           Create CV
         </Button>

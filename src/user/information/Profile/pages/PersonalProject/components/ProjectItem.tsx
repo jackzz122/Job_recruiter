@@ -9,8 +9,14 @@ export const ProjectItem = ({
   link,
   handleEdit,
   description,
+  role,
+  startDate,
+  endDate,
 }: {
   _id: string;
+  role: string;
+  startDate: string;
+  endDate: string;
   handleEdit: (id: string) => void;
   projectName: string;
   link: string;
@@ -21,9 +27,10 @@ export const ProjectItem = ({
       <ItemList type="projects" id={_id} onEdit={handleEdit}>
         <Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-            <Typography variant="subtitle1" fontWeight="bold">
+            <Typography variant="h6" fontWeight="bold">
               {projectName}
             </Typography>
+
             <Button
               size="small"
               startIcon={<LinkIcon />}
@@ -33,6 +40,13 @@ export const ProjectItem = ({
               Your link project
             </Button>
           </Box>
+          <Typography
+            variant="subtitle2"
+            sx={{ color: "gray", marginBlock: 1 }}
+            fontStyle="italic"
+          >
+            {role} - {startDate} - {endDate}
+          </Typography>
           <Typography variant="body2" sx={{ mt: 1 }}>
             {description}
           </Typography>

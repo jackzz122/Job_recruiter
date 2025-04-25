@@ -1,69 +1,29 @@
-import React from "react";
-import {
-  Avatar,
-  Box,
-  Chip,
-  Container,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Grid2 from "@mui/material/Grid2";
+import Container from "@mui/material/Container";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../../redux/feature/user/userSlice";
 
-type CVProps = {
-  userData: {
-    avatarIMG: string;
-    fullname: string;
-    phone: string;
-    address: string;
-    email: string;
-    aboutMe: string;
-    skills: string[];
-    education: Array<{
-      schoolName: string;
-      major: string;
-      startDate: string;
-      endDate: string;
-      description: string;
-    }>;
-    workEx: Array<{
-      companyName: string;
-      position: string;
-      startDate: string;
-      endDate: string;
-      description: string;
-    }>;
-    projects: Array<{
-      projectName: string;
-      role: string;
-      startDate: string;
-      endDate: string;
-      description: string;
-    }>;
-    certificate: Array<{
-      certName: string;
-      organization: string;
-      issueDate: string;
-      description: string;
-    }>;
-  };
-};
-
-export const FirstCV: React.FC<CVProps> = ({ userData }) => {
+export const FirstCV = () => {
   const theme = useTheme();
-
+  const user = useSelector(selectUser);
   return (
     <Container
       maxWidth="lg"
       sx={{ bgcolor: "background.paper", p: 4, height: "100%" }}
     >
-      <Grid container spacing={3}>
+      <Grid2 container spacing={3}>
         {/* Left column - Personal info */}
-        <Grid item xs={12} md={4}>
+        <Grid2 size={{ xs: 12, md: 4 }}>
           <Paper
             elevation={0}
             sx={{
@@ -76,8 +36,8 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
             {/* Profile image */}
             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
               <Avatar
-                src={userData.avatarIMG || "/placeholder-avatar.png"}
-                alt={userData.fullname}
+                src={user?.avatarIMG || "/avatar.png"}
+                alt={user?.fullname}
                 sx={{
                   width: 120,
                   height: 120,
@@ -95,7 +55,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                 fontWeight="bold"
                 color="text.primary"
               >
-                {userData.fullname}
+                {user?.fullname}
               </Typography>
             </Box>
 
@@ -116,15 +76,15 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               <Stack spacing={1.5}>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <EmailIcon fontSize="small" color="action" />
-                  <Typography variant="body2">{userData.email}</Typography>
+                  <Typography variant="body2">{user?.email}</Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <PhoneIcon fontSize="small" color="action" />
-                  <Typography variant="body2">{userData.phone}</Typography>
+                  <Typography variant="body2">{user?.phone}</Typography>
                 </Box>
                 <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                   <LocationOnIcon fontSize="small" color="action" />
-                  <Typography variant="body2">{userData.address}</Typography>
+                  <Typography variant="body2">{user?.address}</Typography>
                 </Box>
               </Stack>
             </Box>
@@ -143,10 +103,10 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                 Skills
               </Typography>
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                {userData.skills.map((skill, index) => (
+                {user?.skills?.map((skill, index) => (
                   <Chip
                     key={index}
-                    label={skill}
+                    label={skill.value}
                     size="small"
                     sx={{
                       bgcolor: "grey.200",
@@ -157,10 +117,10 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               </Box>
             </Box>
           </Paper>
-        </Grid>
+        </Grid2>
 
         {/* Right column - Professional details */}
-        <Grid item xs={12} md={8}>
+        <Grid2 size={{ xs: 12, md: 8 }}>
           {/* About me */}
           <Box sx={{ mb: 3 }}>
             <Typography
@@ -175,7 +135,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               About Me
             </Typography>
             <Typography variant="body1" color="text.secondary">
-              {userData.aboutMe}
+              {user?.aboutMe}
             </Typography>
           </Box>
 
@@ -193,7 +153,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               Work Experience
             </Typography>
             <Stack spacing={2}>
-              {userData.workEx.map((job, index) => (
+              {user?.workEx?.map((job, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -203,10 +163,10 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                   }}
                 >
                   <Typography variant="subtitle1" fontWeight="bold">
-                    {job.position}
+                    {job.jobTitle}
                   </Typography>
                   <Typography variant="subtitle2" color="text.secondary">
-                    {job.companyName}
+                    {job.company}
                   </Typography>
                   <Typography
                     variant="caption"
@@ -216,7 +176,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                     {job.startDate} - {job.endDate}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
-                    {job.description}
+                    {job.responsibilites}
                   </Typography>
                 </Box>
               ))}
@@ -237,7 +197,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               Education
             </Typography>
             <Stack spacing={2}>
-              {userData.education.map((edu, index) => (
+              {user?.education?.map((edu, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -247,7 +207,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                   }}
                 >
                   <Typography variant="subtitle1" fontWeight="bold">
-                    {edu.schoolName}
+                    {edu.school}
                   </Typography>
                   <Typography variant="subtitle2" color="text.secondary">
                     {edu.major}
@@ -259,7 +219,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                   >
                     {edu.startDate} - {edu.endDate}
                   </Typography>
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="subtitle2" color="text.secondary">
                     {edu.description}
                   </Typography>
                 </Box>
@@ -281,7 +241,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               Projects
             </Typography>
             <Stack spacing={2}>
-              {userData.projects.map((project, index) => (
+              {user?.projects?.map((project, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -325,7 +285,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               Certificates
             </Typography>
             <Stack spacing={2}>
-              {userData.certificate.map((cert, index) => (
+              {user?.certificate?.map((cert, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -335,7 +295,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                   }}
                 >
                   <Typography variant="subtitle1" fontWeight="bold">
-                    {cert.certName}
+                    {cert.name}
                   </Typography>
                   <Typography variant="subtitle2" color="text.secondary">
                     {cert.organization}
@@ -345,7 +305,7 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
                     color="text.secondary"
                     sx={{ display: "block", mb: 0.5 }}
                   >
-                    {cert.issueDate}
+                    Month: {cert.month}, {cert.year}
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {cert.description}
@@ -354,8 +314,8 @@ export const FirstCV: React.FC<CVProps> = ({ userData }) => {
               ))}
             </Stack>
           </Box>
-        </Grid>
-      </Grid>
+        </Grid2>
+      </Grid2>
     </Container>
   );
 };

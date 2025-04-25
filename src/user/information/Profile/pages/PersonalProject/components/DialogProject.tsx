@@ -8,6 +8,7 @@ import { projectType } from "../../../../../../types/UserType";
 import { handleError } from "../../../../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
 import { useEffect } from "react";
+import Box from "@mui/material/Box";
 export const DialogProject = ({
   currentProject,
   openProjects,
@@ -23,6 +24,9 @@ export const DialogProject = ({
       projectName: "",
       description: "",
       link: "",
+      startDate: "",
+      endDate: "",
+      role: "",
     },
   };
   const { register, handleSubmit, setValue, reset } = useForm<{
@@ -35,6 +39,9 @@ export const DialogProject = ({
       setValue("projects.link", currentProject.link);
       setValue("projects.description", currentProject.description);
       setValue("projects.projectName", currentProject.projectName);
+      setValue("projects.startDate", currentProject.startDate);
+      setValue("projects.endDate", currentProject.endDate);
+      setValue("projects.role", currentProject.role);
     } else reset(defaultProject);
   }, [currentProject, setValue, reset]);
   const onSubmit: SubmitHandler<{
@@ -53,12 +60,14 @@ export const DialogProject = ({
         if (response.data?.success) {
           toast.success(response.data?.message);
           setOpenProjects(false);
+          reset();
         }
       } else {
         const response = await updateUser(data);
         if (response.data?.success) {
           toast.success(response.data?.message);
           setOpenProjects(false);
+          reset();
         }
       }
     } catch (err) {
@@ -82,11 +91,27 @@ export const DialogProject = ({
             {...register("projects.projectName")}
             fullWidth
           />
+          <TextField label="Role" {...register("projects.role")} fullWidth />
           <TextField
             label="Project Link"
             {...register("projects.link")}
             fullWidth
           />
+          <Box>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              Enter the date of your project (Start date and End Date)
+            </Typography>
+            <input
+              {...register("projects.startDate")}
+              className="border border-gray-300 p-4 mr-2"
+              type="date"
+            />
+            <input
+              {...register("projects.endDate")}
+              className="border border-gray-300 p-4"
+              type="date"
+            />
+          </Box>
           <TextField
             label="Description"
             {...register("projects.description")}

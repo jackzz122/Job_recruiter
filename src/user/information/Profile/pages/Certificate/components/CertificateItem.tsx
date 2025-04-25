@@ -6,10 +6,12 @@ export const CertificateItem = ({
   name,
   organization,
   month,
+  description,
   year,
   handleEdit,
 }: {
   _id: string;
+  description: string;
   name: string;
   organization: string;
   month: number;
@@ -28,6 +30,9 @@ export const CertificateItem = ({
           </Typography>
           <Typography color="text.secondary">
             {month}/{year}
+          </Typography>
+          <Typography color="text.secondary">
+            Description: {description}
           </Typography>
         </Box>
       </ItemList>

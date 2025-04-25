@@ -1,63 +1,24 @@
-import React from "react";
-import {
-  Avatar,
-  Box,
-  Chip,
-  Container,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-  useTheme,
-} from "@mui/material";
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Container from "@mui/material/Container";
+import Grid2 from "@mui/material/Grid2";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useTheme } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../../../redux/feature/user/userSlice";
 
-type CVProps = {
-  userData: {
-    avatarIMG: string;
-    fullname: string;
-    phone: string;
-    address: string;
-    email: string;
-    aboutMe: string;
-    skills: string[];
-    education: Array<{
-      schoolName: string;
-      major: string;
-      startDate: string;
-      endDate: string;
-      description: string;
-    }>;
-    workEx: Array<{
-      companyName: string;
-      position: string;
-      startDate: string;
-      endDate: string;
-      description: string;
-    }>;
-    projects: Array<{
-      projectName: string;
-      role: string;
-      startDate: string;
-      endDate: string;
-      description: string;
-    }>;
-    certificate: Array<{
-      certName: string;
-      organization: string;
-      issueDate: string;
-      description: string;
-    }>;
-  };
-};
-
-export const SecondCV: React.FC<CVProps> = ({ userData }) => {
+export const SecondCV = () => {
   const theme = useTheme();
   const primaryColor = theme.palette.primary;
 
+  const user = useSelector(selectUser);
   return (
     <Container
       maxWidth="lg"
@@ -77,8 +38,8 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
         {/* Profile image */}
         <Box sx={{ mb: { xs: 2, md: 0 }, mr: { md: 3 } }}>
           <Avatar
-            src={userData.avatarIMG || "/placeholder-avatar.png"}
-            alt={userData.fullname}
+            src={user?.avatarIMG}
+            alt={user?.fullname}
             sx={{
               width: 140,
               height: 140,
@@ -100,7 +61,7 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
             color="text.primary"
             mb={1}
           >
-            {userData.fullname}
+            {user?.fullname}
           </Typography>
           <Typography
             variant="body1"
@@ -108,7 +69,7 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
             mb={2}
             sx={{ maxWidth: "36rem" }}
           >
-            {userData.aboutMe}
+            {user?.aboutMe}
           </Typography>
 
           <Stack
@@ -122,15 +83,15 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
           >
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <EmailIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{userData.email}</Typography>
+              <Typography variant="body2">{user?.email}</Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <PhoneIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{userData.phone}</Typography>
+              <Typography variant="body2">{user?.phone}</Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
               <LocationOnIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{userData.address}</Typography>
+              <Typography variant="body2">{user?.address}</Typography>
             </Box>
           </Stack>
         </Box>
@@ -142,10 +103,10 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
           Skills
         </Typography>
         <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {userData.skills.map((skill, index) => (
+          {user?.skills?.map((skill, index) => (
             <Chip
               key={index}
-              label={skill}
+              label={skill.value}
               sx={{
                 bgcolor: `${primaryColor.light}22`,
                 color: "primary.main",
@@ -163,14 +124,14 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
           Work Experience
         </Typography>
         <Stack spacing={3}>
-          {userData.workEx.map((job, index) => (
+          {user?.workEx?.map((job, index) => (
             <Box key={index} sx={{ position: "relative", pl: 4 }}>
               {/* Timeline dot */}
               <Box
                 sx={{
                   position: "absolute",
                   left: 0,
-                  top: 0,
+                  top: 10,
                   width: 16,
                   height: 16,
                   borderRadius: "50%",
@@ -178,12 +139,12 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
                 }}
               />
               {/* Timeline line */}
-              {index < userData.workEx.length - 1 && (
+              {index < (user?.workEx?.length || 0) - 1 && (
                 <Box
                   sx={{
                     position: "absolute",
-                    left: 8,
-                    top: 16,
+                    left: 7,
+                    top: 26,
                     width: 2,
                     height: "calc(100% + 24px)",
                     bgcolor: "primary.light",
@@ -192,10 +153,10 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
                 />
               )}
               <Typography variant="h6" fontWeight="bold">
-                {job.position}
+                {job.jobTitle}
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" mb={0.5}>
-                {job.companyName}
+                {job.company}
               </Typography>
               <Typography
                 variant="caption"
@@ -205,7 +166,7 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
                 {job.startDate} - {job.endDate}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {job.description}
+                {job.responsibilites}
               </Typography>
             </Box>
           ))}
@@ -218,14 +179,14 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
           Education
         </Typography>
         <Stack spacing={3}>
-          {userData.education.map((edu, index) => (
+          {user?.education?.map((edu, index) => (
             <Box key={index} sx={{ position: "relative", pl: 4 }}>
               {/* Timeline dot */}
               <Box
                 sx={{
                   position: "absolute",
                   left: 0,
-                  top: 0,
+                  top: 10,
                   width: 16,
                   height: 16,
                   borderRadius: "50%",
@@ -233,12 +194,12 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
                 }}
               />
               {/* Timeline line */}
-              {index < userData.education.length - 1 && (
+              {index < (user?.education?.length || 0) - 1 && (
                 <Box
                   sx={{
                     position: "absolute",
                     left: 8,
-                    top: 16,
+                    top: 26,
                     width: 2,
                     height: "calc(100% + 24px)",
                     bgcolor: "primary.light",
@@ -247,7 +208,7 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
                 />
               )}
               <Typography variant="h6" fontWeight="bold">
-                {edu.schoolName}
+                {edu.school}
               </Typography>
               <Typography variant="subtitle1" color="text.secondary" mb={0.5}>
                 {edu.major}
@@ -272,74 +233,65 @@ export const SecondCV: React.FC<CVProps> = ({ userData }) => {
         <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
           Projects
         </Typography>
-        <Grid container spacing={2}>
-          {userData.projects.map((project, index) => (
-            <Grid item xs={12} md={6} key={index}>
+        <Grid2 container spacing={2}>
+          {user?.projects?.map((project, index) => (
+            <Grid2 size={{ xs: 12, md: 6 }} key={index}>
               <Paper
-                elevation={0}
+                elevation={1}
                 sx={{
                   p: 2,
-                  borderRadius: 1,
-                  bgcolor: "grey.50",
-                  border: `1px solid ${theme.palette.grey[200]}`,
+                  height: "100%",
+                  borderLeft: `4px solid ${theme.palette.primary.main}`,
                 }}
               >
                 <Typography variant="h6" fontWeight="bold" mb={0.5}>
                   {project.projectName}
                 </Typography>
-                <Typography variant="subtitle2" color="primary" mb={0.5}>
-                  {project.role}
-                </Typography>
                 <Typography
-                  variant="caption"
+                  variant="body2"
                   color="text.secondary"
-                  sx={{ display: "block", mb: 1 }}
+                  sx={{ mb: 1 }}
                 >
-                  {project.startDate} - {project.endDate}
+                  <Box component="span" sx={{ fontWeight: "medium" }}>
+                    {project.role}
+                  </Box>{" "}
+                  • {project.startDate} - {project.endDate}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
                   {project.description}
                 </Typography>
               </Paper>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       </Box>
 
       {/* Certificates section */}
-      <Box sx={{ mb: 2 }}>
+      <Box>
         <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
           Certificates
         </Typography>
-        <Grid container spacing={2}>
-          {userData.certificate.map((cert, index) => (
-            <Grid item xs={12} md={6} key={index}>
-              <Box sx={{ display: "flex", gap: 1.5 }}>
-                <Box sx={{ mt: 0.5 }}>
-                  <CheckCircleIcon color="primary" />
-                </Box>
-                <Box>
-                  <Typography variant="h6" fontWeight="bold">
-                    {cert.certName}
-                  </Typography>
-                  <Typography variant="subtitle2" color="text.secondary">
-                    {cert.organization}
-                  </Typography>
-                  <Typography
-                    variant="caption"
-                    color="primary"
-                    sx={{ display: "block", mb: 0.5 }}
-                  >
-                    {cert.issueDate}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {cert.description}
-                  </Typography>
-                </Box>
+        <Stack spacing={2}>
+          {user?.certificate?.map((cert, index) => (
+            <Box
+              key={index}
+              sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}
+            >
+              <CheckCircleIcon color="primary" sx={{ mt: 0.5 }} />
+              <Box>
+                <Typography variant="h6" fontWeight="bold">
+                  {cert.name}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" mb={0.5}>
+                  {cert.organization} • {cert.month} {cert.year}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {cert.description}
+                </Typography>
               </Box>
-            </Grid>
+            </Box>
           ))}
-        </Grid>
+        </Stack>
       </Box>
     </Container>
   );

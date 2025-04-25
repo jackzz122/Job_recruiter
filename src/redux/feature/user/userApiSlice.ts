@@ -3,6 +3,7 @@ import {
   educationType,
   projectType,
   ResponseUserType,
+  skillType,
   UserType,
   workExType,
 } from "../../../types/UserType";
@@ -33,6 +34,8 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       | { certificate: Omit<certificateType, "_id"> }
       | { workEx: Omit<workExType, "_id"> }
       | { projects: Omit<projectType, "_id"> }
+      | { skills: Partial<Omit<skillType, "_id">> & { _id: string } }
+      | { skills: Partial<Omit<skillType, "_id">> }
     >({
       query: (data) => {
         return {

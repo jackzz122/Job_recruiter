@@ -8,6 +8,7 @@ type EducationItemProps = {
   school: string;
   startDate: string;
   endDate: string;
+  description: string;
   onEdit?: (id: string) => void;
 };
 
@@ -17,6 +18,7 @@ export const EducationItem = ({
   school,
   startDate,
   endDate,
+  description,
   onEdit,
 }: EducationItemProps) => {
   return (
@@ -30,6 +32,7 @@ export const EducationItem = ({
           <Typography color="text.secondary">
             (Thời gian bắt đầu - Kết thúc): {startDate} - {endDate}
           </Typography>
+          <Typography color="text.secondary">Mô tả: {description}</Typography>
         </Box>
       </ItemList>
     </>

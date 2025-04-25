@@ -22,6 +22,7 @@ export const DialogCerti = ({
       month: 0,
       organization: "",
       year: 0,
+      description: "",
     },
   };
   const listOfMonth = [...Array(12)].map((_, i) => i + 0);
@@ -39,6 +40,7 @@ export const DialogCerti = ({
       setValue("certificate.name", currentCerti.name);
       setValue("certificate.organization", currentCerti.organization);
       setValue("certificate.year", currentCerti.year);
+      setValue("certificate.description", currentCerti.description);
     } else reset(defaultValue);
   }, [reset, currentCerti, setValue]);
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
@@ -129,7 +131,7 @@ export const DialogCerti = ({
                     className="border p-3 border-gray-400 rounded-md"
                   >
                     <option value="" hidden>
-                      Choose month
+                      Choose year
                     </option>
                     {listOfYear.map((year, index) => {
                       return (
@@ -142,6 +144,11 @@ export const DialogCerti = ({
                 </>
               );
             }}
+          />
+          <TextField
+            label="Description"
+            {...register("certificate.description")}
+            fullWidth
           />
         </Stack>
       </EditDialog>

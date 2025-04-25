@@ -8,6 +8,7 @@ export const WorkExItem = ({
   startDate,
   endDate,
   responsibilites,
+  description,
   handleEdit,
 }: {
   _id: string;
@@ -16,6 +17,7 @@ export const WorkExItem = ({
   startDate: string;
   endDate: string;
   responsibilites: string;
+  description: string;
   handleEdit: (id: string) => void;
 }) => {
   return (
@@ -29,7 +31,10 @@ export const WorkExItem = ({
             {company} • {startDate} - {endDate ? endDate : "Present"}
           </Typography>
           <Typography variant="body2" sx={{ mt: 1 }}>
-            {responsibilites}
+            <strong> Responsible:</strong> {responsibilites}
+          </Typography>
+          <Typography variant="body2" sx={{ mt: 1 }}>
+            <strong>Description: </strong> {description}
           </Typography>
         </Box>
       </ItemList>

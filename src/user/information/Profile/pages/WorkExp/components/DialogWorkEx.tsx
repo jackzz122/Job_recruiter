@@ -25,6 +25,7 @@ export const DialogWorkEx = ({
       responsibilites: "",
       startDate: "",
       endDate: "",
+      description: "",
     },
   };
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
@@ -40,6 +41,7 @@ export const DialogWorkEx = ({
       setValue("workEx.responsibilites", currentEx.responsibilites);
       setValue("workEx.startDate", currentEx.startDate);
       setValue("workEx.endDate", currentEx.endDate);
+      setValue("workEx.description", currentEx.description);
     } else reset(defaultWorkValue);
   }, [currentEx, setValue, reset]);
   const onSubmit: SubmitHandler<{ workEx: Omit<workExType, "_id"> }> = async (
@@ -116,6 +118,11 @@ export const DialogWorkEx = ({
             placeholder="• List your responsibilities
     • One per line
     • Be specific"
+          />
+          <TextField
+            label="Description"
+            {...register("workEx.description")}
+            fullWidth
           />
         </Stack>
       </EditDialog>

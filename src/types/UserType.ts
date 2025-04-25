@@ -33,6 +33,7 @@ export type educationType = {
   school: string;
   startDate: string;
   endDate: string;
+  description: string;
 };
 export type workExType = {
   _id: string;
@@ -41,6 +42,7 @@ export type workExType = {
   responsibilites: string;
   startDate: string;
   endDate: string;
+  description: string;
 };
 export type certificateType = {
   _id: string;
@@ -48,12 +50,16 @@ export type certificateType = {
   organization: string;
   month: number;
   year: number;
+  description: string;
 };
 export type projectType = {
   _id: string;
   projectName: string;
   link: string;
   description: string;
+  startDate: string;
+  endDate: string;
+  role: string;
 };
 export type skillType = {
   _id: string;

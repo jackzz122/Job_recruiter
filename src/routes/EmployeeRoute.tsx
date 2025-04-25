@@ -21,6 +21,11 @@ import { JobApplied } from "../user/information/JobManage/pages/JobApplied";
 import { JobSaves } from "../user/information/JobManage/pages/JobSaves";
 import { CompanySave } from "../user/information/JobManage/pages/CompanySave";
 import { Setting } from "../user/information/UserSetting/Setting";
+import { FirstCV } from "../user/CV/pages/CV_Layout/FirstCV";
+import { SecondCV } from "../user/CV/pages/CV_Layout/SecondCV";
+import { ThirdCV } from "../user/CV/pages/CV_Layout/ThirdCV";
+import { CVLayoutPage } from "../user/CV/pages/CVLayoutPage";
+
 // import { ProtectedUser } from "../auth/user/components/ProtectedUser";
 
 export const EmployeeRoute = [
@@ -40,6 +45,11 @@ export const EmployeeRoute = [
     </Route>
     {/* CV page */}
     <Route path="CV" element={<CVPages />} />
+    <Route path="layoutCV" element={<CVLayoutPage />}>
+      <Route index element={<FirstCV />} />
+      <Route path="cv_2" element={<SecondCV />} />
+      <Route path="cv_3" element={<ThirdCV />} />
+    </Route>
     <Route element={<LayoutCreateCV />}>
       <Route path="CV/edit/:id" element={<CreateCVPage />} />
     </Route>
