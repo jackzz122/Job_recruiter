@@ -2,6 +2,7 @@ import {
   JobFormData,
   JobResponse,
   JobTypeResponse,
+  listAccountType,
 } from "../../../types/JobType";
 import ApiSlice from "../../api/apiSlice";
 import { generateProvidesTags } from "../../generateProvideTags";
@@ -23,6 +24,20 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
     }),
     getJobById: builder.query<JobTypeResponse<JobResponse>, string>({
       query: (id: string) => `getDetailJob/${id}`,
+    }),
+    addApplicant: builder.mutation<
+      JobTypeResponse<listAccountType>,
+      {
+        id: string;
+        applicant: FormData;
+      }
+    >({
+      query: (data) => ({
+        url: `addApplicant/${data.id}`,
+        method: "POST",
+        body: data.applicant,
+      }),
+      invalidatesTags: [{ type: "Jobs", id: "LIST" }],
     }),
     updateJobs: builder.mutation<
       JobTypeResponse<JobResponse>,
@@ -53,4 +68,5 @@ export const {
   useDeleteJobMutation,
   useUpdateJobsMutation,
   useGetJobByIdQuery,
+  useAddApplicantMutation,
 } = jobApiSlice;

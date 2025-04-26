@@ -6,12 +6,16 @@ export type JobType = {
   description: [];
   salaryRange: number;
 };
+export enum statusApplication {
+  Submitted = "Submitted",
+  Reviewing = "Reviewing",
+  Rejected = "Rejected",
+}
 
 interface DescriptionSection {
   mainText: string;
   bulletPoints: { value: string }[];
 }
-
 export interface JobDescription {
   summary: string;
   keySkills: DescriptionSection;
@@ -32,6 +36,16 @@ export interface JobFormData {
   applicationDeadline: string;
 }
 
+export type listAccountType = {
+  _id: string;
+  accountId: string;
+  linkPdf: string;
+  appliedAt: string;
+  coverLetter: string;
+  status: statusApplication;
+  notes: string;
+};
+
 // For API responses
 export interface JobResponse {
   _id: string;
@@ -48,7 +62,7 @@ export interface JobResponse {
   minRange: number;
   maxRange: number;
   description: JobDescription;
-  listAccountId?: string[];
+  listAccount?: listAccountType[];
   createdAt: string;
 }
 export type JobTypeResponse<T> = ResponseType<T>;

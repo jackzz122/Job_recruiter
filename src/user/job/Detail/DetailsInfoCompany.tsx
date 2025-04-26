@@ -22,7 +22,7 @@ export default function DetailsInforCompany() {
     >
       <Stack direction="row" spacing={2}>
         <img
-          src="../../../public/bss_avatar.png"
+          src="/bss_avatar.png"
           alt="company_name"
           className="w-1/3 border border-gray-400"
         />

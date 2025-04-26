@@ -38,6 +38,7 @@ export const DialogViewJob = ({
         return "primary";
     }
   };
+  console.log(job);
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>

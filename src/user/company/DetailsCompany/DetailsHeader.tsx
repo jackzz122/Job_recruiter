@@ -82,7 +82,7 @@ export const DetailsHeader = () => {
         <img
           src={companyDetail?.data.logo || "/bss_avatar.png"}
           alt=""
-          className="w-1/4 rounded-lg "
+          className="w-1/4 h-40 rounded-lg"
         />
         <Box sx={{ color: "white" }}>
           <Typography fontWeight="bold" variant="h5">

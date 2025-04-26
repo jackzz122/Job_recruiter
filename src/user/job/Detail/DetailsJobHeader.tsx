@@ -141,13 +141,13 @@ export default function DetailsJobHeader() {
         rowHeight={150}
       >
         <ImageListItem>
-          <img src="../../../public/bss_avatar.png" alt="" />
+          <img src="/bss_avatar.png" alt="" />
         </ImageListItem>
         <ImageListItem>
-          <img src="../../../public/bss_avatar.png" alt="" />
+          <img src="/bss_avatar.png" alt="" />
         </ImageListItem>
         <ImageListItem>
-          <img src="../../../public/bss_avatar.png" alt="" />
+          <img src="/bss_avatar.png" alt="" />
         </ImageListItem>
       </ImageList>
       <Box>

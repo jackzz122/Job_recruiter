@@ -1,16 +1,14 @@
 import React from "react";
-import {
-  Avatar,
-  Box,
-  Chip,
-  Container,
-  Grid,
-  Paper,
-  Stack,
-  Typography,
-  useTheme,
-  alpha,
-} from "@mui/material";
+
+import Avatar from "@mui/material/Avatar";
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import Container from "@mui/material/Container";
+import Grid2 from "@mui/material/Grid2";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import { useTheme, alpha } from "@mui/material";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -137,9 +135,9 @@ export const ThirdCV: React.FC = () => {
         </Box>
 
         {/* Two column layout for experience and education */}
-        <Grid container spacing={4} sx={{ mb: 5 }}>
+        <Grid2 container spacing={4} sx={{ mb: 5 }}>
           {/* Experience */}
-          <Grid item xs={12} md={6}>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Box
                 sx={{ width: 8, height: 32, bgcolor: "error.main", mr: 2 }}
@@ -206,10 +204,10 @@ export const ThirdCV: React.FC = () => {
                 </Box>
               ))}
             </Stack>
-          </Grid>
+          </Grid2>
 
           {/* Education */}
-          <Grid item xs={12} md={6}>
+          <Grid2 size={{ xs: 12, md: 6 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Box sx={{ width: 8, height: 32, bgcolor: "info.main", mr: 2 }} />
               <Typography variant="h5" fontWeight="bold" color="info.main">
@@ -274,13 +272,13 @@ export const ThirdCV: React.FC = () => {
                 </Box>
               ))}
             </Stack>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
 
         {/* Projects and Certificates */}
-        <Grid container spacing={4}>
+        <Grid2 container spacing={4}>
           {/* Projects */}
-          <Grid item xs={12} md={7}>
+          <Grid2 size={{ xs: 12, md: 7 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Box
                 sx={{ width: 8, height: 32, bgcolor: "success.main", mr: 2 }}
@@ -317,10 +315,10 @@ export const ThirdCV: React.FC = () => {
                 </Paper>
               ))}
             </Stack>
-          </Grid>
+          </Grid2>
 
           {/* Certificates */}
-          <Grid item xs={12} md={5}>
+          <Grid2 size={{ xs: 12, md: 5 }}>
             <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
               <Box
                 sx={{ width: 8, height: 32, bgcolor: "warning.main", mr: 2 }}
@@ -361,8 +359,8 @@ export const ThirdCV: React.FC = () => {
                 </Box>
               ))}
             </Stack>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Container>
     </Box>
   );
