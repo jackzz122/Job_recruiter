@@ -1,3 +1,4 @@
+import { JobResponse, JobTypeResponse } from "../../../types/JobType";
 import {
   certificateType,
   educationType,
@@ -57,6 +58,11 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
+    getAppliedJob: builder.query<JobTypeResponse<JobResponse[]>, string>({
+      query: (id) => `appliedJobList/${id}`,
+      providesTags: (result) =>
+        generateProvidesTags("Jobs", result?.data, (items) => items._id),
+    }),
     addFavouriteCompany: builder.mutation<ResponseUserType<string[]>, string>({
       query: (id: string) => ({
         url: `companyFavourite/${id}`,
@@ -108,4 +114,5 @@ export const {
   useAddFavouriteJobMutation,
   useChangePasswordMutation,
   useDeleteAccountMutation,
+  useGetAppliedJobQuery,
 } = userApiSlice;

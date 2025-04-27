@@ -45,7 +45,21 @@ export type listAccountType = {
   status: statusApplication;
   notes: string;
 };
-
+export type candidateJobPostingType = {
+  jobId: string;
+  jobTitle: string;
+  listAccount: {
+    accountId: string;
+    fullname: string;
+    phone: string;
+    avatarIMG: string;
+    linkPdf: string;
+    appliedAt: string;
+    coverLetter: string;
+    status: statusApplication;
+    notes: string;
+  }[];
+};
 // For API responses
 export interface JobResponse {
   _id: string;

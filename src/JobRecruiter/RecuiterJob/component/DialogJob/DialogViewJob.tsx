@@ -38,7 +38,6 @@ export const DialogViewJob = ({
         return "primary";
     }
   };
-  console.log(job);
   return (
     <Dialog open={open} onClose={handleClose} maxWidth="md" fullWidth>
       <DialogTitle>
@@ -158,6 +157,11 @@ export const DialogViewJob = ({
                 </Typography>
               ))}
             </Box>
+          </Box>
+          <Box>
+            <Typography sx={{ color: colorButtonOrange }} fontWeight="bold">
+              Số lượng người ứng tuyển: {job.listAccount?.length}
+            </Typography>
           </Box>
         </Box>
       </DialogContent>

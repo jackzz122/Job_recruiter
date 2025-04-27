@@ -3,6 +3,7 @@ import { CompanySaveItem } from "../components/CompanySaveItem";
 import { selectUser } from "../../../../redux/feature/user/userSlice";
 import { useEffect, useState } from "react";
 import { CompanySaveResponse } from "../../../../types/UserType";
+import { NotFoundList } from "../components/NotFoundList";
 
 export const CompanySave = () => {
   const user = useSelector(selectUser);
@@ -15,6 +16,9 @@ export const CompanySave = () => {
       );
     }
   }, [user]);
+  if (!listCompany || listCompany?.length === 0) {
+    return <NotFoundList title="company save" content="save company" />;
+  }
   return (
     <>
       {listCompany.map((company, index) => (

@@ -5,18 +5,70 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import Chip from "@mui/material/Chip";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import { colorButtonOrange } from "../../themeContext";
+import { statusApplication } from "../../types/JobType";
 
-export const EmployeeItem = () => {
+type EmployeeItemProps = {
+  account?: {
+    accountId: string;
+    fullname: string;
+    phone: string;
+    avatarIMG: string;
+    linkPdf: string;
+    appliedAt: string;
+    coverLetter: string;
+    status: statusApplication;
+    notes: string;
+  };
+};
+
+export const EmployeeItem = ({ account }: EmployeeItemProps) => {
+  // Format the applied date
+
+  console.log(account);
+  // Get status chip configuration based on application status
+  // const getStatusChip = () => {
+  //   switch (employeeData.status) {
+  //     case statusApplication.Reviewing:
+  //       return {
+  //         icon: <RemoveRedEyeOutlinedIcon fontSize="small" />,
+  //         label: "Reviewing",
+  //         sx: {
+  //           bgcolor: "rgba(255, 193, 7, 0.1)",
+  //           color: "#F9A825",
+  //         },
+  //       };
+  //     case statusApplication.Rejected:
+  //       return {
+  //         icon: <CancelOutlinedIcon fontSize="small" />,
+  //         label: "Rejected",
+  //         sx: {
+  //           bgcolor: "rgba(244, 67, 54, 0.1)",
+  //           color: "#E53935",
+  //         },
+  //       };
+  //     case statusApplication.Submitted:
+  //     default:
+  //       return {
+  //         icon: <VisibilityOffIcon fontSize="small" />,
+  //         label: "Not seen",
+  //         sx: {
+  //           bgcolor: "rgba(255, 108, 48, 0.1)",
+  //           color: colorButtonOrange,
+  //         },
+  //       };
+  //   }
+  // };
+
+  // const statusChipConfig = getStatusChip();
+
   return (
     <TableRow
       sx={{
@@ -29,7 +81,7 @@ export const EmployeeItem = () => {
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <PersonOutlineIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
-          <Typography variant="body1">Nguyễn Văn Đình</Typography>
+          <Typography variant="body1">{account?.fullname}</Typography>
         </Box>
       </TableCell>
 
@@ -37,7 +89,7 @@ export const EmployeeItem = () => {
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <EmailOutlinedIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
-          <Typography variant="body2">dinh0123@gmail.com</Typography>
+          <Typography variant="body2">{account?.phone}</Typography>
         </Box>
       </TableCell>
 
@@ -46,9 +98,8 @@ export const EmployeeItem = () => {
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <WorkOutlineIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
           <Box>
-            <Typography variant="body2">FrontEnd Developer</Typography>
             <Typography variant="caption" color="text.secondary">
-              Applied on: 15 Jun, 2023
+              Applied on: {account?.appliedAt}
             </Typography>
           </Box>
         </Box>
@@ -56,17 +107,16 @@ export const EmployeeItem = () => {
 
       {/* Status with Chip */}
       <TableCell>
-        <Chip
-          icon={<VisibilityOffIcon fontSize="small" />}
-          label="Not seen"
+        {/* <Chip
+          icon={statusChipConfig.icon}
+          label={statusChipConfig.label}
           size="small"
           sx={{
-            bgcolor: "rgba(255, 108, 48, 0.1)",
-            color: colorButtonOrange,
+            ...statusChipConfig.sx,
             fontWeight: 500,
             borderRadius: 1,
           }}
-        />
+        /> */}
       </TableCell>
 
       {/* Actions */}
