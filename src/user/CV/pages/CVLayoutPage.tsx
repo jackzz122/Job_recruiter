@@ -170,7 +170,7 @@ export const CVLayoutPage = () => {
                       cvComponents.findIndex(
                         (item) => item.href === location.pathname
                       )
-                    ].name
+                    ]?.name
                   }{" "}
                   Template
                 </Typography>
@@ -178,6 +178,7 @@ export const CVLayoutPage = () => {
                   variant="contained"
                   size="small"
                   sx={{ bgcolor: colorButtonOrange }}
+                  onClick={() => navigate("/edited_cv_1")}
                 >
                   Use This Template
                 </Button>

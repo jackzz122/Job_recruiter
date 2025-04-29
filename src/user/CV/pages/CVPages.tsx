@@ -13,14 +13,11 @@ import CreateIcon from "@mui/icons-material/Create";
 import DownloadIcon from "@mui/icons-material/Download";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import { useState } from "react";
 import { DialogUploadCV } from "../components/Dialog/DialogUploadCV";
-import { DialogCreateCV } from "../components/Dialog/DialogCreateCV";
 import { DialogDelete } from "../../../shared/components/DialogDelete";
 export const CVPages = () => {
   const [openUpload, setOpenUpload] = useState(false);
-  const [openCreateCV, setOpenCreateCV] = useState(false);
   const [openDeleteCV, setDeleteCV] = useState(false);
   const handleOpen = () => {
     setOpenUpload(true);
@@ -28,12 +25,7 @@ export const CVPages = () => {
   const handleCloseDialog = () => {
     setOpenUpload(false);
   };
-  const handleOpenCreateCV = () => {
-    setOpenCreateCV(true);
-  };
-  const handleCloseCreateCV = () => {
-    setOpenCreateCV(false);
-  };
+
   const handleOpenDelete = () => {
     setDeleteCV(true);
   };
@@ -66,22 +58,6 @@ export const CVPages = () => {
             Upload CV <DriveFolderUploadIcon />
           </Button>
           <DialogUploadCV handleClose={handleCloseDialog} open={openUpload} />
-          <Button
-            sx={{
-              border: "1px solid red",
-              color: "red",
-              display: "flex",
-              gap: "0.25rem",
-              alignItems: "center",
-            }}
-            onClick={handleOpenCreateCV}
-          >
-            Create CV <AddCircleOutlineIcon />
-          </Button>
-          <DialogCreateCV
-            handleClose={handleCloseCreateCV}
-            open={openCreateCV}
-          />
         </Stack>
       </Stack>
       <TableContainer>
