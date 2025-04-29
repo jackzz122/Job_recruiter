@@ -73,9 +73,11 @@ export const UpdateCompany = () => {
     if (user?.companyId) {
       const companyInfo = user.companyId as CompanyType;
       methods.reset(companyInfo);
+      if ((user?.companyId as CompanyType)?.logo) {
+        setPreviewImage((user?.companyId as CompanyType)?.logo);
+      }
     }
   }, [user?.companyId, methods]);
-
   const { handleSubmit, register } = methods;
   const onSubmit: SubmitHandler<CompanyType> = async (data) => {
     try {

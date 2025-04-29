@@ -10,6 +10,7 @@ export enum statusApplication {
   Submitted = "Submitted",
   Reviewing = "Reviewing",
   Rejected = "Rejected",
+  Success = "Success",
 }
 
 interface DescriptionSection {
@@ -53,6 +54,7 @@ export type candidateJobPostingType = {
     fullname: string;
     phone: string;
     avatarIMG: string;
+    email: string;
     linkPdf: string;
     appliedAt: string;
     coverLetter: string;

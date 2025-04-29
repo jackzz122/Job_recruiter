@@ -29,6 +29,8 @@ export const JobAppliedItem = ({
         return "#f39c12";
       case statusApplication.Rejected:
         return "#e74c3c";
+      case statusApplication.Success:
+        return "green";
       default:
         return "#7f8c8d";
     }

@@ -25,7 +25,6 @@ import { useGetCandidateJobPosingListQuery } from "../../redux/feature/job/jobAp
 
 export const List_employ = () => {
   const { data: jobPosingInfo } = useGetCandidateJobPosingListQuery();
-
   return (
     <ContainerBox>
       <form action="">
@@ -96,6 +95,7 @@ export const List_employ = () => {
                       <TableRow>
                         <TableCell>Name</TableCell>
                         <TableCell>Email</TableCell>
+                        <TableCell>Phone</TableCell>
                         <TableCell>Application Date</TableCell>
                         <TableCell>Status</TableCell>
                         <TableCell>Action</TableCell>
@@ -114,6 +114,7 @@ export const List_employ = () => {
                         jobPosting.listAccount.map((account, accountIndex) => (
                           <EmployeeItem
                             key={account.accountId || accountIndex}
+                            jobId={jobPosting.jobId}
                             account={account}
                           />
                         ))

@@ -14,58 +14,126 @@ import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
 import { colorButtonOrange } from "../../themeContext";
 import { statusApplication } from "../../types/JobType";
-
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import Chip from "@mui/material/Chip";
+import { format } from "date-fns";
+import { useChangeStatusApplicantMutation } from "../../redux/feature/job/jobApiSlice";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { DialogAccept } from "./DialogStatus/DialogAccept";
+import { DialogRejected } from "./DialogStatus/DialogRejected";
+import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/feature/user/userSlice";
+import { DialogRemove } from "./DialogRemove";
 type EmployeeItemProps = {
-  account?: {
-    accountId: string;
-    fullname: string;
-    phone: string;
-    avatarIMG: string;
-    linkPdf: string;
-    appliedAt: string;
-    coverLetter: string;
-    status: statusApplication;
-    notes: string;
-  };
+  accountId: string;
+  fullname: string;
+  phone: string;
+  avatarIMG: string;
+  email: string;
+  linkPdf: string;
+  appliedAt: string;
+  coverLetter: string;
+  status: statusApplication;
+  notes: string;
 };
 
-export const EmployeeItem = ({ account }: EmployeeItemProps) => {
-  // Format the applied date
-
-  console.log(account);
-  // Get status chip configuration based on application status
-  // const getStatusChip = () => {
-  //   switch (employeeData.status) {
-  //     case statusApplication.Reviewing:
-  //       return {
-  //         icon: <RemoveRedEyeOutlinedIcon fontSize="small" />,
-  //         label: "Reviewing",
-  //         sx: {
-  //           bgcolor: "rgba(255, 193, 7, 0.1)",
-  //           color: "#F9A825",
-  //         },
-  //       };
-  //     case statusApplication.Rejected:
-  //       return {
-  //         icon: <CancelOutlinedIcon fontSize="small" />,
-  //         label: "Rejected",
-  //         sx: {
-  //           bgcolor: "rgba(244, 67, 54, 0.1)",
-  //           color: "#E53935",
-  //         },
-  //       };
-  //     case statusApplication.Submitted:
-  //     default:
-  //       return {
-  //         icon: <VisibilityOffIcon fontSize="small" />,
-  //         label: "Not seen",
-  //         sx: {
-  //           bgcolor: "rgba(255, 108, 48, 0.1)",
-  //           color: colorButtonOrange,
-  //         },
-  //       };
-  //   }
-  // };
+export const EmployeeItem = ({
+  jobId,
+  account,
+}: {
+  jobId: string;
+  account: EmployeeItemProps;
+}) => {
+  const user = useSelector(selectUser);
+  const [openAccept, setOpenAccept] = useState(false);
+  const [openRejected, setopenRejected] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [changeStatus, { isLoading }] = useChangeStatusApplicantMutation();
+  const handleChangeStatus = async (status: string) => {
+    if (account?.accountId) {
+      if (status === statusApplication.Success && user) {
+        const response = await changeStatus({
+          jobId: jobId,
+          status: status,
+          id: account?.accountId,
+          ownerMail: user?.email,
+          receiveMail: account.email,
+        });
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+        }
+      } else if (status === statusApplication.Rejected && user) {
+        const response = await changeStatus({
+          jobId: jobId,
+          status: status,
+          id: account?.accountId,
+          ownerMail: user?.email,
+          receiveMail: account.email,
+        });
+        if (response.data?.success) {
+          toast.success(response.data?.message);
+        }
+      } else {
+        const response = await changeStatus({
+          jobId: jobId,
+          status: status,
+          id: account?.accountId,
+        });
+        if (response?.data?.success) {
+          if (account?.linkPdf) {
+            window.open(account?.linkPdf, "_blank");
+          }
+          if (account?.status !== statusApplication.Reviewing) {
+            toast.success("Change status");
+          }
+        }
+      }
+    }
+  };
+  const getStatusChip = () => {
+    switch (account?.status) {
+      case statusApplication.Reviewing:
+        return {
+          icon: <RemoveRedEyeOutlinedIcon fontSize="small" />,
+          label: "Reviewing",
+          sx: {
+            bgcolor: "rgba(255, 193, 7, 0.1)",
+            color: "#F9A825",
+          },
+        };
+      case statusApplication.Rejected:
+        return {
+          icon: <CancelOutlinedIcon fontSize="small" />,
+          label: "Rejected",
+          sx: {
+            bgcolor: "rgba(244, 67, 54, 0.1)",
+            color: "#E53935",
+          },
+        };
+      case statusApplication.Success: {
+        return {
+          icon: <CheckCircleOutlineIcon fontSize="small" />,
+          label: "Success",
+          sx: {
+            bgcolor: "rgba(76, 175, 80, 0.1)",
+            color: "#4CAF50",
+          },
+        };
+      }
+      case statusApplication.Submitted:
+      default:
+        return {
+          icon: <VisibilityOffIcon fontSize="small" />,
+          label: "Not seen",
+          sx: {
+            bgcolor: "rgba(255, 108, 48, 0.1)",
+            color: colorButtonOrange,
+          },
+        };
+    }
+  };
 
   // const statusChipConfig = getStatusChip();
 
@@ -89,7 +157,17 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
       <TableCell>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <EmailOutlinedIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
-          <Typography variant="body2">{account?.phone}</Typography>
+          <Typography variant="body2">
+            {account?.email || "..........."}
+          </Typography>
+        </Box>
+      </TableCell>
+      <TableCell>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <LocalPhoneIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
+          <Typography variant="body2">
+            {account?.phone || "..........."}
+          </Typography>
         </Box>
       </TableCell>
 
@@ -99,7 +177,7 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
           <WorkOutlineIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
           <Box>
             <Typography variant="caption" color="text.secondary">
-              Applied on: {account?.appliedAt}
+              Applied on: {format(account?.appliedAt as string, "dd MMMM yyyy")}
             </Typography>
           </Box>
         </Box>
@@ -107,16 +185,16 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
 
       {/* Status with Chip */}
       <TableCell>
-        {/* <Chip
-          icon={statusChipConfig.icon}
-          label={statusChipConfig.label}
+        <Chip
+          icon={getStatusChip().icon}
+          label={getStatusChip().label}
           size="small"
           sx={{
-            ...statusChipConfig.sx,
+            ...getStatusChip().sx,
             fontWeight: 500,
             borderRadius: 1,
           }}
-        /> */}
+        />
       </TableCell>
 
       {/* Actions */}
@@ -125,6 +203,7 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
           <Tooltip title="View Details">
             <Button
               variant="outlined"
+              onClick={() => handleChangeStatus(statusApplication.Reviewing)}
               size="small"
               sx={{
                 minWidth: "36px",
@@ -143,6 +222,8 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
             <Button
               variant="outlined"
               size="small"
+              // disabled={Boolean(user?.role)}
+              onClick={() => setOpenAccept(true)}
               sx={{
                 minWidth: "36px",
                 p: "6px",
@@ -158,11 +239,19 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
               Accept
             </Button>
           </Tooltip>
+          <DialogAccept
+            loading={isLoading}
+            openAccept={openAccept}
+            handleAccept={handleChangeStatus}
+            handleCloseAccept={() => setOpenAccept(false)}
+          />
 
           <Tooltip title="Reject">
             <Button
               variant="outlined"
               size="small"
+              // disabled={Boolean(user?.role)}
+              onClick={() => setopenRejected(true)}
               sx={{
                 minWidth: "36px",
                 p: "6px",
@@ -178,11 +267,18 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
               Reject
             </Button>
           </Tooltip>
-
+          <DialogRejected
+            loading={isLoading}
+            openRejected={openRejected}
+            handleRejected={handleChangeStatus}
+            handleCloseRejected={() => setopenRejected(false)}
+          />
           <Tooltip title="Delete">
             <Button
               variant="outlined"
               size="small"
+              onClick={() => setOpenDelete(true)}
+              // disabled={Boolean(user?.role)}
               sx={{
                 minWidth: "36px",
                 p: "6px",
@@ -195,6 +291,12 @@ export const EmployeeItem = ({ account }: EmployeeItemProps) => {
               />
             </Button>
           </Tooltip>
+          <DialogRemove
+            jobId={jobId}
+            accountId={account?.accountId}
+            openDelete={openDelete}
+            setOpenDelete={setOpenDelete}
+          />
         </Stack>
       </TableCell>
     </TableRow>
