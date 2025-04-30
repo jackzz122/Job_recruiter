@@ -24,7 +24,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import EditIcon from "@mui/icons-material/Edit";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../../redux/feature/user/userSlice";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SortableItem } from "../components/SortableItem";
 import {
   certificateType,
@@ -35,7 +35,9 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
-
+import Button from "@mui/material/Button";
+import { colorButtonOrange } from "../../../../../themeContext";
+import { usePdfExport } from "../../../../../hooks/usePdfExport";
 // Color options for the CV
 const colorOptions = [
   { name: "Gray", primary: "#f2f2f2", secondary: "#ffffff" },
@@ -67,10 +69,12 @@ type CVSection =
 export const FirstCVEdited = () => {
   const theme = useTheme();
   const user = useSelector(selectUser);
+  const { exportToPdf } = usePdfExport();
+  const contentRef = useRef(null);
   const navigate = useNavigate();
   const [sections, setSections] = useState<CVSection[]>([]);
   const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
-
+  const [isExporting, setIsExporting] = useState(false);
   useEffect(() => {
     if (user) {
       const cvSections: CVSection[] = [
@@ -103,7 +107,15 @@ export const FirstCVEdited = () => {
       return arrayMove(sections, oldIndex, newIndex);
     });
   };
-
+  const handleExportPdf = async () => {
+    setIsExporting(true);
+    setTimeout(async () => {
+      await exportToPdf(contentRef, {
+        filename: "my-document.pdf",
+      });
+      setIsExporting(false);
+    }, 100);
+  };
   return (
     <>
       <Alert
@@ -188,8 +200,36 @@ export const FirstCVEdited = () => {
             Edit CV
           </Typography>
         </Breadcrumbs>
-
+        <Alert
+          severity="warning"
+          variant="outlined"
+          sx={{
+            py: 0.5,
+            px: 1.5,
+            borderRadius: 1.5,
+            backgroundColor: "rgba(255, 244, 229, 0.5)",
+            "& .MuiAlert-icon": {
+              fontSize: "1rem",
+            },
+            "& .MuiAlert-message": {
+              fontSize: "0.8rem",
+              fontWeight: 500,
+            },
+          }}
+        >
+          Unsaved changes will be lost if you leave this page
+        </Alert>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Box>
+            <Button
+              loading={isExporting}
+              onClick={handleExportPdf}
+              variant="contained"
+              sx={{ backgroundColor: colorButtonOrange }}
+            >
+              Download
+            </Button>
+          </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <ColorLensIcon color="action" />
             <Typography variant="body2" color="text.secondary">
@@ -230,6 +270,7 @@ export const FirstCVEdited = () => {
 
       <Container
         maxWidth="lg"
+        ref={contentRef}
         sx={{ bgcolor: "background.paper", p: 4, height: "100%" }}
       >
         <Grid2 container spacing={3}>
@@ -333,30 +374,34 @@ export const FirstCVEdited = () => {
             </Paper>
           </Grid2>
 
-          {/* Right column - Professional details */}
-          <DndContext
-            modifiers={[restrictToParentElement]}
-            collisionDetection={closestCorners}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext
-              items={sections.map((section) => section.id)}
-              strategy={verticalListSortingStrategy}
+          <Box className="content-to-capture" sx={{ flexGrow: 1 }}>
+            {/* Right column - Professional details */}
+            <DndContext
+              modifiers={[restrictToParentElement]}
+              collisionDetection={closestCorners}
+              onDragEnd={handleDragEnd}
             >
-              <Box sx={{ flexGrow: 1 }}>
-                {sections.map((section) => {
-                  return (
-                    <SortableItem
-                      key={section.id}
-                      id={section.id}
-                      type={section.type}
-                      data={section.data.items}
-                    />
-                  );
-                })}
-              </Box>
-            </SortableContext>
-          </DndContext>
+              <SortableContext
+                items={sections.map((section) => section.id)}
+                strategy={verticalListSortingStrategy}
+              >
+                <Box>
+                  {sections.map((section) => {
+                    return (
+                      <SortableItem
+                        cvPos={1}
+                        isExport={isExporting}
+                        key={section.id}
+                        id={section.id}
+                        type={section.type}
+                        data={section.data.items}
+                      />
+                    );
+                  })}
+                </Box>
+              </SortableContext>
+            </DndContext>
+          </Box>
         </Grid2>
       </Container>
     </>

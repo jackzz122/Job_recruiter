@@ -99,23 +99,38 @@ export const SecondCV = () => {
 
       {/* Skills section */}
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" fontWeight="bold" color="primary" mb={1.5}>
+        <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
           Skills
         </Typography>
-        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-          {user?.skills?.map((skill, index) => (
-            <Chip
-              key={index}
-              label={skill.value}
-              sx={{
-                bgcolor: `${primaryColor.light}22`,
-                color: "primary.main",
-                border: `1px solid ${primaryColor.light}`,
-                borderRadius: "16px",
-              }}
-            />
-          ))}
-        </Box>
+        <Paper
+          elevation={0}
+          sx={{
+            p: 1.5,
+            bgcolor: `${primaryColor.light}10`,
+            borderRadius: 1,
+          }}
+        >
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75 }}>
+            {user?.skills?.map((skill, index) => (
+              <Chip
+                key={index}
+                label={skill.value}
+                size="small"
+                sx={{
+                  bgcolor: "#fff",
+                  color: primaryColor.main,
+                  border: `1px solid ${primaryColor.light}`,
+                  boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
+                  fontWeight: 500,
+                  "&:hover": {
+                    bgcolor: primaryColor.light,
+                    color: "#fff",
+                  },
+                }}
+              />
+            ))}
+          </Box>
+        </Paper>
       </Box>
 
       {/* Experience section */}
@@ -123,54 +138,80 @@ export const SecondCV = () => {
         <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
           Work Experience
         </Typography>
-        <Stack spacing={3}>
-          {user?.workEx?.map((job, index) => (
-            <Box key={index} sx={{ position: "relative", pl: 4 }}>
-              {/* Timeline dot */}
+        {user?.workEx?.map((job, index) => (
+          <Paper
+            key={index}
+            elevation={0}
+            sx={{
+              mb: 2,
+              position: "relative",
+              backgroundImage:
+                index % 2 === 0
+                  ? `linear-gradient(to right, ${primaryColor.light}15, transparent)`
+                  : "none",
+              borderLeft: `3px solid ${primaryColor.main}`,
+              overflow: "hidden",
+              p: 1.5,
+              pl: 2,
+            }}
+          >
+            {/* Date badge */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bgcolor: primaryColor.main,
+                color: "white",
+                px: 1.5,
+                py: 0.5,
+                fontWeight: "bold",
+                fontSize: "0.7rem",
+                borderBottomLeftRadius: "8px",
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {job.startDate} - {job.endDate}
+            </Box>
+
+            <Box sx={{ display: "flex", flexDirection: "column", pr: 5 }}>
               <Box
+                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
+              >
+                <Typography
+                  variant="h6"
+                  fontWeight="bold"
+                  sx={{ lineHeight: 1.2 }}
+                >
+                  {job.jobTitle}
+                </Typography>
+              </Box>
+
+              <Typography
+                variant="subtitle1"
                 sx={{
-                  position: "absolute",
-                  left: 0,
-                  top: 10,
-                  width: 16,
-                  height: 16,
-                  borderRadius: "50%",
-                  bgcolor: "primary.main",
+                  mb: 0.75,
+                  color: primaryColor.main,
+                  fontSize: "0.95rem",
+                  fontWeight: "bold",
                 }}
-              />
-              {/* Timeline line */}
-              {index < (user?.workEx?.length || 0) - 1 && (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    left: 7,
-                    top: 26,
-                    width: 2,
-                    height: "calc(100% + 24px)",
-                    bgcolor: "primary.light",
-                    opacity: 0.4,
-                  }}
-                />
-              )}
-              <Typography variant="h6" fontWeight="bold">
-                {job.jobTitle}
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary" mb={0.5}>
+              >
                 {job.company}
               </Typography>
+
               <Typography
-                variant="caption"
-                color="primary"
-                sx={{ display: "block", mb: 1 }}
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  fontSize: "0.9rem",
+                }}
               >
-                {job.startDate} - {job.endDate}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
                 {job.responsibilites}
               </Typography>
             </Box>
-          ))}
-        </Stack>
+          </Paper>
+        ))}
       </Box>
 
       {/* Education section */}
@@ -178,54 +219,74 @@ export const SecondCV = () => {
         <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
           Education
         </Typography>
-        <Stack spacing={3}>
-          {user?.education?.map((edu, index) => (
-            <Box key={index} sx={{ position: "relative", pl: 4 }}>
-              {/* Timeline dot */}
-              <Box
-                sx={{
-                  position: "absolute",
-                  left: 0,
-                  top: 10,
-                  width: 16,
-                  height: 16,
-                  borderRadius: "50%",
-                  bgcolor: "primary.main",
-                }}
-              />
-              {/* Timeline line */}
-              {index < (user?.education?.length || 0) - 1 && (
-                <Box
-                  sx={{
-                    position: "absolute",
-                    left: 8,
-                    top: 26,
-                    width: 2,
-                    height: "calc(100% + 24px)",
-                    bgcolor: "primary.light",
-                    opacity: 0.4,
-                  }}
-                />
-              )}
-              <Typography variant="h6" fontWeight="bold">
+        {user?.education?.map((edu, index) => (
+          <Paper
+            key={index}
+            elevation={0}
+            sx={{
+              mb: 2,
+              position: "relative",
+              backgroundImage:
+                index % 2 === 0
+                  ? `linear-gradient(to right, ${primaryColor.light}15, transparent)`
+                  : "none",
+              borderLeft: `3px solid ${primaryColor.main}`,
+              overflow: "hidden",
+              p: 1.5,
+              pl: 2,
+            }}
+          >
+            {/* Date badge */}
+            <Box
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                bgcolor: primaryColor.main,
+                color: "white",
+                px: 1.5,
+                py: 0.5,
+                fontWeight: "bold",
+                fontSize: "0.7rem",
+                borderBottomLeftRadius: "8px",
+              }}
+            >
+              {edu.startDate} - {edu.endDate}
+            </Box>
+
+            <Box sx={{ display: "flex", flexDirection: "column", pr: 5 }}>
+              <Typography
+                variant="h6"
+                fontWeight="bold"
+                sx={{ lineHeight: 1.2 }}
+              >
                 {edu.school}
               </Typography>
-              <Typography variant="subtitle1" color="text.secondary" mb={0.5}>
+
+              <Typography
+                variant="subtitle1"
+                sx={{
+                  mb: 0.75,
+                  color: primaryColor.main,
+                  fontSize: "0.95rem",
+                  fontWeight: "bold",
+                }}
+              >
                 {edu.major}
               </Typography>
+
               <Typography
-                variant="caption"
-                color="primary"
-                sx={{ display: "block", mb: 1 }}
+                variant="body2"
+                color="text.secondary"
+                sx={{
+                  fontSize: "0.9rem",
+                }}
               >
-                {edu.startDate} - {edu.endDate}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
                 {edu.description}
               </Typography>
             </Box>
-          ))}
-        </Stack>
+          </Paper>
+        ))}
       </Box>
 
       {/* Projects section */}
@@ -233,31 +294,79 @@ export const SecondCV = () => {
         <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
           Projects
         </Typography>
-        <Grid2 container spacing={2}>
+        <Grid2 container spacing={1.5}>
           {user?.projects?.map((project, index) => (
-            <Grid2 size={{ xs: 12, md: 6 }} key={index}>
+            <Grid2 key={index} size={{ xs: 12, md: 6 }}>
               <Paper
                 elevation={1}
                 sx={{
-                  p: 2,
+                  position: "relative",
                   height: "100%",
-                  borderLeft: `4px solid ${theme.palette.primary.main}`,
+                  p: 1.5,
+                  pl: 2,
+                  overflow: "hidden",
+                  borderRadius: 1,
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "translateY(-3px)",
+                    boxShadow: theme.shadows[3],
+                  },
+                  "&:before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    left: 0,
+                    height: "100%",
+                    width: "4px",
+                    background: `linear-gradient(to bottom, ${primaryColor.main}, ${primaryColor.light})`,
+                  },
                 }}
               >
-                <Typography variant="h6" fontWeight="bold" mb={0.5}>
+                <Box
+                  sx={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    bgcolor: `${primaryColor.main}20`,
+                    px: 1,
+                    py: 0.25,
+                    borderRadius: 0.5,
+                    fontSize: "0.7rem",
+                    color: primaryColor.dark,
+                  }}
+                >
+                  {project.startDate} - {project.endDate}
+                </Box>
+
+                <Typography
+                  variant="subtitle1"
+                  fontWeight="bold"
+                  sx={{ fontSize: "0.95rem", mb: 0.5, pr: 5 }}
+                >
                   {project.projectName}
                 </Typography>
+
+                <Box
+                  sx={{
+                    mb: 1,
+                    color: primaryColor.main,
+                    fontWeight: "medium",
+                    fontSize: "0.85rem",
+                  }}
+                >
+                  <Typography
+                    variant="body2"
+                    sx={{ color: primaryColor.main, fontWeight: "bold" }}
+                  >
+                    {project.role}
+                  </Typography>
+                </Box>
+
                 <Typography
                   variant="body2"
                   color="text.secondary"
-                  sx={{ mb: 1 }}
+                  sx={{ fontSize: "0.85rem" }}
                 >
-                  <Box component="span" sx={{ fontWeight: "medium" }}>
-                    {project.role}
-                  </Box>{" "}
-                  • {project.startDate} - {project.endDate}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
                   {project.description}
                 </Typography>
               </Paper>
@@ -267,31 +376,83 @@ export const SecondCV = () => {
       </Box>
 
       {/* Certificates section */}
-      <Box>
+      <Box sx={{ mb: 4 }}>
         <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
           Certificates
         </Typography>
-        <Stack spacing={2}>
+        <Grid2 container spacing={1.5}>
           {user?.certificate?.map((cert, index) => (
-            <Box
-              key={index}
-              sx={{ display: "flex", alignItems: "flex-start", gap: 1.5 }}
-            >
-              <CheckCircleIcon color="primary" sx={{ mt: 0.5 }} />
-              <Box>
-                <Typography variant="h6" fontWeight="bold">
-                  {cert.name}
-                </Typography>
-                <Typography variant="body2" color="text.secondary" mb={0.5}>
-                  {cert.organization} • {cert.month} {cert.year}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {cert.description}
-                </Typography>
-              </Box>
-            </Box>
+            <Grid2 key={index} size={{ xs: 12, sm: 6 }}>
+              <Paper
+                elevation={1}
+                sx={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "flex-start",
+                  p: 1.5,
+                  borderRadius: 1,
+                  height: "100%",
+                  transition: "transform 0.2s",
+                  "&:hover": {
+                    transform: "translateY(-3px)",
+                    boxShadow: theme.shadows[2],
+                  },
+                  "&:before": {
+                    content: '""',
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    width: "30%",
+                    height: "4px",
+                    backgroundColor: primaryColor.main,
+                    borderBottomLeftRadius: 4,
+                  },
+                }}
+              >
+                <CheckCircleIcon
+                  color="primary"
+                  sx={{
+                    fontSize: "1.4rem",
+                    mt: 0.5,
+                    mr: 1.5,
+                    color: primaryColor.main,
+                  }}
+                />
+                <Box sx={{ flex: 1 }}>
+                  <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
+                    <Typography
+                      variant="subtitle1"
+                      fontWeight="bold"
+                      sx={{ fontSize: "0.95rem" }}
+                    >
+                      {cert.name}
+                    </Typography>
+                  </Box>
+
+                  <Typography
+                    variant="caption"
+                    sx={{
+                      display: "block",
+                      mb: 0.75,
+                      color: primaryColor.main,
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {cert.organization} • {cert.month} {cert.year}
+                  </Typography>
+
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ fontSize: "0.85rem" }}
+                  >
+                    {cert.description}
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid2>
           ))}
-        </Stack>
+        </Grid2>
       </Box>
     </Container>
   );

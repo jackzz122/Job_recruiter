@@ -24,6 +24,8 @@ import { SecondCV } from "../user/CV/pages/CV_Layout/SecondCV";
 import { ThirdCV } from "../user/CV/pages/CV_Layout/ThirdCV";
 import { CVLayoutPage } from "../user/CV/pages/CVLayoutPage";
 import { FirstCVEdited } from "../user/CV/pages/EditCV/FirstCv/FirstCVEdited";
+import { SecondCVEdited } from "../user/CV/pages/EditCV/SecondCv/SecondCVEdited";
+import { ThirdCVEdited } from "../user/CV/pages/EditCV/ThirdCv/ThirdCVEdited";
 
 // import { ProtectedUser } from "../auth/user/components/ProtectedUser";
 
@@ -49,7 +51,9 @@ export const EmployeeRoute = [
       <Route path="cv_2" element={<SecondCV />} />
       <Route path="cv_3" element={<ThirdCV />} />
     </Route>
-    <Route path="edited_cv_1" element={<FirstCVEdited />} />
+    <Route path="edited" element={<FirstCVEdited />} />
+    <Route path="edited/cv_2" element={<SecondCVEdited />} />
+    <Route path="edited/cv_3" element={<ThirdCVEdited />} />
     <Route path="list_company" element={<ListOfCompany />} />
     <Route path="job/:id" element={<DetailsJob />} />
     {/* Company related routes */}

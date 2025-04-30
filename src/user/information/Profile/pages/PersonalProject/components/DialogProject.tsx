@@ -51,10 +51,8 @@ export const DialogProject = ({
       if (currentProject) {
         const response = await updateUser({
           projects: {
+            ...data.projects,
             _id: currentProject._id,
-            description: data.projects.description,
-            link: data.projects.link,
-            projectName: data.projects.projectName,
           } as projectType,
         });
         if (response.data?.success) {

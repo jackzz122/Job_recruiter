@@ -8,22 +8,28 @@ import {
   workExType,
   certificateType,
   educationType,
-  UserType,
 } from "../../../../../types/UserType";
 import { useTheme } from "@mui/material";
+import { EditableText } from "../components/EditableText";
+import { dataType, itemType } from "../components/SortableItem";
+
+export type DragHandleProps = {
+  onMouseDown?: (event: React.SyntheticEvent) => void;
+  onTouchStart?: (event: React.SyntheticEvent) => void;
+  role?: string;
+  tabIndex?: number;
+};
+
 export const CVSectionContent = ({
+  exportLoading,
   type,
   data,
+  dragHandleProps,
 }: {
-  type: string;
-  data:
-    | string
-    | workExType[]
-    | projectType[]
-    | certificateType[]
-    | educationType[]
-    | undefined
-    | UserType;
+  exportLoading: boolean;
+  type: itemType;
+  data: dataType;
+  dragHandleProps?: DragHandleProps;
 }) => {
   const theme = useTheme();
   switch (type) {
@@ -36,17 +42,20 @@ export const CVSectionContent = ({
             zIndex: 10,
           }}
         >
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
           <Typography
             variant="h6"
             fontWeight="bold"
@@ -58,25 +67,26 @@ export const CVSectionContent = ({
           >
             About Me
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            {data as string}
-          </Typography>
+          <EditableText value={data as string} />
         </Box>
       );
     case "workEx":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
           <Typography
             variant="h6"
             fontWeight="bold"
@@ -100,31 +110,13 @@ export const CVSectionContent = ({
                   "&:hover": { bgcolor: "grey.50" },
                 }}
               >
-                <Typography
-                  sx={{
-                    "& [contentEditable]": {
-                      outline: "none",
-                      minWidth: "20px",
-                      display: "inline-block",
-                    },
-                  }}
+                <EditableText
+                  value={job.jobTitle}
                   variant="subtitle1"
                   fontWeight="bold"
-                >
-                  <span
-                    contentEditable={true}
-                    suppressContentEditableWarning={true}
-                    onBlur={(e) => {
-                      const newValue = e.target.textContent;
-                      console.log(newValue);
-                    }}
-                    dangerouslySetInnerHTML={{ __html: job.jobTitle }}
-                  />
-                  {/* {job.jobTitle} */}
-                </Typography>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {job.company}
-                </Typography>
+                />
+                <EditableText value={job.company} variant="subtitle2" />
+
                 <Typography
                   variant="caption"
                   color="text.secondary"
@@ -132,9 +124,7 @@ export const CVSectionContent = ({
                 >
                   {job.startDate} - {job.endDate}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {job.responsibilites}
-                </Typography>
+                <EditableText variant="body2" value={job.responsibilites} />
               </Box>
             ))}
           </Stack>
@@ -143,17 +133,20 @@ export const CVSectionContent = ({
     case "education":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
           <Typography
             variant="h6"
             fontWeight="bold"
@@ -201,17 +194,20 @@ export const CVSectionContent = ({
     case "projects":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
           <Typography
             variant="h6"
             fontWeight="bold"
@@ -234,12 +230,13 @@ export const CVSectionContent = ({
                   "&:hover": { bgcolor: "grey.50" },
                 }}
               >
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {project.projectName}
-                </Typography>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {project.role}
-                </Typography>
+                <EditableText
+                  variant="subtitle1"
+                  fontWeight="bold"
+                  value={project.projectName}
+                />
+                <EditableText value={project.role} variant="subtitle2" />
+
                 <Typography
                   variant="caption"
                   color="text.secondary"
@@ -247,9 +244,7 @@ export const CVSectionContent = ({
                 >
                   {project.startDate} - {project.endDate}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {project.description}
-                </Typography>
+                <EditableText variant="body2" value={project.description} />
               </Box>
             ))}
           </Stack>
@@ -258,17 +253,20 @@ export const CVSectionContent = ({
     case "certificate":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
           <Typography
             variant="h6"
             fontWeight="bold"
@@ -292,12 +290,13 @@ export const CVSectionContent = ({
                   "&:hover": { bgcolor: "grey.50" },
                 }}
               >
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {cert.name}
-                </Typography>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {cert.organization}
-                </Typography>
+                <EditableText
+                  variant="subtitle1"
+                  fontWeight="bold"
+                  value={cert.name}
+                />
+                <EditableText variant="subtitle2" value={cert.organization} />
+
                 <Typography
                   variant="caption"
                   color="text.secondary"
@@ -305,9 +304,7 @@ export const CVSectionContent = ({
                 >
                   Month: {cert.month}, {cert.year}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {cert.description}
-                </Typography>
+                <EditableText variant="body2" value={cert.description} />
               </Box>
             ))}
           </Stack>

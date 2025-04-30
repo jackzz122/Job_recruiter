@@ -16,6 +16,9 @@ export const CVLayoutPage = () => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const linkEdited = location.pathname.slice(
+    location.pathname.indexOf("/", 1) + 1
+  );
   // Array of CV components
   const cvComponents = [
     {
@@ -34,7 +37,7 @@ export const CVLayoutPage = () => {
       preview: "/placeholder-cv3.png",
     },
   ];
-
+  console.log(linkEdited);
   return (
     <Box sx={{ bgcolor: "grey.100", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="xl">
@@ -178,7 +181,11 @@ export const CVLayoutPage = () => {
                   variant="contained"
                   size="small"
                   sx={{ bgcolor: colorButtonOrange }}
-                  onClick={() => navigate("/edited_cv_1")}
+                  onClick={() =>
+                    navigate(
+                      `/edited/${linkEdited === "/layoutCV" ? "" : linkEdited}`
+                    )
+                  }
                 >
                   Use This Template
                 </Button>
