@@ -1,494 +1,436 @@
-import React from "react";
-import Avatar from "@mui/material/Avatar";
+import React, { useRef, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
 import Container from "@mui/material/Container";
-import Grid2 from "@mui/material/Grid2";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import { useTheme, alpha } from "@mui/material";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../../redux/feature/user/userSlice";
+import { EditableText } from "../components/EditableText";
+import { usePdfExport } from "../../../../../hooks/usePdfExport";
+import { useNavigate } from "react-router-dom";
+import { DndContext, closestCorners, DragEndEvent } from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { restrictToParentElement } from "@dnd-kit/modifiers";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
+import ColorLensIcon from "@mui/icons-material/ColorLens";
+import Tooltip from "@mui/material/Tooltip";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
+import Link from "@mui/material/Link";
+import HomeIcon from "@mui/icons-material/Home";
+import EditIcon from "@mui/icons-material/Edit";
+import {
+  certificateType,
+  educationType,
+  projectType,
+  skillType,
+  workExType,
+} from "../../../../../types/UserType";
+import { SortableItem } from "../components/SortableItem";
+
+type CVSection =
+  | { id: "skill"; type: "skill"; data: { items: skillType[] | undefined } }
+  | { id: "workEx"; type: "workEx"; data: { items: workExType[] | undefined } }
+  | {
+      id: "education";
+      type: "education";
+      data: { items: educationType[] | undefined };
+    }
+  | {
+      id: "projects";
+      type: "projects";
+      data: { items: projectType[] | undefined };
+    }
+  | {
+      id: "certificate";
+      type: "certificate";
+      data: { items: certificateType[] | undefined };
+    };
+
+const colorOptions = [
+  { name: "Blue", primary: "#1976d2" },
+  { name: "Purple", primary: "#9c27b0" },
+  { name: "Green", primary: "#2e7d32" },
+  { name: "Orange", primary: "#ed6c02" },
+  { name: "Black", primary: "#212121" },
+];
 
 export const ThirdCVEdited = () => {
-  const theme = useTheme();
   const user = useSelector(selectUser);
+  const { exportToPdf } = usePdfExport();
+  const contentRef = useRef(null);
+  const navigate = useNavigate();
+  const [sections, setSections] = useState<CVSection[]>([]);
+  const [isExporting, setIsExporting] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(colorOptions[0]);
+
+  useEffect(() => {
+    if (user) {
+      const cvSections: CVSection[] = [
+        { id: "workEx", type: "workEx", data: { items: user?.workEx } },
+        {
+          id: "education",
+          type: "education",
+          data: { items: user?.education },
+        },
+        { id: "projects", type: "projects", data: { items: user?.projects } },
+        { id: "skill", type: "skill", data: { items: user?.skills } },
+        {
+          id: "certificate",
+          type: "certificate",
+          data: { items: user?.certificate },
+        },
+      ];
+      setSections(cvSections);
+    }
+  }, [user]);
+
+  const handleExportPdf = async () => {
+    setIsExporting(true);
+    setTimeout(async () => {
+      await exportToPdf(contentRef, {
+        filename: "my-cv.pdf",
+      });
+      setIsExporting(false);
+    }, 100);
+  };
+
+  const handleDragEnd = (e: DragEndEvent) => {
+    const { active, over } = e;
+    if (!over || active.id === over.id) return;
+    setSections((sections) => {
+      const oldPos = sections.findIndex((section) => section.id === active.id);
+      const newPos = sections.findIndex((section) => section.id === over.id);
+      return arrayMove(sections, oldPos, newPos);
+    });
+  };
 
   return (
-    <Box
-      sx={{
-        height: "100%",
-        bgcolor: "background.paper",
-        color: "text.primary",
-        fontFamily: "sans-serif",
-      }}
+    <Container
+      maxWidth="lg"
+      sx={{ bgcolor: "background.paper", p: 3, height: "100%" }}
     >
-      {/* Header with accent color */}
-      <Box
-        sx={{
-          bgcolor: "purple.700",
-          color: "black",
-          p: 4,
-          position: "relative",
-        }}
-      >
-        {/* Drag Handle for Header */}
-        <IconButton
+      {/* Header Controls */}
+      <Box sx={{ mb: 2.5 }}>
+        {/* Breadcrumbs */}
+        <Breadcrumbs
+          aria-label="breadcrumb"
           sx={{
-            position: "absolute",
-            top: 10,
-            right: 10,
-            color: "white",
-            "&:hover": { color: alpha("#ffffff", 0.8) },
-            cursor: "grab",
-            zIndex: 10,
+            mb: 1.5,
+            "& .MuiBreadcrumbs-separator": {
+              mx: 0.5,
+              fontSize: "0.75rem",
+            },
+            "& .MuiBreadcrumbs-ol": {
+              flexWrap: "nowrap",
+            },
           }}
         >
-          <DragIndicatorIcon />
-        </IconButton>
-
-        <Container maxWidth="lg">
-          <Box
+          <Link
+            component="button"
+            underline="hover"
+            onClick={() => navigate("/")}
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", md: "row" },
               alignItems: "center",
-              gap: 3,
+              color: "text.secondary",
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              p: 0,
+              fontSize: "0.75rem",
+              "&:hover": {
+                color: "primary.main",
+              },
             }}
           >
-            <Avatar
-              src={user?.avatarIMG}
-              alt={user?.fullname}
-              sx={{
-                width: 128,
-                height: 128,
-                border: "4px solid white",
-              }}
-            />
+            <HomeIcon sx={{ mr: 0.5, fontSize: "0.85rem" }} />
+            Home
+          </Link>
+          <Link
+            component="button"
+            underline="hover"
+            onClick={() => navigate("/cv")}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              color: "text.secondary",
+              border: "none",
+              background: "none",
+              cursor: "pointer",
+              p: 0,
+              fontSize: "0.75rem",
+              "&:hover": {
+                color: "primary.main",
+              },
+            }}
+          >
+            CV
+          </Link>
+          <Typography
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              color: "text.primary",
+              fontSize: "0.75rem",
+              fontWeight: 500,
+            }}
+          >
+            Edit CV
+          </Typography>
+        </Breadcrumbs>
 
-            <Box>
-              <Typography variant="h3" fontWeight={800} mb={1}>
-                {user?.fullname}
-              </Typography>
-              <Typography
-                variant="body1"
-                sx={{
-                  color: alpha(theme.palette.common.black, 0.8),
-                  maxWidth: "36rem",
-                }}
-              >
-                {user?.aboutMe}
-              </Typography>
-            </Box>
-          </Box>
-        </Container>
-      </Box>
-
-      {/* Contact bar */}
-      <Box
-        sx={{
-          bgcolor: "#4a148c",
-          color: "white",
-          py: 1.5,
-          position: "relative",
-        }}
-      >
-        {/* Drag Handle for Contact */}
-        <IconButton
+        <Box
           sx={{
-            position: "absolute",
-            top: "50%",
-            right: 10,
-            transform: "translateY(-50%)",
-            color: "white",
-            "&:hover": { color: alpha("#ffffff", 0.8) },
-            cursor: "grab",
-            zIndex: 10,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
           }}
         >
-          <DragIndicatorIcon />
-        </IconButton>
+          <Chip
+            icon={<EditIcon sx={{ fontSize: "1rem !important" }} />}
+            label="Edit Mode"
+            color="primary"
+            size="small"
+            sx={{ height: 28 }}
+          />
 
-        <Container maxWidth="lg">
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            spacing={2}
-            justifyContent={{ xs: "center", md: "space-between" }}
-            sx={{ "& > *": { mb: { xs: 1, md: 0 } } }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <EmailIcon
-                sx={{ color: alpha(theme.palette.common.white, 0.7) }}
-              />
-              <Typography variant="body2">{user?.email}</Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <PhoneIcon
-                sx={{ color: alpha(theme.palette.common.white, 0.7) }}
-              />
-              <Typography variant="body2">{user?.phone}</Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <LocationOnIcon
-                sx={{ color: alpha(theme.palette.common.white, 0.7) }}
-              />
-              <Typography variant="body2">{user?.address}</Typography>
-            </Box>
-          </Stack>
-        </Container>
-      </Box>
-
-      {/* Main content */}
-      <Container maxWidth="lg" sx={{ py: 5 }}>
-        {/* Skills section */}
-        <Box sx={{ mb: 5, position: "relative" }}>
-          {/* Drag Handle for Skills */}
-          <IconButton
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-              cursor: "grab",
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
-
-          <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-            <Box
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Alert
+              severity="warning"
+              variant="outlined"
               sx={{
-                width: 8,
-                height: 32,
-                bgcolor: "purple.600",
-                mr: 2,
-              }}
-            />
-            <Typography variant="h5" fontWeight="bold" color="purple.700">
-              Skills
-            </Typography>
-          </Box>
-          <Box sx={{ ml: 3, display: "flex", flexWrap: "wrap", gap: 1 }}>
-            {user?.skills?.map((skill, index) => (
-              <Chip
-                key={index}
-                label={skill.value}
-                sx={{
-                  color: "purple.800",
-                  px: 2,
-                  py: 1,
-                  borderRadius: 2,
-                  fontWeight: 500,
+                py: 0,
+                px: 1,
+                borderRadius: 1,
+                backgroundColor: "rgba(255, 244, 229, 0.5)",
+                "& .MuiAlert-icon": {
                   fontSize: "0.875rem",
-                }}
-              />
-            ))}
+                  mr: 0.5,
+                },
+                "& .MuiAlert-message": {
+                  fontSize: "0.75rem",
+                  fontWeight: 500,
+                },
+              }}
+            >
+              Unsaved changes will be lost
+            </Alert>
+
+            <Button
+              startIcon={<DragIndicatorIcon />}
+              size="small"
+              variant="text"
+              sx={{ fontSize: "0.75rem", fontWeight: 500 }}
+            >
+              Drag to reorder
+            </Button>
+
+            <Button
+              size="small"
+              loading={isExporting}
+              onClick={handleExportPdf}
+              variant="contained"
+              sx={{ px: 2, py: 0.5, fontSize: "0.75rem" }}
+            >
+              Download
+            </Button>
           </Box>
         </Box>
 
-        {/* Two column layout for experience and education */}
-        <Grid2 container spacing={4} sx={{ mb: 5 }}>
-          {/* Experience */}
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Box sx={{ position: "relative" }}>
-              {/* Drag Handle for Experience */}
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                  cursor: "grab",
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            gap: 1.5,
+            mb: 0.5,
+          }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <ColorLensIcon
+              fontSize="small"
+              color="action"
+              sx={{ fontSize: "1rem" }}
+            />
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight={500}
+            >
+              Theme
+            </Typography>
+          </Box>
 
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
+          <Stack direction="row" spacing={1}>
+            {colorOptions.map((color) => (
+              <Tooltip key={color.name} title={color.name}>
                 <Box
-                  sx={{ width: 8, height: 32, bgcolor: "error.main", mr: 2 }}
+                  sx={{
+                    width: 24,
+                    height: 24,
+                    borderRadius: "50%",
+                    bgcolor: color.primary,
+                    cursor: "pointer",
+                    border:
+                      selectedColor.name === color.name
+                        ? "2px solid #000"
+                        : "1px solid transparent",
+                    boxShadow:
+                      selectedColor.name === color.name
+                        ? "0 0 0 1px white"
+                        : "none",
+                    transition: "all 0.2s ease",
+                    "&:hover": {
+                      transform: "scale(1.1)",
+                      boxShadow: "0 0 0 1px white",
+                    },
+                  }}
+                  onClick={() => setSelectedColor(color)}
                 />
-                <Typography variant="h5" fontWeight="bold" color="error.main">
-                  Work Experience
-                </Typography>
-              </Box>
+              </Tooltip>
+            ))}
+          </Stack>
+        </Box>
+      </Box>
 
-              <Stack spacing={3} sx={{ ml: 3 }}>
-                {user?.workEx?.map((job, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      position: "relative",
-                      borderLeft: `2px solid ${alpha(
-                        theme.palette.error.main,
-                        0.2
-                      )}`,
-                      pl: 3,
-                      pb: 3,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        left: -6,
-                        top: 6,
-                        width: 12,
-                        height: 12,
-                        borderRadius: "50%",
-                        bgcolor: "error.main",
-                      }}
-                    />
-                    <Typography variant="h6" fontWeight="bold">
-                      {job.jobTitle}
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        color: "error.main",
-                        fontWeight: 600,
-                        mb: 0.5,
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        color="error.main"
-                        fontWeight="medium"
-                      >
-                        {job.company}
-                        <Box component="span" sx={{ mx: 1 }}>
-                          •
-                        </Box>
-                        <Box component="span" sx={{ fontSize: "0.875rem" }}>
-                          {job.startDate} - {job.endDate}
-                        </Box>
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      {job.responsibilites}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
+      {/* CV Content */}
+      <Box
+        ref={contentRef}
+        sx={{
+          mx: "auto",
+          p: 4,
+          backgroundColor: "#fff",
+          color: "#000",
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+          position: "relative",
+          fontFamily: "Arial, sans-serif",
+        }}
+      >
+        {/* Header/Personal Info */}
+        <Box
+          sx={{
+            mb: 2,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              color={selectedColor.primary}
+              gutterBottom
+            >
+              {user?.fullname}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              color="text.secondary"
+              gutterBottom
+              sx={{ fontStyle: "italic" }}
+            >
+              Nhân viên tư vấn
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{ ml: 2, display: "flex", flexDirection: "column", gap: 0.8 }}
+          >
+            <Typography
+              variant="body2"
+              sx={{
+                lineHeight: 1.4,
+                display: "block",
+                textAlign: "right",
+              }}
+            >
+              {user?.phone}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                lineHeight: 1.4,
+                display: "block",
+                textAlign: "right",
+              }}
+            >
+              {user?.email}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                lineHeight: 1.4,
+                display: "block",
+                textAlign: "right",
+              }}
+            >
+              {user?.address}
+            </Typography>
+          </Box>
+        </Box>
+
+        {/* Objective Section */}
+        <Box sx={{ mb: 3 }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              mb: 1,
+              borderBottom: `1px solid ${selectedColor.primary}`,
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              color={selectedColor.primary}
+              sx={{ textTransform: "uppercase", pb: 0.5 }}
+            >
+              Mục tiêu nghề nghiệp
+            </Typography>
+          </Box>
+
+          <EditableText
+            value={user?.aboutMe as string}
+            sx={{ fontSize: "0.9rem", lineHeight: 1.5 }}
+          />
+        </Box>
+
+        {/* CV Sections */}
+        <DndContext
+          collisionDetection={closestCorners}
+          modifiers={[restrictToParentElement]}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext
+            items={sections.map((section) => section.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <Box>
+              {sections.map((section) => {
+                return (
+                  <SortableItem
+                    selectedColor={selectedColor}
+                    key={section.id}
+                    data={section.data.items}
+                    cvPos={3}
+                    isExport={isExporting}
+                    type={section.type}
+                    id={section.id}
+                  />
+                );
+              })}
             </Box>
-          </Grid2>
-
-          {/* Education */}
-          <Grid2 size={{ xs: 12, md: 6 }}>
-            <Box sx={{ position: "relative" }}>
-              {/* Drag Handle for Education */}
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                  cursor: "grab",
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Box
-                  sx={{ width: 8, height: 32, bgcolor: "info.main", mr: 2 }}
-                />
-                <Typography variant="h5" fontWeight="bold" color="info.main">
-                  Education
-                </Typography>
-              </Box>
-
-              <Stack spacing={3} sx={{ ml: 3 }}>
-                {user?.education?.map((edu, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      position: "relative",
-                      borderLeft: `2px solid ${alpha(
-                        theme.palette.info.main,
-                        0.2
-                      )}`,
-                      pl: 3,
-                      pb: 3,
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        left: -6,
-                        top: 6,
-                        width: 12,
-                        height: 12,
-                        borderRadius: "50%",
-                        bgcolor: "info.main",
-                      }}
-                    />
-                    <Typography variant="h6" fontWeight="bold">
-                      {edu.school}
-                    </Typography>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        color: "info.main",
-                        fontWeight: 600,
-                        mb: 0.5,
-                      }}
-                    >
-                      <Typography
-                        variant="subtitle2"
-                        color="info.main"
-                        fontWeight="medium"
-                      >
-                        {edu.major}
-                        <Box component="span" sx={{ mx: 1 }}>
-                          •
-                        </Box>
-                        <Box component="span" sx={{ fontSize: "0.875rem" }}>
-                          {edu.startDate} - {edu.endDate}
-                        </Box>
-                      </Typography>
-                    </Box>
-                    <Typography variant="body2" color="text.secondary">
-                      {edu.description}
-                    </Typography>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          </Grid2>
-        </Grid2>
-
-        {/* Projects and Certificates */}
-        <Grid2 container spacing={4}>
-          {/* Projects */}
-          <Grid2 size={{ xs: 12, md: 7 }}>
-            <Box sx={{ position: "relative" }}>
-              {/* Drag Handle for Projects */}
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                  cursor: "grab",
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Box
-                  sx={{ width: 8, height: 32, bgcolor: "success.main", mr: 2 }}
-                />
-                <Typography variant="h5" fontWeight="bold" color="success.main">
-                  Projects
-                </Typography>
-              </Box>
-
-              <Stack spacing={3} sx={{ ml: 3 }}>
-                {user?.projects?.map((project, index) => (
-                  <Paper
-                    key={index}
-                    elevation={2}
-                    sx={{
-                      p: 2.5,
-                      borderRadius: 2,
-                      borderTop: `4px solid ${theme.palette.success.main}`,
-                    }}
-                  >
-                    <Typography variant="h6" fontWeight="bold">
-                      {project.projectName}
-                    </Typography>
-                    <Typography
-                      variant="subtitle2"
-                      color="success.main"
-                      sx={{ mb: 1 }}
-                    >
-                      {project.role} | {project.startDate} - {project.endDate}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {project.description}
-                    </Typography>
-                  </Paper>
-                ))}
-              </Stack>
-            </Box>
-          </Grid2>
-
-          {/* Certificates */}
-          <Grid2 size={{ xs: 12, md: 5 }}>
-            <Box sx={{ position: "relative" }}>
-              {/* Drag Handle for Certificates */}
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                  cursor: "grab",
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
-
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Box
-                  sx={{ width: 8, height: 32, bgcolor: "warning.main", mr: 2 }}
-                />
-                <Typography variant="h5" fontWeight="bold" color="warning.main">
-                  Certificates
-                </Typography>
-              </Box>
-
-              <Stack spacing={3} sx={{ ml: 3 }}>
-                {user?.certificate?.map((cert, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      display: "flex",
-                      gap: 2,
-                      alignItems: "flex-start",
-                    }}
-                  >
-                    <CheckCircleOutlineIcon
-                      sx={{ color: "warning.main", fontSize: 28 }}
-                    />
-                    <Box>
-                      <Typography variant="h6" fontWeight="bold">
-                        {cert.name}
-                      </Typography>
-                      <Typography variant="subtitle2" color="text.secondary">
-                        {cert.organization} | {cert.month} {cert.year}
-                      </Typography>
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ mt: 0.5 }}
-                      >
-                        {cert.description}
-                      </Typography>
-                    </Box>
-                  </Box>
-                ))}
-              </Stack>
-            </Box>
-          </Grid2>
-        </Grid2>
-      </Container>
-    </Box>
+          </SortableContext>
+        </DndContext>
+      </Box>
+    </Container>
   );
 };

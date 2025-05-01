@@ -3,10 +3,6 @@ import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import Typography from "@mui/material/Typography";
-import Chip from "@mui/material/Chip";
-import Grid2 from "@mui/material/Grid2";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import Paper from "@mui/material/Paper";
 import {
   certificateType,
   educationType,
@@ -17,22 +13,28 @@ import {
 import { useTheme } from "@mui/material";
 import { DragHandleProps } from "../FirstCv/CVSectionContent";
 import { EditableText } from "../components/EditableText";
+
+// Update itemType in SortableItem.ts if needed
+type ExtendedItemType = itemType | "objective";
+
 export const SecondCVSectionContent = ({
   type,
   data,
   dragHandleProps,
+  selectedColor,
 }: {
-  type: itemType;
+  type: ExtendedItemType;
   data: dataType;
   dragHandleProps?: DragHandleProps;
+  selectedColor: { name: string; primary: string };
 }) => {
   const theme = useTheme();
-  const primaryColor = theme.palette.primary;
+  const primaryColor = selectedColor?.primary || theme.palette.primary.main;
+
   switch (type) {
-    case "skill":
+    case "aboutMe":
       return (
-        <Box sx={{ mb: 4, position: "relative" }}>
-          {/* Drag Handle for Skills */}
+        <Box sx={{ mb: 3, position: "relative" }}>
           <IconButton
             {...dragHandleProps}
             sx={{
@@ -47,433 +49,345 @@ export const SecondCVSectionContent = ({
             <DragIndicatorIcon />
           </IconButton>
 
-          <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-            Skills
-          </Typography>
-          <Paper
-            elevation={0}
+          <Box
             sx={{
-              p: 1.5,
-              bgcolor: `${primaryColor.light}10`,
-              borderRadius: 1,
+              borderBottom: "2px solid #000",
+              mb: 2,
+              pb: 0.5,
             }}
           >
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75 }}>
-              {(data as skillType[])?.map((skill, index) => (
-                <Chip
-                  key={index}
-                  label={skill.value}
-                  size="small"
-                  sx={{
-                    bgcolor: "#fff",
-                    color: primaryColor.main,
-                    border: `1px solid ${primaryColor.light}`,
-                    boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                    fontWeight: 500,
-                    "&:hover": {
-                      bgcolor: primaryColor.light,
-                      color: "#fff",
-                    },
-                  }}
-                />
-              ))}
-            </Box>
-          </Paper>
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ textTransform: "uppercase" }}
+            >
+              Mục tiêu nghề nghiệp
+            </Typography>
+          </Box>
+
+          <EditableText
+            value={(data as string) || ""}
+            variant="body2"
+            sx={{ lineHeight: 1.6 }}
+          />
         </Box>
       );
+
+    case "skill":
+      return (
+        <Box sx={{ mb: 3, position: "relative" }}>
+          <IconButton
+            {...dragHandleProps}
+            sx={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              color: "grey.500",
+              "&:hover": { color: "grey.700" },
+              cursor: "grab",
+            }}
+          >
+            <DragIndicatorIcon />
+          </IconButton>
+
+          <Box
+            sx={{
+              borderBottom: "2px solid #000",
+              mb: 2,
+              pb: 0.5,
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ textTransform: "uppercase" }}
+            >
+              Các kỹ năng
+            </Typography>
+          </Box>
+
+          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+            {(data as skillType[])?.map((skill, index) => (
+              <Typography
+                key={index}
+                variant="body2"
+                sx={{
+                  border: `1px solid ${primaryColor}`,
+                  borderRadius: 0,
+                  px: 2,
+                  py: 0.5,
+                  color: primaryColor,
+                  fontWeight: 500,
+                }}
+              >
+                {skill.value}
+              </Typography>
+            ))}
+          </Box>
+        </Box>
+      );
+
     case "workEx":
       return (
-        <>
-          <Box sx={{ mb: 4, position: "relative" }}>
-            {/* Drag Handle for Experience */}
-            <IconButton
-              {...dragHandleProps}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                color: "grey.500",
-                "&:hover": { color: "grey.700" },
-                cursor: "grab",
-              }}
-            >
-              <DragIndicatorIcon />
-            </IconButton>
-            <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-              Work Experience
-            </Typography>
+        <Box sx={{ mb: 3, position: "relative" }}>
+          <IconButton
+            {...dragHandleProps}
+            sx={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              color: "grey.500",
+              "&:hover": { color: "grey.700" },
+              cursor: "grab",
+            }}
+          >
+            <DragIndicatorIcon />
+          </IconButton>
 
-            {(data as workExType[])?.map((job, index) => (
-              <Paper
-                key={index}
-                elevation={0}
+          <Box
+            sx={{
+              borderBottom: "2px solid #000",
+              mb: 2,
+              pb: 0.5,
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ textTransform: "uppercase" }}
+            >
+              Kinh nghiệm làm việc
+            </Typography>
+          </Box>
+
+          {(data as workExType[])?.map((job, index) => (
+            <Box key={index} sx={{ mb: 3 }}>
+              <Box
                 sx={{
-                  mb: 2,
-                  position: "relative",
-                  backgroundImage:
-                    index % 2 === 0
-                      ? `linear-gradient(to right, ${primaryColor.light}15, transparent)`
-                      : "none",
-                  borderLeft: `3px solid ${primaryColor.main}`,
-                  overflow: "hidden",
-                  p: 1.5,
-                  pl: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 0.5,
                 }}
               >
-                {/* Company & date badge */}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    bgcolor: primaryColor.main,
-                    color: "white",
-                    px: 1.5,
-                    py: 0.5,
-                    fontWeight: "bold",
-                    fontSize: "0.7rem",
-                    borderBottomLeftRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  {job.startDate} - {job.endDate}
+                <Box sx={{ width: "30%" }}>
+                  <Typography variant="body2" fontWeight="medium">
+                    {job.startDate} - {job.endDate}
+                  </Typography>
                 </Box>
-
-                <Box sx={{ display: "flex", flexDirection: "column", pr: 5 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: 1,
-                      mb: 0.5,
-                    }}
-                  >
-                    <EditableText
-                      variant="h6"
-                      fontWeight="bold"
-                      value={job.jobTitle}
-                      sx={{ lineHeight: 1.2 }}
-                    />
-                  </Box>
-
-                  <EditableText
-                    variant="subtitle1"
-                    fontWeight="bold"
-                    sx={{
-                      mb: 0.75,
-                      color: primaryColor.main,
-                      fontSize: "0.95rem",
-                    }}
-                    value={job.company}
-                  />
-
-                  <EditableText
+                <Box sx={{ width: "70%" }}>
+                  <Typography variant="body1" fontWeight="bold">
+                    Công ty {job.company}
+                  </Typography>
+                  <Typography
                     variant="body2"
+                    sx={{ mb: 1, fontWeight: "medium", color: primaryColor }}
+                  >
+                    {job.jobTitle}
+                  </Typography>
+                  <EditableText
                     value={job.responsibilites}
-                    sx={{
-                      fontSize: "0.9rem",
-                      color: "text.secondary",
-                    }}
+                    variant="body2"
+                    sx={{ whiteSpace: "pre-line" }}
                   />
                 </Box>
-              </Paper>
-            ))}
-          </Box>
-        </>
+              </Box>
+            </Box>
+          ))}
+        </Box>
       );
+
     case "education":
       return (
-        <>
-          <Box sx={{ mb: 4, position: "relative" }}>
-            {/* Drag Handle for Education */}
-            <IconButton
-              {...dragHandleProps}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                color: "grey.500",
-                "&:hover": { color: "grey.700" },
-                cursor: "grab",
-              }}
+        <Box sx={{ mb: 3, position: "relative" }}>
+          <IconButton
+            {...dragHandleProps}
+            sx={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              color: "grey.500",
+              "&:hover": { color: "grey.700" },
+              cursor: "grab",
+            }}
+          >
+            <DragIndicatorIcon />
+          </IconButton>
+
+          <Box
+            sx={{
+              borderBottom: "2px solid #000",
+              mb: 2,
+              pb: 0.5,
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ textTransform: "uppercase" }}
             >
-              <DragIndicatorIcon />
-            </IconButton>
-
-            <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-              Education
+              Học vấn
             </Typography>
+          </Box>
 
-            {(data as educationType[])?.map((edu, index) => (
-              <Paper
-                key={index}
-                elevation={0}
+          {(data as educationType[])?.map((edu, index) => (
+            <Box key={index} sx={{ mb: 2 }}>
+              <Box
                 sx={{
-                  mb: 2,
-                  position: "relative",
-                  backgroundImage:
-                    index % 2 === 0
-                      ? `linear-gradient(to right, ${primaryColor.light}15, transparent)`
-                      : "none",
-                  borderLeft: `3px solid ${primaryColor.main}`,
-                  overflow: "hidden",
-                  p: 1.5,
-                  pl: 2,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 0.5,
                 }}
               >
-                {/* Date badge */}
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    bgcolor: primaryColor.main,
-                    color: "white",
-                    px: 1.5,
-                    py: 0.5,
-                    fontWeight: "bold",
-                    fontSize: "0.7rem",
-                    borderBottomLeftRadius: "8px",
-                  }}
-                >
-                  {edu.startDate} - {edu.endDate}
+                <Box sx={{ width: "30%" }}>
+                  <Typography variant="body2" fontWeight="medium">
+                    {edu.startDate} - {edu.endDate}
+                  </Typography>
                 </Box>
-
-                <Box sx={{ display: "flex", flexDirection: "column", pr: 5 }}>
+                <Box sx={{ width: "70%" }}>
                   <EditableText
-                    variant="h6"
-                    fontWeight="bold"
                     value={edu.school}
-                    sx={{ lineHeight: 1.2 }}
-                  />
-
-                  <EditableText
-                    variant="subtitle1"
+                    variant="body1"
                     fontWeight="bold"
-                    sx={{
-                      mb: 0.75,
-                      color: primaryColor.main,
-                      fontSize: "0.95rem",
-                    }}
-                    value={edu.major}
                   />
-
                   <EditableText
+                    value={edu.major}
                     variant="body2"
-                    value={edu.description}
-                    sx={{
-                      fontSize: "0.9rem",
-                      color: "text.secondary",
-                    }}
+                    sx={{ mb: 1, fontWeight: "medium", color: primaryColor }}
                   />
+                  <EditableText value={edu.description} variant="body2" />
                 </Box>
-              </Paper>
-            ))}
-          </Box>
-        </>
+              </Box>
+            </Box>
+          ))}
+        </Box>
       );
+
     case "projects":
       return (
-        <>
-          <Box sx={{ mb: 4, position: "relative" }}>
-            {/* Drag Handle for Projects */}
-            <IconButton
-              {...dragHandleProps}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                color: "grey.500",
-                "&:hover": { color: "grey.700" },
-                cursor: "grab",
-              }}
+        <Box sx={{ mb: 3, position: "relative" }}>
+          <IconButton
+            {...dragHandleProps}
+            sx={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              color: "grey.500",
+              "&:hover": { color: "grey.700" },
+              cursor: "grab",
+            }}
+          >
+            <DragIndicatorIcon />
+          </IconButton>
+
+          <Box
+            sx={{
+              borderBottom: "2px solid #000",
+              mb: 2,
+              pb: 0.5,
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ textTransform: "uppercase" }}
             >
-              <DragIndicatorIcon />
-            </IconButton>
-
-            <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-              Projects
+              Các dự án
             </Typography>
-            <Grid2 container spacing={1.5}>
-              {(data as projectType[])?.map((project, index) => (
-                <Grid2 key={index} size={{ xs: 12, md: 6 }}>
-                  <Paper
-                    elevation={1}
-                    sx={{
-                      position: "relative",
-                      height: "100%",
-                      p: 1.5,
-                      pl: 2,
-                      overflow: "hidden",
-                      borderRadius: 1,
-                      transition: "transform 0.2s",
-                      "&:hover": {
-                        transform: "translateY(-3px)",
-                        boxShadow: theme.shadows[3],
-                      },
-                      "&:before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        height: "100%",
-                        width: "4px",
-                        background: `linear-gradient(to bottom, ${primaryColor.main}, ${primaryColor.light})`,
-                      },
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: "absolute",
-                        top: 8,
-                        right: 8,
-                        bgcolor: `${primaryColor.main}20`,
-                        px: 1,
-                        py: 0.25,
-                        borderRadius: 0.5,
-                        fontSize: "0.7rem",
-                        color: primaryColor.dark,
-                      }}
-                    >
-                      {project.startDate} - {project.endDate}
-                    </Box>
-
-                    <EditableText
-                      variant="subtitle1"
-                      fontWeight="bold"
-                      sx={{ fontSize: "0.95rem", mb: 0.5, pr: 5 }}
-                      value={project.projectName}
-                    />
-
-                    <Box
-                      sx={{
-                        mb: 1,
-                        color: primaryColor.main,
-                        fontWeight: "medium",
-                        fontSize: "0.85rem",
-                      }}
-                    >
-                      <EditableText
-                        variant="body2"
-                        value={project.role}
-                        sx={{ color: primaryColor.main, fontWeight: "bold" }}
-                      />
-                    </Box>
-
-                    <EditableText
-                      variant="body2"
-                      color="text.secondary"
-                      value={project.description}
-                      sx={{ fontSize: "0.85rem" }}
-                    />
-                  </Paper>
-                </Grid2>
-              ))}
-            </Grid2>
           </Box>
-        </>
+
+          {(data as projectType[])?.map((project, index) => (
+            <Box key={index} sx={{ mb: 2 }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  mb: 0.5,
+                }}
+              >
+                <Box sx={{ width: "30%" }}>
+                  <Typography variant="body2" fontWeight="medium">
+                    {project.startDate} - {project.endDate}
+                  </Typography>
+                </Box>
+                <Box sx={{ width: "70%" }}>
+                  <EditableText
+                    value={project.projectName}
+                    variant="body1"
+                    fontWeight="bold"
+                  />
+                  <EditableText
+                    value={project.role}
+                    variant="body2"
+                    sx={{ mb: 1, fontWeight: "medium", color: primaryColor }}
+                  />
+                  <EditableText value={project.description} variant="body2" />
+                </Box>
+              </Box>
+            </Box>
+          ))}
+        </Box>
       );
+
     case "certificate":
       return (
-        <>
-          <Box sx={{ position: "relative", mb: 4 }}>
-            {/* Drag Handle for Certificates */}
-            <IconButton
-              {...dragHandleProps}
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                color: "grey.500",
-                "&:hover": { color: "grey.700" },
-                cursor: "grab",
-              }}
+        <Box sx={{ mb: 3, position: "relative" }}>
+          <IconButton
+            {...dragHandleProps}
+            sx={{
+              position: "absolute",
+              top: 0,
+              right: 0,
+              color: "grey.500",
+              "&:hover": { color: "grey.700" },
+              cursor: "grab",
+            }}
+          >
+            <DragIndicatorIcon />
+          </IconButton>
+
+          <Box
+            sx={{
+              borderBottom: "2px solid #000",
+              mb: 2,
+              pb: 0.5,
+            }}
+          >
+            <Typography
+              variant="h6"
+              fontWeight="bold"
+              sx={{ textTransform: "uppercase" }}
             >
-              <DragIndicatorIcon />
-            </IconButton>
-
-            <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-              Certificates
+              Chứng chỉ
             </Typography>
-            <Grid2 container spacing={1.5}>
-              {(data as certificateType[])?.map((cert, index) => (
-                <Grid2 key={index} size={{ xs: 12, sm: 6 }}>
-                  <Paper
-                    elevation={1}
-                    sx={{
-                      position: "relative",
-                      display: "flex",
-                      alignItems: "flex-start",
-                      p: 1.5,
-                      borderRadius: 1,
-                      height: "100%",
-                      transition: "transform 0.2s",
-                      "&:hover": {
-                        transform: "translateY(-3px)",
-                        boxShadow: theme.shadows[2],
-                      },
-                      "&:before": {
-                        content: '""',
-                        position: "absolute",
-                        top: 0,
-                        right: 0,
-                        width: "30%",
-                        height: "4px",
-                        backgroundColor: primaryColor.main,
-                        borderBottomLeftRadius: 4,
-                      },
-                    }}
-                  >
-                    <CheckCircleIcon
-                      color="primary"
-                      sx={{
-                        fontSize: "1.4rem",
-                        mt: 0.5,
-                        mr: 1.5,
-                        color: primaryColor.main,
-                      }}
-                    />
-                    <Box sx={{ flex: 1 }}>
-                      <Box
-                        sx={{ display: "flex", alignItems: "center", mb: 0.5 }}
-                      >
-                        <Typography
-                          variant="subtitle1"
-                          fontWeight="bold"
-                          sx={{ fontSize: "0.95rem" }}
-                        >
-                          {cert.name}
-                        </Typography>
-                      </Box>
-
-                      <Typography
-                        variant="caption"
-                        sx={{
-                          display: "block",
-                          mb: 0.75,
-                          color: primaryColor.main,
-                          fontWeight: "bold",
-                        }}
-                      >
-                        {cert.organization} • {cert.month} {cert.year}
-                      </Typography>
-
-                      <Typography
-                        variant="body2"
-                        color="text.secondary"
-                        sx={{ fontSize: "0.85rem" }}
-                      >
-                        {cert.description}
-                      </Typography>
-                    </Box>
-                  </Paper>
-                </Grid2>
-              ))}
-            </Grid2>
           </Box>
-        </>
+
+          {(data as certificateType[])?.map((cert, index) => (
+            <Box key={index} sx={{ mb: 2 }}>
+              <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+                <Box sx={{ width: "30%" }}>
+                  <Typography variant="body2" fontWeight="medium">
+                    {cert.month} {cert.year}
+                  </Typography>
+                </Box>
+                <Box sx={{ width: "70%" }}>
+                  <EditableText
+                    value={cert.name}
+                    variant="body1"
+                    fontWeight="bold"
+                  />
+                  <EditableText
+                    value={cert.organization}
+                    variant="body2"
+                    sx={{ mb: 1, color: primaryColor }}
+                  />
+                  <EditableText value={cert.description} variant="body2" />
+                </Box>
+              </Box>
+            </Box>
+          ))}
+        </Box>
       );
+
     default:
       return <div>Unknown section type</div>;
   }

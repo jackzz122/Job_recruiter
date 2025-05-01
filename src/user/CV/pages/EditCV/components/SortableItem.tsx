@@ -10,6 +10,7 @@ import {
   workExType,
 } from "../../../../../types/UserType";
 import { SecondCVSectionContent } from "../SecondCv/SecondCVSectionContent";
+import { ThirdCvSectionContent } from "../ThirdCv/ThirdCvSectionContent";
 export type itemType =
   | "aboutMe"
   | "workEx"
@@ -27,12 +28,14 @@ export type dataType =
   | skillType[]
   | UserType;
 export const SortableItem = ({
+  selectedColor,
   cvPos,
   isExport,
   id,
   type,
   data,
 }: {
+  selectedColor: { name: string; primary: string };
   cvPos: number;
   isExport: boolean;
   id: string;
@@ -58,12 +61,20 @@ export const SortableItem = ({
       )}
       {cvPos === 2 && (
         <SecondCVSectionContent
+          selectedColor={selectedColor}
           data={data}
           type={type}
           dragHandleProps={{ ...attributes, ...listeners }}
         />
       )}
-      {cvPos === 3}
+      {cvPos === 3 && (
+        <ThirdCvSectionContent
+          dragHandleProps={{ ...attributes, ...listeners }}
+          selectedColor={selectedColor}
+          data={data}
+          type={type}
+        />
+      )}
     </div>
   );
 };

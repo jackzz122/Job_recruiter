@@ -389,6 +389,7 @@ export const FirstCVEdited = () => {
                   {sections.map((section) => {
                     return (
                       <SortableItem
+                        selectedColor={selectedColor}
                         cvPos={1}
                         isExport={isExporting}
                         key={section.id}

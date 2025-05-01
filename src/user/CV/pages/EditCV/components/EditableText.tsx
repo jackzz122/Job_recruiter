@@ -3,7 +3,7 @@ import { SxProps, Theme } from "@mui/material";
 
 type EditableTextProps = {
   value: string;
-  variant?: "body1" | "body2" | "subtitle1" | "subtitle2" | "h6";
+  variant?: "body1" | "body2" | "subtitle1" | "subtitle2" | "h6" | "h4";
   color?: "text.primary" | "text.secondary";
   fontWeight?: "normal" | "bold";
   sx?: SxProps<Theme>;

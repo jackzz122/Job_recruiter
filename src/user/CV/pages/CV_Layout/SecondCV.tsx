@@ -1,16 +1,8 @@
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Chip from "@mui/material/Chip";
-import Container from "@mui/material/Container";
-import Grid2 from "@mui/material/Grid2";
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../redux/feature/user/userSlice";
 
@@ -22,437 +14,290 @@ export const SecondCV = () => {
   return (
     <Container
       maxWidth="lg"
-      sx={{ bgcolor: "background.paper", p: 4, height: "100%" }}
+      sx={{
+        bgcolor: "background.paper",
+        p: 4,
+        height: "100%",
+        fontFamily: "Arial, sans-serif",
+        color: "text.primary",
+      }}
     >
-      {/* Header section */}
+      {/* Header Section */}
       <Box
         sx={{
           display: "flex",
           flexDirection: { xs: "column", md: "row" },
-          alignItems: "center",
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          pb: 3,
-          mb: 3,
+          mb: 4,
+          gap: 3,
         }}
       >
-        {/* Profile image */}
-        <Box sx={{ mb: { xs: 2, md: 0 }, mr: { md: 3 } }}>
+        {/* Avatar */}
+        <Box sx={{ width: 120 }}>
           <Avatar
             src={user?.avatarIMG}
             alt={user?.fullname}
             sx={{
-              width: 140,
+              width: 120,
               height: 140,
-              border: `2px solid ${theme.palette.grey[200]}`,
+              border: "1px solid #e0e0e0",
+              borderRadius: 1,
             }}
           />
         </Box>
 
-        {/* Name and about */}
-        <Box
-          sx={{
-            textAlign: { xs: "center", md: "left" },
-            flex: 1,
-          }}
-        >
+        {/* Personal Info */}
+        <Box sx={{ flex: 1 }}>
           <Typography
             variant="h4"
             fontWeight="bold"
-            color="text.primary"
-            mb={1}
+            color={primaryColor.main}
+            mb={0.5}
           >
             {user?.fullname}
           </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            mb={2}
-            sx={{ maxWidth: "36rem" }}
-          >
-            {user?.aboutMe}
+
+          <Typography variant="subtitle1" color="text.secondary" mb={2}>
+            Nhân viên tư vấn
           </Typography>
 
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            spacing={2}
+          <Box
             sx={{
-              justifyContent: { xs: "center", md: "flex-start" },
-              "& > *": { mb: 1 },
+              display: "grid",
+              gridTemplateColumns: "120px 1fr",
+              rowGap: 1,
             }}
           >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <EmailIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{user?.email}</Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <PhoneIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{user?.phone}</Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <LocationOnIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{user?.address}</Typography>
-            </Box>
-          </Stack>
+            <Typography variant="body2" fontWeight="medium">
+              Ngày sinh:
+            </Typography>
+            <Typography variant="body2">15/05/1990</Typography>
+
+            <Typography variant="body2" fontWeight="medium">
+              Giới tính:
+            </Typography>
+            <Typography variant="body2">Nam/Nữ/Khác</Typography>
+
+            <Typography variant="body2" fontWeight="medium">
+              Số điện thoại:
+            </Typography>
+            <Typography variant="body2">{user?.phone}</Typography>
+
+            <Typography variant="body2" fontWeight="medium">
+              Email:
+            </Typography>
+            <Typography variant="body2">{user?.email}</Typography>
+
+            <Typography variant="body2" fontWeight="medium">
+              Website:
+            </Typography>
+            <Typography variant="body2" color={primaryColor.main}>
+              be.net/tencuaban
+            </Typography>
+
+            <Typography variant="body2" fontWeight="medium">
+              Địa chỉ:
+            </Typography>
+            <Typography variant="body2">{user?.address}</Typography>
+          </Box>
         </Box>
       </Box>
 
-      {/* Skills section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-          Skills
-        </Typography>
-        <Paper
-          elevation={0}
+      {/* Section: Career Objective */}
+      <Box sx={{ mb: 3 }}>
+        <Box
           sx={{
-            p: 1.5,
-            bgcolor: `${primaryColor.light}10`,
-            borderRadius: 1,
+            borderBottom: "2px solid #000",
+            mb: 2,
+            pb: 0.5,
           }}
         >
-          <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.75 }}>
-            {user?.skills?.map((skill, index) => (
-              <Chip
-                key={index}
-                label={skill.value}
-                size="small"
-                sx={{
-                  bgcolor: "#fff",
-                  color: primaryColor.main,
-                  border: `1px solid ${primaryColor.light}`,
-                  boxShadow: "0 1px 2px rgba(0,0,0,0.05)",
-                  fontWeight: 500,
-                  "&:hover": {
-                    bgcolor: primaryColor.light,
-                    color: "#fff",
-                  },
-                }}
-              />
-            ))}
-          </Box>
-        </Paper>
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ textTransform: "uppercase" }}
+          >
+            Mục tiêu nghề nghiệp
+          </Typography>
+        </Box>
+        <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
+          {user?.aboutMe}
+        </Typography>
       </Box>
 
-      {/* Experience section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-          Work Experience
-        </Typography>
-        {user?.workEx?.map((job, index) => (
-          <Paper
-            key={index}
-            elevation={0}
-            sx={{
-              mb: 2,
-              position: "relative",
-              backgroundImage:
-                index % 2 === 0
-                  ? `linear-gradient(to right, ${primaryColor.light}15, transparent)`
-                  : "none",
-              borderLeft: `3px solid ${primaryColor.main}`,
-              overflow: "hidden",
-              p: 1.5,
-              pl: 2,
-            }}
+      {/* Section: Education */}
+      <Box sx={{ mb: 3 }}>
+        <Box
+          sx={{
+            borderBottom: "2px solid #000",
+            mb: 2,
+            pb: 0.5,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ textTransform: "uppercase" }}
           >
-            {/* Date badge */}
-            <Box
-              sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                bgcolor: primaryColor.main,
-                color: "white",
-                px: 1.5,
-                py: 0.5,
-                fontWeight: "bold",
-                fontSize: "0.7rem",
-                borderBottomLeftRadius: "8px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              {job.startDate} - {job.endDate}
-            </Box>
+            Học vấn
+          </Typography>
+        </Box>
 
-            <Box sx={{ display: "flex", flexDirection: "column", pr: 5 }}>
-              <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
-              >
+        {user?.education?.map((edu, index) => (
+          <Box key={index} sx={{ mb: 2 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}
+            >
+              <Box sx={{ width: "30%" }}>
+                <Typography variant="body2" fontWeight="medium">
+                  {edu.startDate} - {edu.endDate}
+                </Typography>
+              </Box>
+              <Box sx={{ width: "70%" }}>
+                <Typography variant="body1" fontWeight="bold">
+                  {edu.school}
+                </Typography>
                 <Typography
-                  variant="h6"
-                  fontWeight="bold"
-                  sx={{ lineHeight: 1.2 }}
+                  variant="body2"
+                  color={primaryColor.main}
+                  sx={{ mb: 1, fontWeight: "medium" }}
+                >
+                  {edu.major}
+                </Typography>
+                <Typography variant="body2">Tốt nghiệp loại Giỏi</Typography>
+              </Box>
+            </Box>
+          </Box>
+        ))}
+      </Box>
+
+      {/* Section: Work Experience */}
+      <Box sx={{ mb: 3 }}>
+        <Box
+          sx={{
+            borderBottom: "2px solid #000",
+            mb: 2,
+            pb: 0.5,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ textTransform: "uppercase" }}
+          >
+            Kinh nghiệm làm việc
+          </Typography>
+        </Box>
+
+        {user?.workEx?.map((job, index) => (
+          <Box key={index} sx={{ mb: 3 }}>
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mb: 0.5 }}
+            >
+              <Box sx={{ width: "30%" }}>
+                <Typography variant="body2" fontWeight="medium">
+                  {job.startDate} - {job.endDate}
+                </Typography>
+              </Box>
+              <Box sx={{ width: "70%" }}>
+                <Typography variant="body1" fontWeight="bold">
+                  Công ty {job.company}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color={primaryColor.main}
+                  sx={{ mb: 1, fontWeight: "medium" }}
                 >
                   {job.jobTitle}
                 </Typography>
+                <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+                  {job.responsibilites}
+                </Typography>
               </Box>
-
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  mb: 0.75,
-                  color: primaryColor.main,
-                  fontSize: "0.95rem",
-                  fontWeight: "bold",
-                }}
-              >
-                {job.company}
-              </Typography>
-
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
-                  fontSize: "0.9rem",
-                }}
-              >
-                {job.responsibilites}
-              </Typography>
             </Box>
-          </Paper>
+          </Box>
         ))}
       </Box>
 
-      {/* Education section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-          Education
-        </Typography>
-        {user?.education?.map((edu, index) => (
-          <Paper
-            key={index}
-            elevation={0}
-            sx={{
-              mb: 2,
-              position: "relative",
-              backgroundImage:
-                index % 2 === 0
-                  ? `linear-gradient(to right, ${primaryColor.light}15, transparent)`
-                  : "none",
-              borderLeft: `3px solid ${primaryColor.main}`,
-              overflow: "hidden",
-              p: 1.5,
-              pl: 2,
-            }}
+      {/* Section: Skills */}
+      <Box sx={{ mb: 3 }}>
+        <Box
+          sx={{
+            borderBottom: "2px solid #000",
+            mb: 2,
+            pb: 0.5,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ textTransform: "uppercase" }}
           >
-            {/* Date badge */}
-            <Box
+            Các kỹ năng
+          </Typography>
+        </Box>
+
+        <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+          {user?.skills?.map((skill, index) => (
+            <Typography
+              key={index}
+              variant="body2"
               sx={{
-                position: "absolute",
-                top: 0,
-                right: 0,
-                bgcolor: primaryColor.main,
-                color: "white",
-                px: 1.5,
+                border: `1px solid ${primaryColor.main}`,
+                borderRadius: 0,
+                px: 2,
                 py: 0.5,
-                fontWeight: "bold",
-                fontSize: "0.7rem",
-                borderBottomLeftRadius: "8px",
+                color: primaryColor.main,
+                fontWeight: 500,
               }}
             >
-              {edu.startDate} - {edu.endDate}
-            </Box>
-
-            <Box sx={{ display: "flex", flexDirection: "column", pr: 5 }}>
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                sx={{ lineHeight: 1.2 }}
-              >
-                {edu.school}
-              </Typography>
-
-              <Typography
-                variant="subtitle1"
-                sx={{
-                  mb: 0.75,
-                  color: primaryColor.main,
-                  fontSize: "0.95rem",
-                  fontWeight: "bold",
-                }}
-              >
-                {edu.major}
-              </Typography>
-
-              <Typography
-                variant="body2"
-                color="text.secondary"
-                sx={{
-                  fontSize: "0.9rem",
-                }}
-              >
-                {edu.description}
-              </Typography>
-            </Box>
-          </Paper>
-        ))}
+              {skill.value}
+            </Typography>
+          ))}
+        </Box>
       </Box>
 
-      {/* Projects section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-          Projects
-        </Typography>
-        <Grid2 container spacing={1.5}>
-          {user?.projects?.map((project, index) => (
-            <Grid2 key={index} size={{ xs: 12, md: 6 }}>
-              <Paper
-                elevation={1}
-                sx={{
-                  position: "relative",
-                  height: "100%",
-                  p: 1.5,
-                  pl: 2,
-                  overflow: "hidden",
-                  borderRadius: 1,
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "translateY(-3px)",
-                    boxShadow: theme.shadows[3],
-                  },
-                  "&:before": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    height: "100%",
-                    width: "4px",
-                    background: `linear-gradient(to bottom, ${primaryColor.main}, ${primaryColor.light})`,
-                  },
-                }}
-              >
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 8,
-                    right: 8,
-                    bgcolor: `${primaryColor.main}20`,
-                    px: 1,
-                    py: 0.25,
-                    borderRadius: 0.5,
-                    fontSize: "0.7rem",
-                    color: primaryColor.dark,
-                  }}
-                >
-                  {project.startDate} - {project.endDate}
-                </Box>
+      {/* Section: Certificates */}
+      <Box sx={{ mb: 3 }}>
+        <Box
+          sx={{
+            borderBottom: "2px solid #000",
+            mb: 2,
+            pb: 0.5,
+          }}
+        >
+          <Typography
+            variant="h6"
+            fontWeight="bold"
+            sx={{ textTransform: "uppercase" }}
+          >
+            Chứng chỉ
+          </Typography>
+        </Box>
 
-                <Typography
-                  variant="subtitle1"
-                  fontWeight="bold"
-                  sx={{ fontSize: "0.95rem", mb: 0.5, pr: 5 }}
-                >
-                  {project.projectName}
+        {user?.certificate?.map((cert, index) => (
+          <Box key={index} sx={{ mb: 2 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+              <Box sx={{ width: "30%" }}>
+                <Typography variant="body2" fontWeight="medium">
+                  {cert.month} {cert.year}
                 </Typography>
-
-                <Box
-                  sx={{
-                    mb: 1,
-                    color: primaryColor.main,
-                    fontWeight: "medium",
-                    fontSize: "0.85rem",
-                  }}
-                >
-                  <Typography
-                    variant="body2"
-                    sx={{ color: primaryColor.main, fontWeight: "bold" }}
-                  >
-                    {project.role}
-                  </Typography>
-                </Box>
-
+              </Box>
+              <Box sx={{ width: "70%" }}>
+                <Typography variant="body1" fontWeight="bold">
+                  {cert.name}
+                </Typography>
                 <Typography
                   variant="body2"
-                  color="text.secondary"
-                  sx={{ fontSize: "0.85rem" }}
+                  color={primaryColor.main}
+                  sx={{ mb: 1 }}
                 >
-                  {project.description}
+                  {cert.organization}
                 </Typography>
-              </Paper>
-            </Grid2>
-          ))}
-        </Grid2>
-      </Box>
-
-      {/* Certificates section */}
-      <Box sx={{ mb: 4 }}>
-        <Typography variant="h5" fontWeight="bold" color="primary" mb={2}>
-          Certificates
-        </Typography>
-        <Grid2 container spacing={1.5}>
-          {user?.certificate?.map((cert, index) => (
-            <Grid2 key={index} size={{ xs: 12, sm: 6 }}>
-              <Paper
-                elevation={1}
-                sx={{
-                  position: "relative",
-                  display: "flex",
-                  alignItems: "flex-start",
-                  p: 1.5,
-                  borderRadius: 1,
-                  height: "100%",
-                  transition: "transform 0.2s",
-                  "&:hover": {
-                    transform: "translateY(-3px)",
-                    boxShadow: theme.shadows[2],
-                  },
-                  "&:before": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    right: 0,
-                    width: "30%",
-                    height: "4px",
-                    backgroundColor: primaryColor.main,
-                    borderBottomLeftRadius: 4,
-                  },
-                }}
-              >
-                <CheckCircleIcon
-                  color="primary"
-                  sx={{
-                    fontSize: "1.4rem",
-                    mt: 0.5,
-                    mr: 1.5,
-                    color: primaryColor.main,
-                  }}
-                />
-                <Box sx={{ flex: 1 }}>
-                  <Box sx={{ display: "flex", alignItems: "center", mb: 0.5 }}>
-                    <Typography
-                      variant="subtitle1"
-                      fontWeight="bold"
-                      sx={{ fontSize: "0.95rem" }}
-                    >
-                      {cert.name}
-                    </Typography>
-                  </Box>
-
-                  <Typography
-                    variant="caption"
-                    sx={{
-                      display: "block",
-                      mb: 0.75,
-                      color: primaryColor.main,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {cert.organization} • {cert.month} {cert.year}
-                  </Typography>
-
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{ fontSize: "0.85rem" }}
-                  >
-                    {cert.description}
-                  </Typography>
-                </Box>
-              </Paper>
-            </Grid2>
-          ))}
-        </Grid2>
+                <Typography variant="body2">{cert.description}</Typography>
+              </Box>
+            </Box>
+          </Box>
+        ))}
       </Box>
     </Container>
   );

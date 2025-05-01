@@ -3,10 +3,6 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { useTheme } from "@mui/material";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import EditIcon from "@mui/icons-material/Edit";
 import HomeIcon from "@mui/icons-material/Home";
 import { useSelector } from "react-redux";
@@ -40,6 +36,7 @@ import Link from "@mui/material/Link";
 import { useNavigate } from "react-router-dom";
 
 type CVSection =
+  | { id: "aboutMe"; type: "aboutMe"; data: { items: string | undefined } }
   | { id: "skill"; type: "skill"; data: { items: skillType[] | undefined } }
   | { id: "workEx"; type: "workEx"; data: { items: workExType[] | undefined } }
   | {
@@ -67,7 +64,6 @@ const colorOptions = [
 ];
 
 export const SecondCVEdited = () => {
-  const theme = useTheme();
   const user = useSelector(selectUser);
   const { exportToPdf } = usePdfExport();
   const contentRef = useRef(null);
@@ -79,19 +75,20 @@ export const SecondCVEdited = () => {
   useEffect(() => {
     if (user) {
       const cvSections: CVSection[] = [
-        { id: "skill", type: "skill", data: { items: user?.skills } },
-        { id: "workEx", type: "workEx", data: { items: user?.workEx } },
+        { id: "aboutMe", type: "aboutMe", data: { items: user?.aboutMe } },
         {
           id: "education",
           type: "education",
           data: { items: user?.education },
         },
-        { id: "projects", type: "projects", data: { items: user?.projects } },
+        { id: "workEx", type: "workEx", data: { items: user?.workEx } },
         {
           id: "certificate",
           type: "certificate",
           data: { items: user?.certificate },
         },
+        { id: "skill", type: "skill", data: { items: user?.skills } },
+        { id: "projects", type: "projects", data: { items: user?.projects } },
       ];
       setSections(cvSections);
     }
@@ -311,75 +308,97 @@ export const SecondCVEdited = () => {
       <Box
         ref={contentRef}
         sx={{
-          display: "flex",
-          flexDirection: { xs: "column", md: "row" },
-          alignItems: "center",
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          pb: 3,
-          mb: 3,
-          position: "relative",
+          mx: "auto",
+          width: "100%",
+          maxWidth: "1152px",
+          p: 4,
+          backgroundColor: "#fff",
+          color: "#000",
+          boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+          fontFamily: "Arial, sans-serif",
         }}
       >
-        {/* Profile image */}
-        <Box sx={{ mb: { xs: 2, md: 0 }, mr: { md: 3 } }}>
-          <Avatar
-            src={user?.avatarIMG}
-            alt={user?.fullname}
-            sx={{
-              width: 140,
-              height: 140,
-              border: `2px solid ${theme.palette.grey[200]}`,
-            }}
-          />
-        </Box>
-
-        {/* Name and about */}
+        {/* Header Section */}
         <Box
           sx={{
-            textAlign: { xs: "center", md: "left" },
-            flex: 1,
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            mb: 4,
+            gap: 3,
           }}
         >
-          <Typography
-            variant="h4"
-            fontWeight="bold"
-            color="text.primary"
-            mb={1}
-          >
-            {user?.fullname}
-          </Typography>
-          <EditableText
-            value={user?.aboutMe as string}
-            sx={{ maxWidth: "36rem", marginBlock: 2 }}
-          />
+          {/* Avatar */}
+          <Box sx={{ width: 120 }}>
+            <Avatar
+              src={user?.avatarIMG}
+              alt={user?.fullname}
+              sx={{
+                width: 120,
+                height: 140,
+                border: "1px solid #e0e0e0",
+                borderRadius: 1,
+              }}
+            />
+          </Box>
 
-          <Stack
-            direction="row"
-            flexWrap="wrap"
-            spacing={2}
-            sx={{
-              justifyContent: { xs: "center", md: "flex-start" },
-              "& > *": { mb: 1 },
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <EmailIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{user?.email}</Typography>
+          {/* Personal Info */}
+          <Box sx={{ flex: 1 }}>
+            <Typography
+              variant="h4"
+              fontWeight="bold"
+              sx={{ color: selectedColor.primary, mb: 0.5 }}
+            >
+              {user?.fullname}
+            </Typography>
+
+            <EditableText
+              value={"Nhân viên tư vấn"}
+              variant="subtitle1"
+              color="text.secondary"
+              sx={{ mb: 2 }}
+            />
+
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: "120px 1fr",
+                rowGap: 1,
+              }}
+            >
+              <Typography variant="body2" fontWeight="medium">
+                Ngày sinh:
+              </Typography>
+              <Typography variant="body2">12/3/2003</Typography>
+
+              <Typography variant="body2" fontWeight="medium">
+                Giới tính:
+              </Typography>
+              <Typography variant="body2">Nam/Nữ/Khác</Typography>
+
+              <Typography variant="body2" fontWeight="medium">
+                Số điện thoại:
+              </Typography>
+              <Typography variant="body2">{user?.phone || ""}</Typography>
+
+              <Typography variant="body2" fontWeight="medium">
+                Email:
+              </Typography>
+              <Typography variant="body2">{user?.email || ""}</Typography>
+
+              <Typography variant="body2" fontWeight="medium">
+                Website:
+              </Typography>
+              <Typography variant="body2">be.net/tencuaban</Typography>
+
+              <Typography variant="body2" fontWeight="medium">
+                Địa chỉ:
+              </Typography>
+              <Typography variant="body2">{user?.address || ""}</Typography>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <PhoneIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{user?.phone}</Typography>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              <LocationOnIcon fontSize="small" color="primary" />
-              <Typography variant="body2">{user?.address}</Typography>
-            </Box>
-          </Stack>
+          </Box>
         </Box>
-      </Box>
 
-      {/* CV Sections */}
-      <Box>
+        {/* CV Sections */}
         <DndContext
           collisionDetection={closestCorners}
           modifiers={[restrictToParentElement]}
@@ -393,6 +412,7 @@ export const SecondCVEdited = () => {
               {sections.map((section) => {
                 return (
                   <SortableItem
+                    selectedColor={selectedColor}
                     cvPos={2}
                     key={section.id}
                     id={section.id}
