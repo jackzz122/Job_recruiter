@@ -156,7 +156,7 @@ export const ThirdCVEdited = () => {
           <Link
             component="button"
             underline="hover"
-            onClick={() => navigate("/cv")}
+            onClick={() => navigate(-1)}
             sx={{
               display: "flex",
               alignItems: "center",

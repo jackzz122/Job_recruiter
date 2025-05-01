@@ -15,6 +15,12 @@ import { toast } from "react-toastify";
 import Button from "@mui/material/Button";
 import Divider from "@mui/material/Divider";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import LinkIcon from "@mui/icons-material/Link";
+import InputAdornment from "@mui/material/InputAdornment";
 // import DeleteIcon from "@mui/icons-material/Delete";
 
 type basicInforType = {
@@ -23,6 +29,10 @@ type basicInforType = {
   phone: string;
   email: string;
   avatarImg: string;
+  title: string;
+  gender: string;
+  dob: string;
+  linkingProfile: string;
 };
 
 export const InforPage = ({
@@ -31,34 +41,56 @@ export const InforPage = ({
   phone,
   email,
   avatarImg,
+  title = "",
+  gender = "",
+  dob = "",
+  linkingProfile = "",
 }: {
   avatarImg: string;
   email: string;
   fullname: string;
   address: string;
   phone: string;
+  title?: string;
+  gender?: string;
+  dob?: string;
+  linkingProfile?: string;
 }) => {
   const imageRef = useRef<HTMLInputElement>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [openBasicInfo, setOpenBasicInfo] = useState(false);
+
   const defaultBasic = {
     fullname: fullname,
     address: address,
     email: email,
     phone: phone,
+    title: title,
+    gender: gender,
+    dob: dob || "",
+    linkingProfile: linkingProfile || "",
   };
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
-  const { register, handleSubmit, reset } = useForm<basicInforType>({
-    defaultValues: defaultBasic,
-  });
+  const { register, handleSubmit, reset, setValue, watch } =
+    useForm<basicInforType>({
+      defaultValues: defaultBasic,
+    });
+
+  const selectedGender = watch("gender");
+
   useEffect(() => {
     if (fullname && email) {
-      reset(defaultBasic);
+      reset({
+        ...defaultBasic,
+        dob: dob || "",
+        linkingProfile: linkingProfile || "",
+      });
       if (avatarImg) {
         setPreviewImage(avatarImg);
       }
     }
-  }, [fullname, phone, email, avatarImg]);
+  }, [fullname, phone, email, avatarImg, title, gender, dob, linkingProfile]);
+
   const onSubmit: SubmitHandler<basicInforType> = async (data) => {
     try {
       const formData = new FormData();
@@ -66,6 +98,10 @@ export const InforPage = ({
       formData.append("address", data.address);
       formData.append("email", data.email);
       formData.append("phone", data.phone);
+      formData.append("title", data.title);
+      formData.append("gender", data.gender);
+      formData.append("dob", data.dob || "");
+      formData.append("linkingProfile", data.linkingProfile || "");
 
       const file = imageRef.current?.files?.[0];
       if (file) {
@@ -89,6 +125,7 @@ export const InforPage = ({
       setPreviewImage(imgUrl);
     }
   };
+
   return (
     <>
       <Paper sx={{ p: 3, position: "relative" }}>
@@ -98,7 +135,7 @@ export const InforPage = ({
         >
           <EditIcon />
         </IconButton>
-        <Stack direction="row" spacing={3}>
+        <Stack direction="row" alignItems="center" spacing={3}>
           <Avatar
             src={avatarImg || "/avatar.png"}
             sx={{ width: 120, height: 120 }}
@@ -107,6 +144,11 @@ export const InforPage = ({
             <Typography variant="h5" fontWeight="bold">
               {fullname || "Your Name"}
             </Typography>
+            {title && (
+              <Typography variant="subtitle1" color="primary.main">
+                {title}
+              </Typography>
+            )}
             <Typography color="text.secondary" sx={{ mt: 1 }}>
               <strong>Email: </strong>
               {email || "Your email"}
@@ -119,6 +161,31 @@ export const InforPage = ({
               <strong>Address: </strong>
               {address || "............."}
             </Typography>
+            {gender && (
+              <Typography color="text.secondary" sx={{ mt: 2 }}>
+                <strong>Gender: </strong>
+                {gender}
+              </Typography>
+            )}
+            {dob && (
+              <Typography color="text.secondary" sx={{ mt: 1 }}>
+                <strong>Date of Birth: </strong>
+                {dob}
+              </Typography>
+            )}
+            {linkingProfile && (
+              <Typography color="text.secondary" sx={{ mt: 1 }}>
+                <strong>Profile Link: </strong>
+                <a
+                  href={linkingProfile}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#1976d2", textDecoration: "none" }}
+                >
+                  {linkingProfile}
+                </a>
+              </Typography>
+            )}
           </Box>
         </Stack>
       </Paper>
@@ -182,9 +249,53 @@ export const InforPage = ({
           <Divider sx={{ my: 1 }}>Profile Information</Divider>
 
           <TextField label="Full Name" {...register("fullname")} fullWidth />
+          <TextField
+            label="Title"
+            {...register("title")}
+            fullWidth
+            placeholder="e.g. Software Engineer, Project Manager"
+          />
+
+          <FormControl fullWidth>
+            <InputLabel id="gender-select-label">Gender</InputLabel>
+            <Select
+              labelId="gender-select-label"
+              id="gender-select"
+              value={selectedGender || ""}
+              label="Gender"
+              onChange={(e) => setValue("gender", e.target.value)}
+            >
+              <MenuItem value="male">Male</MenuItem>
+              <MenuItem value="female">Female</MenuItem>
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
+          </FormControl>
+
+          <input
+            type="date"
+            {...register("dob")}
+            className="p-3 border border-gray-500 rounded-lg"
+          />
+
+          <TextField
+            label="Profile Link"
+            {...register("linkingProfile")}
+            fullWidth
+            placeholder="https://linkedin.com/in/yourprofile"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LinkIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              },
+            }}
+          />
+
           <TextField label="Phone" {...register("phone")} fullWidth />
           <TextField label="Address" {...register("address")} fullWidth />
-          <TextField label="email" {...register("email")} fullWidth />
+          <TextField label="Email" {...register("email")} fullWidth />
         </Stack>
       </EditDialog>
     </>

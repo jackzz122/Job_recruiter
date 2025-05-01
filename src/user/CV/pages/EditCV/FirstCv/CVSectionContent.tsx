@@ -67,7 +67,7 @@ export const CVSectionContent = ({
           >
             About Me
           </Typography>
-          <EditableText value={data as string} />
+          <EditableText title="about Me" value={data as string} />
         </Box>
       );
     case "workEx":
@@ -124,7 +124,11 @@ export const CVSectionContent = ({
                 >
                   {job.startDate} - {job.endDate}
                 </Typography>
-                <EditableText variant="body2" value={job.responsibilites} />
+                <EditableText
+                  title={`Job responsibilites about ${job.jobTitle} in ${job.company}`}
+                  variant="body2"
+                  value={job.responsibilites}
+                />
               </Box>
             ))}
           </Stack>
@@ -170,12 +174,17 @@ export const CVSectionContent = ({
                   "&:hover": { bgcolor: "grey.50" },
                 }}
               >
-                <Typography variant="subtitle1" fontWeight="bold">
-                  {edu.school}
-                </Typography>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {edu.major}
-                </Typography>
+                <EditableText
+                  variant="subtitle1"
+                  fontWeight="bold"
+                  value={edu.school}
+                />
+                <EditableText
+                  variant="subtitle2"
+                  color="text.secondary"
+                  value={edu.major}
+                />
+
                 <Typography
                   variant="caption"
                   color="text.secondary"
@@ -183,9 +192,12 @@ export const CVSectionContent = ({
                 >
                   {edu.startDate} - {edu.endDate}
                 </Typography>
-                <Typography variant="subtitle2" color="text.secondary">
-                  {edu.description}
-                </Typography>
+                <EditableText
+                  value={edu.description}
+                  title={`Education in ${edu.school} major ${edu.major} description`}
+                  variant="subtitle2"
+                  color="text.secondary"
+                />
               </Box>
             ))}
           </Stack>
@@ -244,7 +256,11 @@ export const CVSectionContent = ({
                 >
                   {project.startDate} - {project.endDate}
                 </Typography>
-                <EditableText variant="body2" value={project.description} />
+                <EditableText
+                  title={`Project description about ${project.projectName}`}
+                  variant="body2"
+                  value={project.description}
+                />
               </Box>
             ))}
           </Stack>
@@ -304,7 +320,11 @@ export const CVSectionContent = ({
                 >
                   Month: {cert.month}, {cert.year}
                 </Typography>
-                <EditableText variant="body2" value={cert.description} />
+                <EditableText
+                  title={`Certificate description about ${cert.name} in ${cert.organization}`}
+                  variant="body2"
+                  value={cert.description}
+                />
               </Box>
             ))}
           </Stack>

@@ -135,9 +135,12 @@ export const ThirdCvSectionContent = ({
               <Box key={index} sx={{ mb: 2 }}>
                 <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
                   <Box sx={{ width: "30%" }}>
-                    <Typography variant="subtitle2" fontWeight="bold">
-                      Công ty {job.company}
-                    </Typography>
+                    <EditableText
+                      variant="subtitle2"
+                      fontWeight="bold"
+                      value={`Công ty ${job.company}`}
+                    />
+
                     <Typography
                       variant="body2"
                       color="text.secondary"
@@ -148,14 +151,15 @@ export const ThirdCvSectionContent = ({
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
-                    <Typography
+                    <EditableText
                       variant="subtitle1"
                       fontWeight="bold"
-                      color={selectedColor.primary}
-                    >
-                      {job.jobTitle}
-                    </Typography>
+                      value={job.jobTitle}
+                      sx={{ color: selectedColor.primary }}
+                    />
+
                     <EditableText
+                      title={`Job responsibilites about ${job.jobTitle} in ${job.company}`}
                       value={job.responsibilites}
                       sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}
                     />
@@ -211,17 +215,20 @@ export const ThirdCvSectionContent = ({
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
-                    <Typography
+                    <EditableText
+                      value={edu.major}
                       variant="subtitle1"
                       fontWeight="bold"
-                      color="text.primary"
-                    >
-                      {edu.major}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      {edu.school}
-                    </Typography>
+                    />
+
                     <EditableText
+                      value={edu.school}
+                      variant="body2"
+                      sx={{ mb: 0.5 }}
+                    />
+
+                    <EditableText
+                      title={`Education in ${edu.school} major ${edu.major} description`}
                       value={edu.description}
                       sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}
                     />
@@ -266,7 +273,7 @@ export const ThirdCvSectionContent = ({
                 <DragIndicatorIcon />
               </IconButton>
             </Box>
-            {(data as projectType[])?.map((edu, index) => (
+            {(data as projectType[])?.map((project, index) => (
               <Box key={index} sx={{ mb: 2 }}>
                 <Box
                   sx={{
@@ -277,23 +284,26 @@ export const ThirdCvSectionContent = ({
                 >
                   <Box sx={{ width: "30%" }}>
                     <Typography variant="subtitle2" fontWeight="bold">
-                      {edu.startDate} - {edu.endDate}
+                      {project.startDate} - {project.endDate}
                     </Typography>
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
-                    <Typography
+                    <EditableText
+                      value={project.projectName}
                       variant="subtitle1"
                       fontWeight="bold"
                       color="text.primary"
-                    >
-                      {edu.projectName}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      {edu.role}
-                    </Typography>
+                    />
                     <EditableText
-                      value={edu.description}
+                      value={project.role}
+                      variant="body2"
+                      sx={{ mb: 0.5 }}
+                    />
+
+                    <EditableText
+                      title={`Project description about ${project.projectName}`}
+                      value={project.description}
                       sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}
                     />
                   </Box>
@@ -348,17 +358,20 @@ export const ThirdCvSectionContent = ({
                   </Box>
 
                   <Box sx={{ flex: 1 }}>
-                    <Typography
+                    <EditableText
+                      value={cert.name}
                       variant="subtitle1"
                       fontWeight="bold"
                       color="text.primary"
-                    >
-                      {cert.name}
-                    </Typography>
-                    <Typography variant="body2" sx={{ mb: 0.5 }}>
-                      {cert.organization}
-                    </Typography>
+                    />
                     <EditableText
+                      value={cert.organization}
+                      variant="body2"
+                      sx={{ mb: 0.5 }}
+                    />
+
+                    <EditableText
+                      title={`Certificate description about ${cert.name} in ${cert.organization}`}
                       value={cert.description}
                       sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}
                     />

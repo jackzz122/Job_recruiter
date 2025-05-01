@@ -51,7 +51,7 @@ export const SecondCVSectionContent = ({
 
           <Box
             sx={{
-              borderBottom: "2px solid #000",
+              borderBottom: `2px solid ${selectedColor.primary}`,
               mb: 2,
               pb: 0.5,
             }}
@@ -59,13 +59,14 @@ export const SecondCVSectionContent = ({
             <Typography
               variant="h6"
               fontWeight="bold"
-              sx={{ textTransform: "uppercase" }}
+              sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
               Mục tiêu nghề nghiệp
             </Typography>
           </Box>
 
           <EditableText
+            title="About Me"
             value={(data as string) || ""}
             variant="body2"
             sx={{ lineHeight: 1.6 }}
@@ -92,7 +93,7 @@ export const SecondCVSectionContent = ({
 
           <Box
             sx={{
-              borderBottom: "2px solid #000",
+              borderBottom: `2px solid ${selectedColor.primary}`,
               mb: 2,
               pb: 0.5,
             }}
@@ -100,7 +101,7 @@ export const SecondCVSectionContent = ({
             <Typography
               variant="h6"
               fontWeight="bold"
-              sx={{ textTransform: "uppercase" }}
+              sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
               Các kỹ năng
             </Typography>
@@ -146,7 +147,7 @@ export const SecondCVSectionContent = ({
 
           <Box
             sx={{
-              borderBottom: "2px solid #000",
+              borderBottom: `2px solid ${selectedColor.primary}`,
               mb: 2,
               pb: 0.5,
             }}
@@ -154,7 +155,7 @@ export const SecondCVSectionContent = ({
             <Typography
               variant="h6"
               fontWeight="bold"
-              sx={{ textTransform: "uppercase" }}
+              sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
               Kinh nghiệm làm việc
             </Typography>
@@ -175,16 +176,19 @@ export const SecondCVSectionContent = ({
                   </Typography>
                 </Box>
                 <Box sx={{ width: "70%" }}>
-                  <Typography variant="body1" fontWeight="bold">
-                    Công ty {job.company}
-                  </Typography>
-                  <Typography
+                  <EditableText
+                    variant="body1"
+                    fontWeight="bold"
+                    value={`Công ty ${job.company}`}
+                  />
+                  <EditableText
                     variant="body2"
                     sx={{ mb: 1, fontWeight: "medium", color: primaryColor }}
-                  >
-                    {job.jobTitle}
-                  </Typography>
+                    value={job.jobTitle}
+                  />
+
                   <EditableText
+                    title={`Job responsibilites about ${job.jobTitle} in ${job.company}`}
                     value={job.responsibilites}
                     variant="body2"
                     sx={{ whiteSpace: "pre-line" }}
@@ -215,7 +219,7 @@ export const SecondCVSectionContent = ({
 
           <Box
             sx={{
-              borderBottom: "2px solid #000",
+              borderBottom: `2px solid ${selectedColor.primary}`,
               mb: 2,
               pb: 0.5,
             }}
@@ -223,7 +227,7 @@ export const SecondCVSectionContent = ({
             <Typography
               variant="h6"
               fontWeight="bold"
-              sx={{ textTransform: "uppercase" }}
+              sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
               Học vấn
             </Typography>
@@ -254,7 +258,11 @@ export const SecondCVSectionContent = ({
                     variant="body2"
                     sx={{ mb: 1, fontWeight: "medium", color: primaryColor }}
                   />
-                  <EditableText value={edu.description} variant="body2" />
+                  <EditableText
+                    title={`education description in school ${edu.school} with major ${edu.major}`}
+                    value={edu.description}
+                    variant="body2"
+                  />
                 </Box>
               </Box>
             </Box>
@@ -281,7 +289,7 @@ export const SecondCVSectionContent = ({
 
           <Box
             sx={{
-              borderBottom: "2px solid #000",
+              borderBottom: `2px solid ${selectedColor.primary}`,
               mb: 2,
               pb: 0.5,
             }}
@@ -289,7 +297,7 @@ export const SecondCVSectionContent = ({
             <Typography
               variant="h6"
               fontWeight="bold"
-              sx={{ textTransform: "uppercase" }}
+              sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
               Các dự án
             </Typography>
@@ -320,7 +328,11 @@ export const SecondCVSectionContent = ({
                     variant="body2"
                     sx={{ mb: 1, fontWeight: "medium", color: primaryColor }}
                   />
-                  <EditableText value={project.description} variant="body2" />
+                  <EditableText
+                    title={`Project description about ${project.projectName}`}
+                    value={project.description}
+                    variant="body2"
+                  />
                 </Box>
               </Box>
             </Box>
@@ -347,7 +359,7 @@ export const SecondCVSectionContent = ({
 
           <Box
             sx={{
-              borderBottom: "2px solid #000",
+              borderBottom: `2px solid ${selectedColor.primary}`,
               mb: 2,
               pb: 0.5,
             }}
@@ -355,7 +367,7 @@ export const SecondCVSectionContent = ({
             <Typography
               variant="h6"
               fontWeight="bold"
-              sx={{ textTransform: "uppercase" }}
+              sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
               Chứng chỉ
             </Typography>
@@ -380,7 +392,11 @@ export const SecondCVSectionContent = ({
                     variant="body2"
                     sx={{ mb: 1, color: primaryColor }}
                   />
-                  <EditableText value={cert.description} variant="body2" />
+                  <EditableText
+                    title={`Certificate description about ${cert.name} in ${cert.organization}`}
+                    value={cert.description}
+                    variant="body2"
+                  />
                 </Box>
               </Box>
             </Box>

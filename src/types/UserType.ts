@@ -71,12 +71,13 @@ export interface UserType {
   fullname: string;
   avatarImg?: string;
   role: string;
-  dob?: Date;
+  dob?: string;
   aboutMe?: string;
   address?: string;
   avatarIMG?: string;
   phone?: string;
   gender?: string;
+  title?: string;
   education?: educationType[];
   skills?: skillType[];
   workEx?: workExType[];
@@ -88,7 +89,7 @@ export interface UserType {
   isActive: boolean;
   majorId?: string;
   companyId?: string | CompanyType;
-  linkingProfile: string;
+  linkingProfile?: string;
   listFavouritesCompanyID?: string[] | CompanySaveResponse[];
   listFavouritesJobsID?: string[] | JobSaveResponse[];
 }

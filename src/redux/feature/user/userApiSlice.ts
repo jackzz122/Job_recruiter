@@ -47,6 +47,23 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       },
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
+    generateTextAi: builder.mutation<
+      {
+        success: boolean;
+        data: {
+          original: string;
+          improved: string;
+          field: string;
+        };
+      },
+      { field: string; content: string }
+    >({
+      query: (data) => ({
+        url: "improve_text",
+        method: "POST",
+        body: data,
+      }),
+    }),
     changePassword: builder.mutation<
       ResponseUserType<UserType>,
       { oldPassword: string; newPassword: string }
@@ -115,4 +132,5 @@ export const {
   useChangePasswordMutation,
   useDeleteAccountMutation,
   useGetAppliedJobQuery,
+  useGenerateTextAiMutation,
 } = userApiSlice;

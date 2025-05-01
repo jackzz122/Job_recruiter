@@ -14,7 +14,6 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
-import { EditableText } from "../components/EditableText";
 import {
   certificateType,
   educationType,
@@ -56,6 +55,7 @@ type CVSection =
     };
 
 const colorOptions = [
+  { name: "black", primary: "#000000" },
   { name: "Blue", primary: "#1976d2" },
   { name: "Purple", primary: "#9c27b0" },
   { name: "Green", primary: "#2e7d32" },
@@ -159,7 +159,7 @@ export const SecondCVEdited = () => {
           <Link
             component="button"
             underline="hover"
-            onClick={() => navigate("/cv")}
+            onClick={() => navigate(-1)}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -351,12 +351,12 @@ export const SecondCVEdited = () => {
               {user?.fullname}
             </Typography>
 
-            <EditableText
-              value={"Nhân viên tư vấn"}
+            <Typography
               variant="subtitle1"
-              color="text.secondary"
-              sx={{ mb: 2 }}
-            />
+              sx={{ mb: 2, color: selectedColor.primary }}
+            >
+              Nhân viên tư vấn
+            </Typography>
 
             <Box
               sx={{

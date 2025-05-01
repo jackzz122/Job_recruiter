@@ -22,6 +22,7 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import Link from "@mui/material/Link";
 import HomeIcon from "@mui/icons-material/Home";
 import EditIcon from "@mui/icons-material/Edit";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../../redux/feature/user/userSlice";
 import { useEffect, useRef, useState } from "react";
@@ -36,7 +37,6 @@ import { useNavigate } from "react-router-dom";
 import { Tooltip } from "@mui/material";
 import ColorLensIcon from "@mui/icons-material/ColorLens";
 import Button from "@mui/material/Button";
-import { colorButtonOrange } from "../../../../../themeContext";
 import { usePdfExport } from "../../../../../hooks/usePdfExport";
 // Color options for the CV
 const colorOptions = [
@@ -117,37 +117,23 @@ export const FirstCVEdited = () => {
     }, 100);
   };
   return (
-    <>
-      <Alert
-        severity="info"
-        sx={{
-          mb: 2,
-          "& .MuiAlert-message": {
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-          },
-        }}
-      >
-        <EditIcon fontSize="small" />
-        You can edit your title and content by clicking on them. Dates are not
-        editable.
-      </Alert>
-
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          mb: 3,
-          px: 4,
-        }}
-      >
+    <Container
+      maxWidth="lg"
+      sx={{ bgcolor: "background.paper", p: 3, height: "100%" }}
+    >
+      {/* Header Controls */}
+      <Box sx={{ mb: 2.5 }}>
+        {/* Breadcrumbs */}
         <Breadcrumbs
           aria-label="breadcrumb"
           sx={{
+            mb: 1.5,
             "& .MuiBreadcrumbs-separator": {
-              mx: 1,
+              mx: 0.5,
+              fontSize: "0.75rem",
+            },
+            "& .MuiBreadcrumbs-ol": {
+              flexWrap: "nowrap",
             },
           }}
         >
@@ -163,18 +149,19 @@ export const FirstCVEdited = () => {
               background: "none",
               cursor: "pointer",
               p: 0,
+              fontSize: "0.75rem",
               "&:hover": {
                 color: "primary.main",
               },
             }}
           >
-            <HomeIcon sx={{ mr: 0.5 }} fontSize="small" />
+            <HomeIcon sx={{ mr: 0.5, fontSize: "0.85rem" }} />
             Home
           </Link>
           <Link
             component="button"
             underline="hover"
-            onClick={() => navigate("/cv")}
+            onClick={() => navigate(-1)}
             sx={{
               display: "flex",
               alignItems: "center",
@@ -183,6 +170,7 @@ export const FirstCVEdited = () => {
               background: "none",
               cursor: "pointer",
               p: 0,
+              fontSize: "0.75rem",
               "&:hover": {
                 color: "primary.main",
               },
@@ -195,69 +183,119 @@ export const FirstCVEdited = () => {
               display: "flex",
               alignItems: "center",
               color: "text.primary",
+              fontSize: "0.75rem",
+              fontWeight: 500,
             }}
           >
             Edit CV
           </Typography>
         </Breadcrumbs>
-        <Alert
-          severity="warning"
-          variant="outlined"
+
+        <Box
           sx={{
-            py: 0.5,
-            px: 1.5,
-            borderRadius: 1.5,
-            backgroundColor: "rgba(255, 244, 229, 0.5)",
-            "& .MuiAlert-icon": {
-              fontSize: "1rem",
-            },
-            "& .MuiAlert-message": {
-              fontSize: "0.8rem",
-              fontWeight: 500,
-            },
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 2,
           }}
         >
-          Unsaved changes will be lost if you leave this page
-        </Alert>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <Box>
+          <Chip
+            icon={<EditIcon sx={{ fontSize: "1rem !important" }} />}
+            label="Edit Mode"
+            color="primary"
+            size="small"
+            sx={{ height: 28 }}
+          />
+
+          <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            <Alert
+              severity="warning"
+              variant="outlined"
+              sx={{
+                py: 0,
+                px: 1,
+                borderRadius: 1,
+                backgroundColor: "rgba(255, 244, 229, 0.5)",
+                "& .MuiAlert-icon": {
+                  fontSize: "0.875rem",
+                  mr: 0.5,
+                },
+                "& .MuiAlert-message": {
+                  fontSize: "0.75rem",
+                  fontWeight: 500,
+                },
+              }}
+            >
+              Unsaved changes will be lost
+            </Alert>
+
             <Button
+              startIcon={<DragIndicatorIcon />}
+              size="small"
+              variant="text"
+              sx={{ fontSize: "0.75rem", fontWeight: 500 }}
+            >
+              Drag to reorder
+            </Button>
+
+            <Button
+              size="small"
               loading={isExporting}
               onClick={handleExportPdf}
               variant="contained"
-              sx={{ backgroundColor: colorButtonOrange }}
+              sx={{ px: 2, py: 0.5, fontSize: "0.75rem" }}
             >
               Download
             </Button>
           </Box>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "flex-end",
+            gap: 1.5,
+            mb: 0.5,
+          }}
+        >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-            <ColorLensIcon color="action" />
-            <Typography variant="body2" color="text.secondary">
+            <ColorLensIcon
+              fontSize="small"
+              color="action"
+              sx={{ fontSize: "1rem" }}
+            />
+            <Typography
+              variant="caption"
+              color="text.secondary"
+              fontWeight={500}
+            >
               Theme
             </Typography>
           </Box>
-          <Stack direction="row" spacing={1.5}>
+
+          <Stack direction="row" spacing={1}>
             {colorOptions.map((color) => (
               <Tooltip key={color.name} title={color.name}>
                 <Box
                   sx={{
-                    width: 32,
-                    height: 32,
+                    width: 24,
+                    height: 24,
                     borderRadius: "50%",
                     bgcolor: color.primary,
                     cursor: "pointer",
                     border:
                       selectedColor.name === color.name
-                        ? "3px solid #000"
-                        : "2px solid transparent",
+                        ? "2px solid #000"
+                        : "1px solid transparent",
                     boxShadow:
                       selectedColor.name === color.name
-                        ? "0 0 0 2px white"
+                        ? "0 0 0 1px white"
                         : "none",
                     transition: "all 0.2s ease",
                     "&:hover": {
                       transform: "scale(1.1)",
-                      boxShadow: "0 0 0 2px white",
+                      boxShadow: "0 0 0 1px white",
                     },
                   }}
                   onClick={() => setSelectedColor(color)}
@@ -268,113 +306,109 @@ export const FirstCVEdited = () => {
         </Box>
       </Box>
 
-      <Container
-        maxWidth="lg"
-        ref={contentRef}
-        sx={{ bgcolor: "background.paper", p: 4, height: "100%" }}
-      >
-        <Grid2 container spacing={3}>
-          {/* Left column - Personal info */}
-          <Grid2 size={{ xs: 12, md: 4 }}>
-            <Paper
-              elevation={0}
-              sx={{
-                backgroundColor: selectedColor.primary,
-                p: 3,
-                color: `${selectedColor.name !== "Gray" ? "white" : "black"}`,
-                borderRadius: 2,
-                height: "100%",
-                position: "relative",
-              }}
-            >
-              {/* Profile image */}
-              <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
-                <Avatar
-                  src={user?.avatarIMG}
-                  alt={user?.fullname}
-                  sx={{
-                    width: 120,
-                    height: 120,
-                    border: "4px solid white",
-                    boxShadow: 1,
-                  }}
-                />
-              </Box>
+      <Grid2 container spacing={3}>
+        {/* Left column - Personal info */}
+        <Grid2 size={{ xs: 12, md: 4 }}>
+          <Paper
+            elevation={0}
+            sx={{
+              backgroundColor: selectedColor.primary,
+              p: 3,
+              color: `${selectedColor.name !== "Gray" ? "white" : "black"}`,
+              borderRadius: 2,
+              height: "100%",
+              position: "relative",
+            }}
+          >
+            {/* Profile image */}
+            <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
+              <Avatar
+                src={user?.avatarIMG}
+                alt={user?.fullname}
+                sx={{
+                  width: 120,
+                  height: 120,
+                  border: "4px solid white",
+                  boxShadow: 1,
+                }}
+              />
+            </Box>
 
-              {/* Personal details */}
-              <Box sx={{ textAlign: "center", mb: 3 }}>
-                <Typography
-                  variant="h5"
-                  component="h1"
-                  fontWeight="bold"
-                  color="text.primary"
-                >
-                  {user?.fullname}
-                </Typography>
-              </Box>
+            {/* Personal details */}
+            <Box sx={{ textAlign: "center", mb: 3 }}>
+              <Typography
+                variant="h5"
+                component="h1"
+                fontWeight="bold"
+                color="text.primary"
+              >
+                {user?.fullname}
+              </Typography>
+            </Box>
 
-              {/* Contact information */}
-              <Box sx={{ mb: 3 }}>
-                <Typography
-                  variant="subtitle1"
-                  fontWeight="bold"
-                  sx={{
-                    pb: 0.5,
-                    mb: 1,
-                    borderBottom: `1px solid ${theme.palette.divider}`,
-                  }}
-                >
-                  Contact Info
-                </Typography>
+            {/* Contact information */}
+            <Box sx={{ mb: 3 }}>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                sx={{
+                  pb: 0.5,
+                  mb: 1,
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                }}
+              >
+                Contact Info
+              </Typography>
 
-                <Stack spacing={1.5}>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <EmailIcon fontSize="small" color="action" />
-                    <Typography variant="body2">{user?.email}</Typography>
-                  </Box>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <PhoneIcon fontSize="small" color="action" />
-                    <Typography variant="body2">{user?.phone}</Typography>
-                  </Box>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <LocationOnIcon fontSize="small" color="action" />
-                    <Typography variant="body2">{user?.address}</Typography>
-                  </Box>
-                </Stack>
-              </Box>
-
-              {/* Skills */}
-              <Box>
-                <Typography
-                  variant="subtitle1"
-                  fontWeight="bold"
-                  sx={{
-                    pb: 0.5,
-                    mb: 1,
-                    borderBottom: `1px solid ${theme.palette.divider}`,
-                  }}
-                >
-                  Skills
-                </Typography>
-                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
-                  {user?.skills?.map((skill, index) => (
-                    <Chip
-                      key={index}
-                      label={skill.value}
-                      size="small"
-                      sx={{
-                        bgcolor: "grey.200",
-                        color: "text.secondary",
-                        "&:hover": { bgcolor: "grey.300" },
-                      }}
-                    />
-                  ))}
+              <Stack spacing={1.5}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <EmailIcon fontSize="small" color="action" />
+                  <Typography variant="body2">{user?.email}</Typography>
                 </Box>
-              </Box>
-            </Paper>
-          </Grid2>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <PhoneIcon fontSize="small" color="action" />
+                  <Typography variant="body2">{user?.phone}</Typography>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <LocationOnIcon fontSize="small" color="action" />
+                  <Typography variant="body2">{user?.address}</Typography>
+                </Box>
+              </Stack>
+            </Box>
 
-          <Box className="content-to-capture" sx={{ flexGrow: 1 }}>
+            {/* Skills */}
+            <Box>
+              <Typography
+                variant="subtitle1"
+                fontWeight="bold"
+                sx={{
+                  pb: 0.5,
+                  mb: 1,
+                  borderBottom: `1px solid ${theme.palette.divider}`,
+                }}
+              >
+                Skills
+              </Typography>
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                {user?.skills?.map((skill, index) => (
+                  <Chip
+                    key={index}
+                    label={skill.value}
+                    size="small"
+                    sx={{
+                      bgcolor: "grey.200",
+                      color: "text.secondary",
+                      "&:hover": { bgcolor: "grey.300" },
+                    }}
+                  />
+                ))}
+              </Box>
+            </Box>
+          </Paper>
+        </Grid2>
+
+        <Grid2 size={{ xs: 12, md: 8 }}>
+          <Box ref={contentRef} sx={{ p: 2 }}>
             {/* Right column - Professional details */}
             <DndContext
               modifiers={[restrictToParentElement]}
@@ -404,7 +438,7 @@ export const FirstCVEdited = () => {
             </DndContext>
           </Box>
         </Grid2>
-      </Container>
-    </>
+      </Grid2>
+    </Container>
   );
 };

@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 
 export const MyInfo = () => {
   const user = useSelector(selectUser);
+  console.log(user);
   const navigate = useNavigate();
   return (
     <Box
@@ -42,6 +43,10 @@ export const MyInfo = () => {
             phone={user?.phone || ""}
             address={user?.address || ""}
             email={user?.email || ""}
+            gender={user?.gender || ""}
+            title={user?.title || ""}
+            linkingProfile={user?.linkingProfile || ""}
+            dob={user?.dob || ""}
           />
           {/* About me */}
           <AboutMe aboutMe={user?.aboutMe || ""} />
