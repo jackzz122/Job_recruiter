@@ -306,7 +306,7 @@ export const FirstCVEdited = () => {
         </Box>
       </Box>
 
-      <Grid2 container spacing={3}>
+      <Grid2 ref={contentRef} container spacing={3}>
         {/* Left column - Personal info */}
         <Grid2 size={{ xs: 12, md: 4 }}>
           <Paper
@@ -408,7 +408,7 @@ export const FirstCVEdited = () => {
         </Grid2>
 
         <Grid2 size={{ xs: 12, md: 8 }}>
-          <Box ref={contentRef} sx={{ p: 2 }}>
+          <Box sx={{ p: 2 }}>
             {/* Right column - Professional details */}
             <DndContext
               modifiers={[restrictToParentElement]}

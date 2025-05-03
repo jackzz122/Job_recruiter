@@ -11,14 +11,20 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { colorButtonOrange } from "../../../themeContext";
+import { handleError } from "../../../helper/HandleError/handleError";
+import { usePdfExport } from "../../../hooks/usePdfExport";
+import { RefObject, useRef, useState } from "react";
 
 export const CVLayoutPage = () => {
   const theme = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
+  const cvRef = useRef<HTMLElement | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
   const linkEdited = location.pathname.slice(
     location.pathname.indexOf("/", 1) + 1
   );
+  const { exportToPdf } = usePdfExport();
   // Array of CV components
   const cvComponents = [
     {
@@ -37,7 +43,17 @@ export const CVLayoutPage = () => {
       preview: "/placeholder-cv3.png",
     },
   ];
-  console.log(linkEdited);
+  const handleExportToPdf = async (reference: RefObject<HTMLElement>) => {
+    try {
+      setIsExporting(true);
+      await exportToPdf(reference);
+      setIsExporting(false);
+    } catch (err) {
+      const error = handleError(err);
+      console.log(error);
+    }
+  };
+
   return (
     <Box sx={{ bgcolor: "grey.100", minHeight: "100vh", py: 4 }}>
       <Container maxWidth="xl">
@@ -190,13 +206,24 @@ export const CVLayoutPage = () => {
                   Use This Template
                 </Button>
               </Box>
-              <Outlet />
+              <Outlet context={{ cvRef }} />
             </Paper>
             <Button
+              loading={isExporting}
+              onClick={() => {
+                if (cvRef.current) {
+                  console.log(cvRef.current);
+                  handleExportToPdf(cvRef);
+                }
+              }}
               sx={{
                 marginTop: 2,
                 border: `1px solid ${colorButtonOrange}`,
                 color: colorButtonOrange,
+                "&:hover": {
+                  backgroundColor: colorButtonOrange,
+                  color: "white",
+                },
               }}
               variant="outlined"
               fullWidth

@@ -3,10 +3,18 @@ import Typography from "@mui/material/Typography";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Stack from "@mui/material/Stack";
+import { useGetJobByIdQuery } from "../../../redux/feature/job/jobApiSlice";
+import { CompanyType } from "../../../types/CompanyType";
 
 export default function DetailsInforCompany() {
+  const params = useParams();
+  const { data: job } = useGetJobByIdQuery(params.id as string, {
+    skip: !params.id,
+  });
+  console.log(job);
+  const companyField = job?.data?.companyId as CompanyType;
   return (
     <Box
       sx={{
@@ -22,21 +30,29 @@ export default function DetailsInforCompany() {
     >
       <Stack direction="row" spacing={2}>
         <img
-          src="/bss_avatar.png"
+          src={companyField?.logo}
           alt="company_name"
           className="w-1/3 border border-gray-400"
         />
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
           <Typography variant="h6" fontWeight="bold">
-            MONEY FORWARD VIETNAM CO.,LTD
+            {companyField?.companyName}
           </Typography>
-          <Link to="" className="hover:underline text-blue-500">
+          <Link
+            to={`/company/${companyField?._id}`}
+            className="hover:underline text-blue-500"
+          >
             Xem Công ty
           </Link>
         </Box>
       </Stack>
       <br />
-      <Typography>Top 1 Fintech Compan</Typography>
       <List>
         <ListItem
           sx={{

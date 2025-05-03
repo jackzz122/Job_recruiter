@@ -5,14 +5,18 @@ import Container from "@mui/material/Container";
 import { useTheme } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../redux/feature/user/userSlice";
+import { useOutletContext } from "react-router-dom";
+import { RefObject } from "react";
 
 export const SecondCV = () => {
+  const { cvRef } = useOutletContext<{ cvRef: RefObject<HTMLDivElement> }>();
   const theme = useTheme();
   const primaryColor = theme.palette.primary;
 
   const user = useSelector(selectUser);
   return (
     <Container
+      ref={cvRef}
       maxWidth="lg"
       sx={{
         bgcolor: "background.paper",
@@ -211,6 +215,9 @@ export const SecondCV = () => {
                 </Typography>
                 <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
                   {job.responsibilites}
+                </Typography>
+                <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+                  {job.description}
                 </Typography>
               </Box>
             </Box>

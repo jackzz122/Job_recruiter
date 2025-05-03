@@ -13,11 +13,13 @@ import {
 import { IconButton } from "@mui/material";
 import { DragHandleProps } from "../FirstCv/CVSectionContent";
 export const ThirdCvSectionContent = ({
+  exportLoading,
   dragHandleProps,
   selectedColor,
   type,
   data,
 }: {
+  exportLoading: boolean;
   dragHandleProps: DragHandleProps;
   selectedColor: { name: string; primary: string };
   type: itemType;
@@ -46,18 +48,20 @@ export const ThirdCvSectionContent = ({
               >
                 Skills
               </Typography>
-              <IconButton
-                {...dragHandleProps}
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
+              {!exportLoading && (
+                <IconButton
+                  {...dragHandleProps}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "grey.500",
+                    "&:hover": { color: "grey.700" },
+                  }}
+                >
+                  <DragIndicatorIcon />
+                </IconButton>
+              )}
             </Box>
 
             <Box
@@ -117,18 +121,20 @@ export const ThirdCvSectionContent = ({
               >
                 Work Experience
               </Typography>
-              <IconButton
-                {...dragHandleProps}
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
+              {!exportLoading && (
+                <IconButton
+                  {...dragHandleProps}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "grey.500",
+                    "&:hover": { color: "grey.700" },
+                  }}
+                >
+                  <DragIndicatorIcon />
+                </IconButton>
+              )}
             </Box>
 
             {(data as workExType[])?.map((job, index) => (
@@ -163,6 +169,12 @@ export const ThirdCvSectionContent = ({
                       value={job.responsibilites}
                       sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}
                     />
+                    <EditableText
+                      title={`Job description about ${job.jobTitle} in ${job.company}`}
+                      variant="body2"
+                      sx={{ marginTop: 1 }}
+                      value={job.description}
+                    />
                   </Box>
                 </Box>
               </Box>
@@ -191,18 +203,20 @@ export const ThirdCvSectionContent = ({
               >
                 Education
               </Typography>
-              <IconButton
-                {...dragHandleProps}
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
+              {!exportLoading && (
+                <IconButton
+                  {...dragHandleProps}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "grey.500",
+                    "&:hover": { color: "grey.700" },
+                  }}
+                >
+                  <DragIndicatorIcon />
+                </IconButton>
+              )}
             </Box>
 
             {(data as educationType[])?.map((edu, index) => (
@@ -260,18 +274,20 @@ export const ThirdCvSectionContent = ({
               >
                 Projects
               </Typography>
-              <IconButton
-                {...dragHandleProps}
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
+              {!exportLoading && (
+                <IconButton
+                  {...dragHandleProps}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "grey.500",
+                    "&:hover": { color: "grey.700" },
+                  }}
+                >
+                  <DragIndicatorIcon />
+                </IconButton>
+              )}
             </Box>
             {(data as projectType[])?.map((project, index) => (
               <Box key={index} sx={{ mb: 2 }}>
@@ -334,18 +350,20 @@ export const ThirdCvSectionContent = ({
               >
                 Certificates
               </Typography>
-              <IconButton
-                {...dragHandleProps}
-                sx={{
-                  position: "absolute",
-                  top: 0,
-                  right: 0,
-                  color: "grey.500",
-                  "&:hover": { color: "grey.700" },
-                }}
-              >
-                <DragIndicatorIcon />
-              </IconButton>
+              {!exportLoading && (
+                <IconButton
+                  {...dragHandleProps}
+                  sx={{
+                    position: "absolute",
+                    top: 0,
+                    right: 0,
+                    color: "grey.500",
+                    "&:hover": { color: "grey.700" },
+                  }}
+                >
+                  <DragIndicatorIcon />
+                </IconButton>
+              )}
             </Box>
 
             {(data as certificateType[])?.map((cert, index) => (

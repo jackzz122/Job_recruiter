@@ -61,6 +61,7 @@ export const SortableItem = ({
       )}
       {cvPos === 2 && (
         <SecondCVSectionContent
+          exportLoading={isExport}
           selectedColor={selectedColor}
           data={data}
           type={type}
@@ -69,6 +70,7 @@ export const SortableItem = ({
       )}
       {cvPos === 3 && (
         <ThirdCvSectionContent
+          exportLoading={isExport}
           dragHandleProps={{ ...attributes, ...listeners }}
           selectedColor={selectedColor}
           data={data}

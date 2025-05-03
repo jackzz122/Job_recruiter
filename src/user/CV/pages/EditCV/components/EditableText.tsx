@@ -2,7 +2,7 @@ import Typography from "@mui/material/Typography";
 import { SxProps, Theme } from "@mui/material";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useGenerateTextAiMutation } from "../../../../../redux/feature/user/userApiSlice";
 import { handleError } from "../../../../../helper/HandleError/handleError";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -29,28 +29,51 @@ export const EditableText = ({
   const [isEditing, setIsEditing] = useState(false);
   const [currentValue, setCurrentValue] = useState(value);
   const [generateText, { isLoading }] = useGenerateTextAiMutation();
+  const editableRef = useRef<HTMLSpanElement>(null);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Update currentValue when the prop value changes
   useEffect(() => {
     setCurrentValue(value);
   }, [value]);
 
+  useEffect(() => {
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleTypographyClick = () => {
+    if (!isLoading && editableRef.current) {
+      editableRef.current.focus();
+      setIsEditing(true);
+    }
+  };
+
   const handleFocus = () => {
     if (!isLoading) {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+        blurTimeoutRef.current = null;
+      }
       setIsEditing(true);
     }
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLSpanElement>) => {
     if (!isLoading) {
-      setTimeout(() => {
-        setIsEditing(false);
-        const newValue = e.target.innerHTML;
-        setCurrentValue(newValue);
-        if (onSave) {
-          onSave(newValue);
+      blurTimeoutRef.current = setTimeout(() => {
+        if (document.activeElement !== editableRef.current) {
+          setIsEditing(false);
+          const newValue = e.target.innerHTML;
+          setCurrentValue(newValue);
+          if (onSave) {
+            onSave(newValue);
+          }
         }
-      }, 800);
+        blurTimeoutRef.current = null;
+      }, 200);
     }
   };
 
@@ -90,13 +113,15 @@ export const EditableText = ({
         variant={variant}
         color={color}
         fontWeight={fontWeight}
+        onClick={handleTypographyClick}
         sx={{
           flexGrow: 1,
+          cursor: isLoading ? "not-allowed" : "text",
           "& [contentEditable]": {
             outline: "none",
             minWidth: "20px",
-            display: "inline-block",
-            cursor: isLoading ? "not-allowed" : "text",
+            display: "block",
+            cursor: "inherit",
             "&:hover": {
               backgroundColor: !isLoading
                 ? "rgba(0, 0, 0, 0.04)"
@@ -106,6 +131,7 @@ export const EditableText = ({
         }}
       >
         <span
+          ref={editableRef}
           contentEditable={!isLoading}
           suppressContentEditableWarning={!isLoading}
           dangerouslySetInnerHTML={{ __html: currentValue }}

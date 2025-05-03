@@ -18,11 +18,13 @@ import { EditableText } from "../components/EditableText";
 type ExtendedItemType = itemType | "objective";
 
 export const SecondCVSectionContent = ({
+  exportLoading,
   type,
   data,
   dragHandleProps,
   selectedColor,
 }: {
+  exportLoading: boolean;
   type: ExtendedItemType;
   data: dataType;
   dragHandleProps?: DragHandleProps;
@@ -35,19 +37,21 @@ export const SecondCVSectionContent = ({
     case "aboutMe":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            {...dragHandleProps}
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-              cursor: "grab",
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+                cursor: "grab",
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
 
           <Box
             sx={{
@@ -131,19 +135,21 @@ export const SecondCVSectionContent = ({
     case "workEx":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            {...dragHandleProps}
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-              cursor: "grab",
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+                cursor: "grab",
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
 
           <Box
             sx={{
@@ -193,6 +199,12 @@ export const SecondCVSectionContent = ({
                     variant="body2"
                     sx={{ whiteSpace: "pre-line" }}
                   />
+                  <EditableText
+                    title={`Job description about ${job.jobTitle} in ${job.company}`}
+                    variant="body2"
+                    sx={{ marginTop: 1 }}
+                    value={job.description}
+                  />
                 </Box>
               </Box>
             </Box>
@@ -203,19 +215,21 @@ export const SecondCVSectionContent = ({
     case "education":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            {...dragHandleProps}
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-              cursor: "grab",
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+                cursor: "grab",
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
 
           <Box
             sx={{
@@ -273,19 +287,21 @@ export const SecondCVSectionContent = ({
     case "projects":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            {...dragHandleProps}
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-              cursor: "grab",
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+                cursor: "grab",
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
 
           <Box
             sx={{
@@ -343,19 +359,21 @@ export const SecondCVSectionContent = ({
     case "certificate":
       return (
         <Box sx={{ mb: 3, position: "relative" }}>
-          <IconButton
-            {...dragHandleProps}
-            sx={{
-              position: "absolute",
-              top: 0,
-              right: 0,
-              color: "grey.500",
-              "&:hover": { color: "grey.700" },
-              cursor: "grab",
-            }}
-          >
-            <DragIndicatorIcon />
-          </IconButton>
+          {!exportLoading && (
+            <IconButton
+              {...dragHandleProps}
+              sx={{
+                position: "absolute",
+                top: 0,
+                right: 0,
+                color: "grey.500",
+                "&:hover": { color: "grey.700" },
+                cursor: "grab",
+              }}
+            >
+              <DragIndicatorIcon />
+            </IconButton>
+          )}
 
           <Box
             sx={{

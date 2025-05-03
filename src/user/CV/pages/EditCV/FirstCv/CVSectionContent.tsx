@@ -107,7 +107,6 @@ export const CVSectionContent = ({
                   ml: 1,
                   borderLeft: `2px solid ${theme.palette.divider}`,
                   position: "relative",
-                  "&:hover": { bgcolor: "grey.50" },
                 }}
               >
                 <EditableText
@@ -128,6 +127,12 @@ export const CVSectionContent = ({
                   title={`Job responsibilites about ${job.jobTitle} in ${job.company}`}
                   variant="body2"
                   value={job.responsibilites}
+                />
+                <EditableText
+                  title={`Job description about ${job.jobTitle} in ${job.company}`}
+                  variant="body2"
+                  sx={{ marginTop: 1 }}
+                  value={job.description}
                 />
               </Box>
             ))}
@@ -171,7 +176,6 @@ export const CVSectionContent = ({
                   ml: 1,
                   borderLeft: `2px solid ${theme.palette.divider}`,
                   position: "relative",
-                  "&:hover": { bgcolor: "grey.50" },
                 }}
               >
                 <EditableText
@@ -239,7 +243,6 @@ export const CVSectionContent = ({
                   pl: 2,
                   ml: 1,
                   borderLeft: `2px solid ${theme.palette.divider}`,
-                  "&:hover": { bgcolor: "grey.50" },
                 }}
               >
                 <EditableText
@@ -303,7 +306,6 @@ export const CVSectionContent = ({
                   ml: 1,
                   borderLeft: `2px solid ${theme.palette.divider}`,
                   position: "relative",
-                  "&:hover": { bgcolor: "grey.50" },
                 }}
               >
                 <EditableText

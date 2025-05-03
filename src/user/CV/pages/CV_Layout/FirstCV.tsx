@@ -12,12 +12,16 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../redux/feature/user/userSlice";
+import { useOutletContext } from "react-router-dom";
+import { RefObject } from "react";
 
 export const FirstCV = () => {
+  const { cvRef } = useOutletContext<{ cvRef: RefObject<HTMLDivElement> }>();
   const theme = useTheme();
   const user = useSelector(selectUser);
   return (
     <Container
+      ref={cvRef}
       maxWidth="lg"
       sx={{ bgcolor: "background.paper", p: 4, height: "100%" }}
     >
@@ -177,6 +181,9 @@ export const FirstCV = () => {
                   </Typography>
                   <Typography variant="body2" color="text.secondary">
                     {job.responsibilites}
+                  </Typography>
+                  <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+                    {job.description}
                   </Typography>
                 </Box>
               ))}

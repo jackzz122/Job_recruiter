@@ -1,14 +1,17 @@
-import React from "react";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../../redux/feature/user/userSlice";
+import { useOutletContext } from "react-router-dom";
+import { RefObject } from "react";
 
-export const ThirdCV: React.FC = () => {
+export const ThirdCV = () => {
   const user = useSelector(selectUser);
+  const { cvRef } = useOutletContext<{ cvRef: RefObject<HTMLDivElement> }>();
   return (
     <Container
+      ref={cvRef}
       maxWidth="lg"
       sx={{
         bgcolor: "background.paper",
@@ -150,6 +153,9 @@ export const ThirdCV: React.FC = () => {
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}>
                   {job.responsibilites}
+                </Typography>
+                <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
+                  {job.description}
                 </Typography>
               </Box>
             </Box>

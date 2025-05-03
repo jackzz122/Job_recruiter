@@ -87,6 +87,12 @@ export const LayoutHome = () => {
               Việc làm IT <KeyboardArrowDownRoundedIcon />
             </Button>
             <Button
+              onClick={() => navigate("/list_job")}
+              sx={{ color: "white" }}
+            >
+              Các công việc
+            </Button>
+            <Button
               onClick={() => navigate("/list_company")}
               sx={{ color: "white" }}
             >
