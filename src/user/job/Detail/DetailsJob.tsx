@@ -1,52 +1,76 @@
-import Container from "@mui/material/Container";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { Link } from "react-router-dom";
-import Stack from "@mui/material/Stack";
 import Box from "@mui/material/Box";
+import Container from "@mui/material/Container";
+import Stack from "@mui/material/Stack";
+import Breadcrumbs from "@mui/material/Breadcrumbs";
 import DetailsInforCompany from "./DetailsInfoCompany";
 import DetailsJobBody from "./DetailsJobBody";
 import DetailsJobHeader from "./DetailsJobHeader";
-export const DetailsJob = () => {
-  // const params = useLocation();
-  const breadCrumbs = [
-    <Link key="home" className="text-red-300" to="/">
-      Trang chủ
-    </Link>,
-    <Link key="all" className="text-red-300" to="/">
-      Tất cả việc làm IT
-    </Link>,
 
-    <p key="job">Tuyển thực tập sinh React/NodeJS </p>,
+export const DetailsJob = () => {
+  const breadCrumbs = [
+    { label: "Trang chủ", path: "/" },
+    { label: "Tất cả việc làm IT", path: "/" },
+    { label: "Tuyển thực tập sinh React/NodeJS", path: null },
   ];
+
   return (
-    <>
-      <Box className="gradient"></Box>
-      <Box sx={{ paddingInline: "40px" }}>
-        <Stack sx={{ marginLeft: "1.563rem" }} direction="row" spacing={2}>
-          <Breadcrumbs sx={{ color: "white" }} separator=">">
-            {" "}
-            {breadCrumbs}{" "}
+    <Box className="relative min-h-screen">
+      <Box className="gradient" />
+
+      <Box className="relative z-10 px-10">
+        {/* Breadcrumbs */}
+        <Box sx={{ py: 2 }}>
+          <Breadcrumbs
+            sx={{
+              color: "white",
+              "& .MuiBreadcrumbs-separator": { color: "rgba(255,255,255,0.6)" },
+            }}
+          >
+            {breadCrumbs.map((crumb, index) => (
+              <Link
+                key={index}
+                to={crumb.path || "#"}
+                style={{
+                  color: crumb.path ? "rgba(255,255,255,0.8)" : "white",
+                  textDecoration: "none",
+                  fontWeight: crumb.path ? "normal" : "500",
+                }}
+              >
+                {crumb.label}
+              </Link>
+            ))}
           </Breadcrumbs>
-        </Stack>
-        <Container
-          maxWidth="xl"
-          sx={{
-            marginTop: "2rem",
-            position: "relative",
-            zIndex: 10,
-          }}
-        >
+        </Box>
+
+        {/* Main Content */}
+        <Container maxWidth="xl" sx={{ mt: 4 }}>
           <Stack direction="row" spacing={3}>
-            <Box sx={{ flexGrow: 1, maxWidth: "55.813rem" }}>
-              <DetailsJobHeader />
-              <DetailsJobBody />
+            {/* Left Column - Job Details */}
+            <Box sx={{ flex: 1, maxWidth: "55.813rem" }}>
+              <Box
+                sx={{
+                  bgcolor: "white",
+                  borderRadius: 1,
+                  border: "1px solid",
+                  borderColor: "divider",
+                  overflow: "hidden",
+                }}
+              >
+                <DetailsJobHeader />
+                <DetailsJobBody />
+              </Box>
             </Box>
-            <Box sx={{ flexGrow: 2 }}>
-              <DetailsInforCompany />
+
+            {/* Right Column - Company Info */}
+            <Box sx={{ width: "29.375rem" }}>
+              <Box sx={{ position: "sticky", top: "6rem" }}>
+                <DetailsInforCompany />
+              </Box>
             </Box>
           </Stack>
         </Container>
       </Box>
-    </>
+    </Box>
   );
 };

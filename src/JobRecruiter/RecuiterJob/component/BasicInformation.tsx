@@ -3,12 +3,22 @@ import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import { useFormContext } from "react-hook-form";
 import { JobFormData } from "../../../types/JobType";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import GroupIcon from "@mui/icons-material/Group";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import { colorButtonOrange } from "../../../themeContext";
 
 export const BasicInformation = () => {
   const {
     register,
+    watch,
     formState: { errors },
   } = useFormContext<JobFormData>();
+  const startDateWatch = watch("startDate");
+
   return (
     <>
       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
@@ -21,8 +31,16 @@ export const BasicInformation = () => {
         error={!!errors.title}
         helperText={errors?.title?.message}
         fullWidth
+        placeholder="Enter job title"
         variant="outlined"
         size="small"
+        slotProps={{
+          input: {
+            startAdornment: (
+              <WorkOutlineIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+            ),
+          },
+        }}
       />
 
       {/* Number of People */}
@@ -40,6 +58,13 @@ export const BasicInformation = () => {
           helperText={errors?.sizingPeople?.message}
           variant="outlined"
           size="small"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <GroupIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+              ),
+            },
+          }}
         />
       </Box>
 
@@ -59,6 +84,13 @@ export const BasicInformation = () => {
           helperText={errors?.minRange?.message}
           variant="outlined"
           size="small"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <AttachMoneyIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+              ),
+            },
+          }}
         />
         <TextField
           fullWidth
@@ -71,6 +103,13 @@ export const BasicInformation = () => {
           helperText={errors?.maxRange?.message}
           variant="outlined"
           size="small"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <AttachMoneyIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+              ),
+            },
+          }}
         />
       </Box>
       {/* Summary */}
@@ -81,7 +120,11 @@ export const BasicInformation = () => {
         <TextField
           multiline
           rows={5}
-          {...register("description.summary")}
+          {...register("description.summary", {
+            required: "Summary is required",
+          })}
+          error={!!errors.description?.summary}
+          helperText={errors?.description?.summary?.message}
           placeholder="Enter summary of this job"
           fullWidth
         />
@@ -92,9 +135,20 @@ export const BasicInformation = () => {
           Enter location of job posting
         </Typography>
         <TextField
-          {...register("location")}
+          {...register("location", {
+            required: "Location is required",
+          })}
+          error={!!errors.location}
+          helperText={errors?.location?.message}
           placeholder="Enter location of this job"
           fullWidth
+          slotProps={{
+            input: {
+              startAdornment: (
+                <LocationOnIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+              ),
+            },
+          }}
         />
       </Box>
       {/* Date */}
@@ -102,15 +156,51 @@ export const BasicInformation = () => {
         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
           Enter the date of the job (Start date and Application deadline)
         </Typography>
-        <input
-          className="border border-gray-300 p-4 mr-2"
+        <TextField
+          sx={{ border: "1px solid #e0e0e0", mr: 2 }}
           type="datetime-local"
-          {...register("startDate")}
+          {...register("startDate", {
+            required: "Start date is required",
+            valueAsDate: true,
+            validate: (value) => {
+              if (new Date(value) < new Date()) {
+                return "Start date must be in the future";
+              }
+              return true;
+            },
+          })}
+          error={!!errors.startDate}
+          helperText={errors?.startDate?.message}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <CalendarMonthIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+              ),
+            },
+          }}
         />
-        <input
-          className="border border-gray-300 p-4"
+        <TextField
+          sx={{ border: "1px solid #e0e0e0" }}
           type="datetime-local"
-          {...register("applicationDeadline")}
+          {...register("applicationDeadline", {
+            required: "Application deadline is required",
+            valueAsDate: true,
+            validate: (value) => {
+              if (value < startDateWatch) {
+                return "Application deadline must be after start date";
+              }
+              return true;
+            },
+          })}
+          error={!!errors.applicationDeadline}
+          helperText={errors?.applicationDeadline?.message}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <AccessTimeIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+              ),
+            },
+          }}
         />
       </Box>
     </>

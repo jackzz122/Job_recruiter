@@ -6,7 +6,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useFieldArray, useFormContext } from "react-hook-form";
 import { JobFormData } from "../../../types/JobType";
-
+import LabelIcon from "@mui/icons-material/Label";
+import { InputAdornment } from "@mui/material";
+import { colorButtonOrange } from "../../../themeContext";
 type FieldName =
   | "description.keySkills.bulletPoints"
   | "description.whyYouLoveIt.bulletPoints";
@@ -37,7 +39,9 @@ export const RenderBulletPointSection = ({
         placeholder={`Add a new ${title}...`}
         variant="outlined"
         size="small"
-        {...register(`description.${name}.mainText`)}
+        {...register(`description.${name}.mainText`, {
+          required: "Main text is required",
+        })}
         sx={{ mb: 2 }}
       />
 
@@ -54,6 +58,15 @@ export const RenderBulletPointSection = ({
                 variant="outlined"
                 size="small"
                 disabled={!isLast}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LabelIcon sx={{ color: colorButtonOrange }} />
+                      </InputAdornment>
+                    ),
+                  },
+                }}
                 {...register(
                   `description.${name}.bulletPoints.${index}.value` as const
                 )}

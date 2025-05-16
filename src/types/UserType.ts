@@ -65,6 +65,18 @@ export type skillType = {
   _id: string;
   value: string;
 };
+export type uploadCVType = {
+  _id: string;
+  linkPdf: string;
+  nameFile: string;
+  uploadedAt: string;
+};
+export enum statusAccountType {
+  PENDING = "pending",
+  APPROVE = "approve",
+  BLOCKED = "blocked",
+  REJECTED = "rejected",
+}
 export interface UserType {
   _id: string;
   email: string;
@@ -77,7 +89,10 @@ export interface UserType {
   avatarIMG?: string;
   phone?: string;
   gender?: string;
+  uploadCV?: uploadCVType;
+  coverLetter?: string;
   title?: string;
+  statusAccount?: statusAccountType;
   education?: educationType[];
   skills?: skillType[];
   workEx?: workExType[];

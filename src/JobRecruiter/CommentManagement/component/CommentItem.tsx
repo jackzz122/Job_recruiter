@@ -66,17 +66,17 @@ export const CommentItem = ({ comment }: { comment: CommentType }) => {
                   fontWeight: "bold",
                 }}
               >
-                {getInitials(comment.account_id.fullname)}
+                {getInitials(comment.account_id?.fullname || "Candidate")}
               </Avatar>
               <Box>
                 <Typography
                   variant="h6"
                   sx={{ fontWeight: 600, lineHeight: 1.2 }}
                 >
-                  {comment.account_id.fullname}
+                  {comment.account_id?.fullname || "Candidate has been deleted"}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {comment.account_id.email}
+                  {comment.account_id?.email || "Not found"}
                 </Typography>
               </Box>
             </Box>

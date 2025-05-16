@@ -1,30 +1,34 @@
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ImageList from "@mui/material/ImageList";
-import ImageListItem from "@mui/material/ImageListItem";
-import { ListOfRequirement } from "../../component/lists/ListOfRequirement";
-import { ListOfInformation } from "../../component/lists/ListOfInformation";
-import { DialogApplication } from "../components/DialogApplication";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useGetJobByIdQuery } from "../../../redux/feature/job/jobApiSlice";
-import { vi } from "date-fns/locale";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { formatDistanceToNow } from "date-fns";
+import { vi } from "date-fns/locale";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Chip from "@mui/material/Chip";
+import Paper from "@mui/material/Paper";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { useGetJobByIdQuery } from "../../../redux/feature/job/jobApiSlice";
 import {
   useAddFavouriteJobMutation,
   useRemoveFavouriteJobMutation,
 } from "../../../redux/feature/user/userApiSlice";
-import { handleError } from "../../../helper/HandleError/handleError";
-import { toast } from "react-toastify";
-import { useSelector } from "react-redux";
+import Divider from "@mui/material/Divider";
 import { selectUser } from "../../../redux/feature/user/userSlice";
+import { handleError } from "../../../helper/HandleError/handleError";
 import { JobSaveResponse } from "../../../types/UserType";
+import { ListOfRequirement } from "../../component/lists/ListOfRequirement";
+import { DialogApplication } from "../components/DialogApplication";
+
 export default function DetailsJobHeader() {
   const [isFavourite, setIsFavourite] = useState(false);
   const { id } = useParams();
@@ -33,10 +37,9 @@ export default function DetailsJobHeader() {
     useAddFavouriteJobMutation();
   const [removeFavouriteJob, { isLoading: removeLoading }] =
     useRemoveFavouriteJobMutation();
-  const { data: job } = useGetJobByIdQuery(id as string, {
-    skip: !id,
-  });
+  const { data: job } = useGetJobByIdQuery(id as string, { skip: !id });
   const user = useSelector(selectUser);
+
   useEffect(() => {
     if (user) {
       const isFavourite = (
@@ -45,8 +48,10 @@ export default function DetailsJobHeader() {
       if (isFavourite) setIsFavourite(true);
     }
   }, [user, id]);
+
   const company = job?.data.companyId;
   const isString = typeof company === "string";
+
   const handleAddFavourite = async () => {
     if (!id) return;
     try {
@@ -60,6 +65,7 @@ export default function DetailsJobHeader() {
       console.log(error);
     }
   };
+
   const handleRemoveFavourite = async () => {
     if (!id) return;
     try {
@@ -73,103 +79,121 @@ export default function DetailsJobHeader() {
       console.log(error);
     }
   };
+
   return (
-    <Box
-      sx={{
-        flexGrow: 2,
-        backgroundColor: "white",
-        borderRadius: "0.3rem",
-        paddingBlock: "0.75rem",
-        paddingInline: "1.25rem",
-        marginBottom: "0.75rem",
-        boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
-      }}
-    >
-      <Typography variant="h5" fontWeight="bold">
-        {job?.data?.title}
-      </Typography>
-      <Typography variant="body1" sx={{ marginBlock: "1rem" }}>
-        {isString ? company : company?.companyName}
-      </Typography>
-      <Typography
-        sx={{ color: "green", marginBlock: "0.5rem" }}
-        fontWeight="bold"
-      >
-        {" "}
-        <MonetizationOnIcon /> {job?.data.minRange}$ - {job?.data.maxRange}$
-      </Typography>
-      <Stack direction="row" spacing={1}>
-        <Button
-          sx={{
-            flexGrow: 1,
-            backgroundColor: "#e50000",
-            color: "white",
-            padding: "1rem",
-          }}
-          onClick={() => setOpenApplication(true)}
-          variant="contained"
+    <Box sx={{ p: 3, borderBottom: 1, borderColor: "divider" }}>
+      <Stack spacing={2}>
+        <Typography variant="h4" fontWeight="bold">
+          {job?.data?.title}
+        </Typography>
+
+        <Typography variant="h6" color="text.secondary">
+          {isString ? company : company?.companyName}
+        </Typography>
+
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={2}
         >
-          Ứng tuyển
-        </Button>
+          <Chip
+            icon={<MonetizationOnIcon />}
+            label={`${job?.data.minRange}$ - ${job?.data.maxRange}$`}
+            color="success"
+            sx={{
+              fontSize: "1rem",
+              height: 32,
+              "& .MuiChip-icon": { color: "inherit" },
+            }}
+          />
+          <Box>
+            <Button
+              variant="contained"
+              size="large"
+              onClick={() => setOpenApplication(true)}
+              sx={{
+                bgcolor: "error.main",
+                "&:hover": { bgcolor: "error.dark" },
+                px: 4,
+              }}
+            >
+              Ứng tuyển
+            </Button>
+            <IconButton
+              onClick={isFavourite ? handleRemoveFavourite : handleAddFavourite}
+              disabled={addLoading || removeLoading}
+              sx={{
+                border: 1,
+                borderColor: "divider",
+                "&:hover": { borderColor: "error.main" },
+              }}
+            >
+              {isFavourite ? (
+                <FavoriteIcon sx={{ color: "error.main" }} />
+              ) : (
+                <FavoriteBorderIcon sx={{ color: "text.secondary" }} />
+              )}
+            </IconButton>
+          </Box>
+        </Stack>
+
         <DialogApplication
           handleClose={() => setOpenApplication(false)}
           title="Ứng tuyển cho vị trí"
           open={openApplication}
         />
-        {isFavourite ? (
-          <IconButton
-            loading={addLoading}
-            onClick={handleRemoveFavourite}
-            sx={{ flexGrow: 0 }}
+
+        <Paper
+          elevation={0}
+          sx={{
+            p: 2,
+            bgcolor: "grey.50",
+            border: 1,
+            borderColor: "divider",
+            borderRadius: 1,
+          }}
+        >
+          <Stack
+            direction="row"
+            spacing={3}
+            divider={<Divider orientation="vertical" flexItem />}
           >
-            <FavoriteIcon sx={{ color: "#e50000" }} fontSize="large" />
-          </IconButton>
-        ) : (
-          <IconButton
-            loading={removeLoading}
-            onClick={handleAddFavourite}
-            sx={{ flexGrow: 0 }}
-          >
-            <FavoriteBorderIcon color="warning" fontSize="large" />
-          </IconButton>
-        )}
-      </Stack>
-      <br />
-      <ImageList
-        sx={{ width: "100%", height: "12.5rem" }}
-        cols={3}
-        rowHeight={150}
-      >
-        <ImageListItem>
-          <img src="/bss_avatar.png" alt="" />
-        </ImageListItem>
-        <ImageListItem>
-          <img src="/bss_avatar.png" alt="" />
-        </ImageListItem>
-        <ImageListItem>
-          <img src="/bss_avatar.png" alt="" />
-        </ImageListItem>
-      </ImageList>
-      <Box>
-        <ListOfInformation
-          place={job?.data?.location}
-          workType="Tại công ty"
-          time={
-            job?.data?.createdAt
-              ? formatDistanceToNow(new Date(job.data.createdAt), {
-                  addSuffix: true,
-                  locale: vi,
-                })
-              : "Đang tải..."
-          }
-        />
-        <Box sx={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-          <Typography variant="body2">Kỹ năng</Typography>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <LocationOnIcon color="action" />
+              <Typography variant="body2" color="text.secondary">
+                {job?.data?.location}
+              </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <WorkOutlineIcon color="action" />
+              <Typography variant="body2" color="text.secondary">
+                Tại công ty
+              </Typography>
+            </Stack>
+            <Stack direction="row" alignItems="center" spacing={1}>
+              <AccessTimeIcon color="action" />
+              <Typography variant="body2" color="text.secondary">
+                {job?.data?.createdAt
+                  ? formatDistanceToNow(new Date(job.data.createdAt), {
+                      addSuffix: true,
+                      locale: vi,
+                    })
+                  : "Đang tải..."}
+              </Typography>
+            </Stack>
+          </Stack>
+        </Paper>
+
+        <Box>
+          <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+            Kỹ năng yêu cầu
+          </Typography>
           <ListOfRequirement
             listOfRequire={job?.data?.description.keySkills.bulletPoints}
           />
         </Box>
-      </Box>
+      </Stack>
     </Box>
   );
 }

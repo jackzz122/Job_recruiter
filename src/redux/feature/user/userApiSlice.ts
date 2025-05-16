@@ -22,6 +22,21 @@ export const userApiSlice = ApiSlice.injectEndpoints({
       query: () => "getAccount",
       providesTags: () => [{ type: "Users", id: "LIST" }],
     }),
+    uploadCV: builder.mutation<ResponseUserType<UserType>, FormData>({
+      query: (data) => ({
+        url: "uploadCV",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
+    removeCV: builder.mutation<ResponseUserType<UserType>, void>({
+      query: () => ({
+        url: "removeCV",
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
     updateUserInfo: builder.mutation<
       ResponseUserType<UserType[]>,
       | Partial<
@@ -133,4 +148,6 @@ export const {
   useDeleteAccountMutation,
   useGetAppliedJobQuery,
   useGenerateTextAiMutation,
+  useUploadCVMutation,
+  useRemoveCVMutation,
 } = userApiSlice;

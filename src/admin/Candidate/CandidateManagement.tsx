@@ -15,6 +15,7 @@ import { useState } from "react";
 import { colorButtonOrange } from "../../themeContext";
 import { CandidateItem } from "./CandidateItem";
 import { useGetAllUsersQuery } from "../../redux/feature/user/userApiSlice";
+import { RoleName } from "../../types/UserType";
 
 export type Candidate = {
   id: string;
@@ -33,9 +34,13 @@ export const CandidateManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { data: user } = useGetAllUsersQuery();
-  const listOfUser = user?.data.map((user) => {
-    return <CandidateItem key={user._id} candidate={user} />;
-  });
+  const listOfUser = user?.data
+    .filter((candidate) => {
+      return candidate.role === RoleName.GUEST;
+    })
+    .map((user) => {
+      return <CandidateItem key={user._id} candidate={user} />;
+    });
   return (
     <Box sx={{ p: 3 }}>
       {/* Header */}
@@ -82,6 +87,7 @@ export const CandidateManagement = () => {
               <TableCell>PhoneNumber</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Created Date</TableCell>
+              <TableCell>Status</TableCell>
               <TableCell align="right">Actions</TableCell>
             </TableRow>
           </TableHead>

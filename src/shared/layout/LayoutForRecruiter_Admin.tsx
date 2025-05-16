@@ -145,15 +145,15 @@ export function LayoutForRecruiter_Admin({
                 <NotificationsActiveOutlinedIcon sx={{ color: "white" }} />
               </IconButton>
               <IconButton>
-                <NotificationsActiveOutlinedIcon sx={{ color: "white" }} />
-              </IconButton>
-              <IconButton>
                 {user?.role === RoleName.STAFF_RECRUIT ||
                   (user?.role === RoleName.RECRUIT && (
                     <Avatar
                       alt="Company logo"
                       src={
-                        (user?.companyId as CompanyType).logo
+                        (
+                          (user?.companyId as CompanyType) ||
+                          "/defaultAvatar.png"
+                        ).logo
                           ? (user?.companyId as CompanyType)?.logo
                           : "/bss_avatar.png"
                       }

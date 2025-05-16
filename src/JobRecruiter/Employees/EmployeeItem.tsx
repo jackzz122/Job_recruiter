@@ -3,7 +3,6 @@ import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
@@ -26,6 +25,13 @@ import LocalPhoneIcon from "@mui/icons-material/LocalPhone";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
 import { DialogRemove } from "./DialogRemove";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import DescriptionIcon from "@mui/icons-material/Description";
+
 type EmployeeItemProps = {
   accountId: string;
   fullname: string;
@@ -50,6 +56,7 @@ export const EmployeeItem = ({
   const [openAccept, setOpenAccept] = useState(false);
   const [openRejected, setopenRejected] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
+  const [openCoverLetter, setOpenCoverLetter] = useState(false);
   const [changeStatus, { isLoading }] = useChangeStatusApplicantMutation();
   const handleChangeStatus = async (status: string) => {
     if (account?.accountId) {
@@ -135,170 +142,228 @@ export const EmployeeItem = ({
     }
   };
 
-  // const statusChipConfig = getStatusChip();
-
   return (
-    <TableRow
-      sx={{
-        "&:hover": {
-          backgroundColor: "rgba(255, 108, 48, 0.04)",
-        },
-      }}
-    >
-      {/* Employee Name with Icon */}
-      <TableCell>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <PersonOutlineIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
-          <Typography variant="body1">{account?.fullname}</Typography>
-        </Box>
-      </TableCell>
+    <>
+      <TableRow
+        sx={{
+          "&:hover": {
+            backgroundColor: "rgba(255, 108, 48, 0.04)",
+          },
+        }}
+      >
+        {/* Employee Name with Icon */}
+        <TableCell>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <PersonOutlineIcon
+              sx={{ color: colorButtonOrange, fontSize: 20 }}
+            />
+            <Box>
+              <Typography variant="body1" fontWeight={500}>
+                {account?.fullname}
+              </Typography>
+              <Typography variant="caption" color="text.secondary">
+                {account?.email}
+              </Typography>
+            </Box>
+          </Box>
+        </TableCell>
 
-      {/* Email with Icon */}
-      <TableCell>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <EmailOutlinedIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
-          <Typography variant="body2">
-            {account?.email || "..........."}
-          </Typography>
-        </Box>
-      </TableCell>
-      <TableCell>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <LocalPhoneIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
-          <Typography variant="body2">
-            {account?.phone || "..........."}
-          </Typography>
-        </Box>
-      </TableCell>
-
-      {/* Applied Position */}
-      <TableCell>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-          <WorkOutlineIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
-          <Box>
-            <Typography variant="caption" color="text.secondary">
-              Applied on: {format(account?.appliedAt as string, "dd MMMM yyyy")}
+        {/* Phone with Icon */}
+        <TableCell>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <LocalPhoneIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
+            <Typography variant="body2">
+              {account?.phone || "..........."}
             </Typography>
           </Box>
-        </Box>
-      </TableCell>
+        </TableCell>
 
-      {/* Status with Chip */}
-      <TableCell>
-        <Chip
-          icon={getStatusChip().icon}
-          label={getStatusChip().label}
-          size="small"
+        {/* Applied Date */}
+        <TableCell>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <WorkOutlineIcon sx={{ color: colorButtonOrange, fontSize: 20 }} />
+            <Typography variant="body2" color="text.secondary">
+              {format(account?.appliedAt as string, "dd MMM yyyy")}
+            </Typography>
+          </Box>
+        </TableCell>
+
+        {/* Status with Chip */}
+        <TableCell>
+          <Chip
+            icon={getStatusChip().icon}
+            label={getStatusChip().label}
+            size="small"
+            sx={{
+              ...getStatusChip().sx,
+              fontWeight: 500,
+              borderRadius: 1,
+            }}
+          />
+        </TableCell>
+
+        {/* Actions */}
+        <TableCell>
+          <Stack direction="row" spacing={1} justifyContent="space-around">
+            <Tooltip title="View Cover Letter">
+              <Button
+                variant="outlined"
+                onClick={() => setOpenCoverLetter(true)}
+                size="small"
+                sx={{
+                  minWidth: "36px",
+                  p: "6px",
+                  border: `1px solid ${colorButtonOrange}`,
+                  borderRadius: 1,
+                }}
+              >
+                <DescriptionIcon
+                  sx={{ color: colorButtonOrange, fontSize: 20 }}
+                />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="View Details">
+              <Button
+                variant="outlined"
+                onClick={() => handleChangeStatus(statusApplication.Reviewing)}
+                size="small"
+                sx={{
+                  minWidth: "36px",
+                  p: "6px",
+                  border: `1px solid ${colorButtonOrange}`,
+                  borderRadius: 1,
+                }}
+              >
+                <RemoveRedEyeOutlinedIcon
+                  sx={{ color: colorButtonOrange, fontSize: 20 }}
+                />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Accept">
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setOpenAccept(true)}
+                sx={{
+                  minWidth: "36px",
+                  p: "6px",
+                  border: `1px solid ${colorButtonOrange}`,
+                  borderRadius: 1,
+                }}
+              >
+                <CheckCircleOutlineIcon
+                  sx={{ color: colorButtonOrange, fontSize: 20 }}
+                />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Reject">
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setopenRejected(true)}
+                sx={{
+                  minWidth: "36px",
+                  p: "6px",
+                  border: `1px solid ${colorButtonOrange}`,
+                  borderRadius: 1,
+                }}
+              >
+                <CancelOutlinedIcon
+                  sx={{ color: colorButtonOrange, fontSize: 20 }}
+                />
+              </Button>
+            </Tooltip>
+
+            <Tooltip title="Delete">
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => setOpenDelete(true)}
+                sx={{
+                  minWidth: "36px",
+                  p: "6px",
+                  border: `1px solid ${colorButtonOrange}`,
+                  borderRadius: 1,
+                }}
+              >
+                <DeleteOutlineOutlinedIcon
+                  sx={{ color: colorButtonOrange, fontSize: 20 }}
+                />
+              </Button>
+            </Tooltip>
+          </Stack>
+        </TableCell>
+      </TableRow>
+
+      {/* Cover Letter Dialog */}
+      <Dialog
+        open={openCoverLetter}
+        onClose={() => setOpenCoverLetter(false)}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            padding: 2,
+          },
+        }}
+      >
+        <DialogTitle
           sx={{
-            ...getStatusChip().sx,
-            fontWeight: 500,
-            borderRadius: 1,
+            display: "flex",
+            alignItems: "center",
+            gap: 1,
+            pb: 1,
+            color: colorButtonOrange,
+            fontWeight: 600,
           }}
-        />
-      </TableCell>
+        >
+          <DescriptionIcon />
+          Cover Letter
+          <IconButton
+            onClick={() => setOpenCoverLetter(false)}
+            sx={{ ml: "auto" }}
+          >
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent
+          sx={{
+            backgroundColor: "#f8f9fa",
+            borderRadius: 2,
+            p: 3,
+            maxHeight: 400,
+            overflowY: "auto",
+          }}
+        >
+          <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+            {account?.coverLetter || "No cover letter provided"}
+          </Typography>
+        </DialogContent>
+      </Dialog>
 
-      {/* Actions */}
-      <TableCell>
-        <Stack direction="row" spacing={1}>
-          <Tooltip title="View Details">
-            <Button
-              variant="outlined"
-              onClick={() => handleChangeStatus(statusApplication.Reviewing)}
-              size="small"
-              sx={{
-                minWidth: "36px",
-                p: "6px",
-                border: `1px solid ${colorButtonOrange}`,
-                borderRadius: 1,
-              }}
-            >
-              <RemoveRedEyeOutlinedIcon
-                sx={{ color: colorButtonOrange, fontSize: 20 }}
-              />
-            </Button>
-          </Tooltip>
-
-          <Tooltip title="Accept">
-            <Button
-              variant="outlined"
-              size="small"
-              // disabled={Boolean(user?.role)}
-              onClick={() => setOpenAccept(true)}
-              sx={{
-                minWidth: "36px",
-                p: "6px",
-                border: `1px solid ${colorButtonOrange}`,
-                color: colorButtonOrange,
-                borderRadius: 1,
-                "&:hover": {
-                  backgroundColor: "rgba(255, 108, 48, 0.08)",
-                },
-              }}
-              startIcon={<CheckCircleOutlineIcon />}
-            >
-              Accept
-            </Button>
-          </Tooltip>
-          <DialogAccept
-            loading={isLoading}
-            openAccept={openAccept}
-            handleAccept={handleChangeStatus}
-            handleCloseAccept={() => setOpenAccept(false)}
-          />
-
-          <Tooltip title="Reject">
-            <Button
-              variant="outlined"
-              size="small"
-              // disabled={Boolean(user?.role)}
-              onClick={() => setopenRejected(true)}
-              sx={{
-                minWidth: "36px",
-                p: "6px",
-                border: `1px solid ${colorButtonOrange}`,
-                color: colorButtonOrange,
-                borderRadius: 1,
-                "&:hover": {
-                  backgroundColor: "rgba(255, 108, 48, 0.08)",
-                },
-              }}
-              startIcon={<CancelOutlinedIcon />}
-            >
-              Reject
-            </Button>
-          </Tooltip>
-          <DialogRejected
-            loading={isLoading}
-            openRejected={openRejected}
-            handleRejected={handleChangeStatus}
-            handleCloseRejected={() => setopenRejected(false)}
-          />
-          <Tooltip title="Delete">
-            <Button
-              variant="outlined"
-              size="small"
-              onClick={() => setOpenDelete(true)}
-              // disabled={Boolean(user?.role)}
-              sx={{
-                minWidth: "36px",
-                p: "6px",
-                border: `1px solid ${colorButtonOrange}`,
-                borderRadius: 1,
-              }}
-            >
-              <DeleteOutlineOutlinedIcon
-                sx={{ color: colorButtonOrange, fontSize: 20 }}
-              />
-            </Button>
-          </Tooltip>
-          <DialogRemove
-            jobId={jobId}
-            accountId={account?.accountId}
-            openDelete={openDelete}
-            setOpenDelete={setOpenDelete}
-          />
-        </Stack>
-      </TableCell>
-    </TableRow>
+      {/* Existing dialogs */}
+      <DialogAccept
+        loading={isLoading}
+        openAccept={openAccept}
+        handleAccept={handleChangeStatus}
+        handleCloseAccept={() => setOpenAccept(false)}
+      />
+      <DialogRejected
+        loading={isLoading}
+        openRejected={openRejected}
+        handleRejected={handleChangeStatus}
+        handleCloseRejected={() => setopenRejected(false)}
+      />
+      <DialogRemove
+        jobId={jobId}
+        accountId={account?.accountId}
+        openDelete={openDelete}
+        setOpenDelete={setOpenDelete}
+      />
+    </>
   );
 };

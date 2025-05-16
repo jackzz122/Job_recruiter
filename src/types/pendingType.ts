@@ -9,6 +9,7 @@ export type pendingType = {
   status: string;
   address: string;
   websiteUrl: string;
+  prevStatus?: string;
   createdAt: Date;
 };
 export type PendingTypeResponse<T> = ResponseType<T>;

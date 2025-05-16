@@ -90,7 +90,7 @@ export const DialogReportComment = ({
           <DialogContentText sx={{ mb: 3 }}>
             Please provide details about why you're reporting this comment from{" "}
             <Box component="span" sx={{ fontWeight: "bold" }}>
-              {comment.account_id.fullname}
+              {comment.account_id?.fullname || "Candidate has been deleted"}
             </Box>
             .
           </DialogContentText>

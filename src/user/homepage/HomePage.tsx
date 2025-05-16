@@ -1,62 +1,262 @@
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-import { ListJobSkeleten } from "../../shared/components/ListJobSkeleten";
 import { Grid2 } from "@mui/material";
-// const CardCompVip = lazy(() => import("../../components/CardCompVip"));
-import CardCompVip from "../job/components/Card/CardCompVip";
-import SearchLayout from "../component/Layout/SearchLayout";
+import WorkIcon from "@mui/icons-material/Work";
+import BusinessIcon from "@mui/icons-material/Business";
+import PeopleIcon from "@mui/icons-material/People";
+import SpeedIcon from "@mui/icons-material/Speed";
+import SecurityIcon from "@mui/icons-material/Security";
+import SupportAgentIcon from "@mui/icons-material/SupportAgent";
+import SearchIcon from "@mui/icons-material/Search";
+import HandshakeIcon from "@mui/icons-material/Handshake";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+
 export const HomePage = () => {
+  const features = [
+    {
+      icon: <WorkIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Smart Job Matching",
+      description:
+        "Our AI-powered system matches you with the perfect job opportunities based on your skills and preferences.",
+    },
+    {
+      icon: <BusinessIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Top Companies",
+      description:
+        "Connect with leading companies and startups across various industries.",
+    },
+    {
+      icon: <PeopleIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Career Growth",
+      description:
+        "Access resources and tools to help you advance your career and develop new skills.",
+    },
+    {
+      icon: <SpeedIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Quick Apply",
+      description:
+        "Apply to multiple jobs with just a few clicks using our streamlined application process.",
+    },
+    {
+      icon: <SecurityIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Secure Platform",
+      description:
+        "Your data is protected with enterprise-grade security measures.",
+    },
+    {
+      icon: <SupportAgentIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "24/7 Support",
+      description:
+        "Get help whenever you need it with our dedicated support team.",
+    },
+  ];
+
+  const benefits = [
+    {
+      icon: <SearchIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Easy Job Search",
+      description:
+        "Find the perfect job with our advanced search filters and personalized recommendations.",
+    },
+    {
+      icon: <HandshakeIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Direct Connection",
+      description:
+        "Connect directly with employers and skip the traditional application process.",
+    },
+    {
+      icon: <TrendingUpIcon sx={{ fontSize: 40, color: "primary.main" }} />,
+      title: "Career Insights",
+      description:
+        "Get valuable insights about industry trends and salary expectations.",
+    },
+  ];
+
   return (
     <div>
-      <SearchLayout />
+      {/* Hero Section */}
       <Box
         sx={{
-          backgroundColor: "#f3f5f7",
-          paddingBottom: 2,
+          background: "linear-gradient(45deg, #990000 30%, #ff6b6b 90%)",
+          color: "white",
+          py: 8,
         }}
       >
         <Container>
-          <Typography
-            paddingTop={2}
-            fontSize={20}
-            fontWeight="bold"
-            sx={{ color: "#990000" }}
-          >
-            Các việc làm tốt nhất
-          </Typography>
-          <ListJobSkeleten />
+          <Grid2 container spacing={4} alignItems="center">
+            <Grid2 size={{ xs: 12, md: 6 }}>
+              <Typography variant="h2" fontWeight="bold" gutterBottom>
+                Find Your Dream Job
+              </Typography>
+              <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
+                Connect with top employers and discover opportunities that match
+                your skills and aspirations.
+              </Typography>
+            </Grid2>
+            <Grid2 size={{ xs: 12, md: 6 }}>
+              <Box
+                component="img"
+                src="/hero-image.png"
+                alt="Job Search"
+                sx={{
+                  width: "100%",
+                  maxWidth: 500,
+                  height: "auto",
+                  display: { xs: "none", md: "block" },
+                }}
+              />
+            </Grid2>
+          </Grid2>
         </Container>
       </Box>
-      <br />
-      <Container>
-        <Typography
-          variant="h5"
-          textAlign="center"
-          margin={2}
-          fontWeight="bold"
-        >
-          Nhà tuyển dụng hàng đầu
-        </Typography>
-        <Grid2 container spacing={2}>
-          <Grid2 size={4}>
-            <CardCompVip />
+
+      {/* Features Section */}
+      <Box sx={{ py: 8, bgcolor: "#f8f9fa" }}>
+        <Container>
+          <Typography
+            variant="h3"
+            textAlign="center"
+            fontWeight="bold"
+            gutterBottom
+            sx={{ mb: 6 }}
+          >
+            Why Choose Us
+          </Typography>
+          <Grid2 container spacing={4}>
+            {features.map((feature, index) => (
+              <Grid2 size={{ xs: 12, sm: 6, md: 4 }} key={index}>
+                <Box
+                  sx={{
+                    p: 3,
+                    height: "100%",
+                    bgcolor: "white",
+                    borderRadius: 2,
+                    boxShadow: "0 2px 12px rgba(0,0,0,0.08)",
+                    transition: "transform 0.2s",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                    },
+                  }}
+                >
+                  <Box sx={{ mb: 2 }}>{feature.icon}</Box>
+                  <Typography variant="h5" fontWeight="bold" gutterBottom>
+                    {feature.title}
+                  </Typography>
+                  <Typography color="text.secondary">
+                    {feature.description}
+                  </Typography>
+                </Box>
+              </Grid2>
+            ))}
           </Grid2>
-          <Grid2 size={4}>
-            <CardCompVip />
+        </Container>
+      </Box>
+
+      {/* Benefits Section */}
+      <Box sx={{ py: 8, bgcolor: "white" }}>
+        <Container>
+          <Typography
+            variant="h3"
+            textAlign="center"
+            fontWeight="bold"
+            gutterBottom
+            sx={{ mb: 6 }}
+          >
+            How We Help You
+          </Typography>
+          <Grid2 container spacing={4}>
+            {benefits.map((benefit, index) => (
+              <Grid2 size={{ xs: 12, md: 4 }} key={index}>
+                <Box
+                  sx={{
+                    p: 4,
+                    height: "100%",
+                    bgcolor: "#f8f9fa",
+                    borderRadius: 2,
+                    textAlign: "center",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      bgcolor: "primary.main",
+                      color: "white",
+                      "& .MuiSvgIcon-root": {
+                        color: "white",
+                      },
+                    },
+                  }}
+                >
+                  <Box sx={{ mb: 2 }}>{benefit.icon}</Box>
+                  <Typography variant="h5" fontWeight="bold" gutterBottom>
+                    {benefit.title}
+                  </Typography>
+                  <Typography>{benefit.description}</Typography>
+                </Box>
+              </Grid2>
+            ))}
           </Grid2>
-          <Grid2 size={4}>
-            <CardCompVip />
+        </Container>
+      </Box>
+
+      {/* CTA Section */}
+      <Box
+        sx={{
+          py: 4,
+          bgcolor: "#f8f9fa",
+          borderTop: "1px solid #e9ecef",
+        }}
+      >
+        <Container>
+          <Grid2 container spacing={4} alignItems="center">
+            <Grid2 size={{ xs: 12, md: 8 }}>
+              <Typography variant="h4" fontWeight="bold" gutterBottom>
+                Ready to Find Your Next Opportunity?
+              </Typography>
+              <Typography variant="body1" color="text.secondary">
+                Join our community of professionals and take the next step in
+                your career journey.
+              </Typography>
+            </Grid2>
+            <Grid2
+              size={{ xs: 12, md: 4 }}
+              sx={{ textAlign: { xs: "left", md: "right" } }}
+            >
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: 1,
+                  bgcolor: "primary.main",
+                  color: "white",
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: 2,
+                  fontWeight: "bold",
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    bgcolor: "primary.dark",
+                    transform: "translateY(-2px)",
+                  },
+                }}
+              >
+                Get Started
+                <Box
+                  component="span"
+                  sx={{
+                    display: "inline-block",
+                    transition: "transform 0.2s ease",
+                    "&:hover": {
+                      transform: "translateX(4px)",
+                    },
+                  }}
+                >
+                  →
+                </Box>
+              </Box>
+            </Grid2>
           </Grid2>
-          <Grid2 size={4}>
-            <CardCompVip />
-          </Grid2>
-          <Grid2 size={4}>
-            <CardCompVip />
-          </Grid2>
-        </Grid2>
-      </Container>
-      <br />
+        </Container>
+      </Box>
     </div>
   );
 };

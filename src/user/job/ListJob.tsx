@@ -1,100 +1,29 @@
 import { useState } from "react";
 import {
   Search as SearchIcon,
-  LocationOn as LocationIcon,
-  Work as WorkIcon,
-  CalendarToday as CalendarIcon,
-  AttachMoney as MoneyIcon,
   FilterList as FilterIcon,
-  BookmarkBorder as BookmarkIcon,
-  People as PeopleIcon,
 } from "@mui/icons-material";
-import {
-  Container,
-  Typography,
-  Box,
-  TextField,
-  Button,
-  Card,
-  CardContent,
-  Grid2,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Chip,
-  Avatar,
-  IconButton,
-  InputAdornment,
-  Pagination,
-  Stack,
-} from "@mui/material";
+import { InputAdornment } from "@mui/material";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import InputLabel from "@mui/material/InputLabel";
+import Grid2 from "@mui/material/Grid2";
+import Stack from "@mui/material/Stack";
+import Pagination from "@mui/material/Pagination";
+import { CardJob } from "./components/Card/CardJob";
+import { useGetAllJobsQuery } from "../../redux/feature/job/jobApiSlice";
+import { colorButtonOrange } from "../../themeContext";
+import { statusJob } from "../../types/JobType";
+import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 
-// Sample data - replace with actual data fetching
-const SAMPLE_JOBS = [
-  {
-    _id: "1",
-    title: "Senior Frontend Developer",
-    location: "New York, NY",
-    experience: 3,
-    startDate: "2023-12-01",
-    companyId: {
-      companyName: "Tech Innovations Inc.",
-      logo: "https://ui-avatars.com/api/?name=Tech+Innovations&background=0D8ABC&color=fff",
-    },
-    minRange: 80000,
-    maxRange: 120000,
-    description: {
-      summary:
-        "We're looking for an experienced frontend developer to join our team.",
-    },
-    majorId: [{ value: "Computer Science" }, { value: "Web Development" }],
-    sizingPeople: 5,
-    applicationDeadline: "2023-12-31",
-  },
-  {
-    _id: "2",
-    title: "UX/UI Designer",
-    location: "Remote",
-    experience: 2,
-    startDate: "2023-11-15",
-    companyId: {
-      companyName: "Creative Solutions",
-      logo: "https://ui-avatars.com/api/?name=Creative+Solutions&background=6B34BA&color=fff",
-    },
-    minRange: 60000,
-    maxRange: 90000,
-    description: {
-      summary:
-        "Join our design team to create beautiful and intuitive user experiences.",
-    },
-    majorId: [{ value: "Design" }, { value: "HCI" }],
-    sizingPeople: 3,
-    applicationDeadline: "2023-12-15",
-  },
-  {
-    _id: "3",
-    title: "Full Stack Developer",
-    location: "San Francisco, CA",
-    experience: 4,
-    startDate: "2023-11-20",
-    companyId: {
-      companyName: "Cloud Systems",
-      logo: "https://ui-avatars.com/api/?name=Cloud+Systems&background=349B34&color=fff",
-    },
-    minRange: 90000,
-    maxRange: 140000,
-    description: {
-      summary:
-        "Build robust full-stack applications for our growing client base.",
-    },
-    majorId: [{ value: "Computer Science" }, { value: "Software Engineering" }],
-    sizingPeople: 8,
-    applicationDeadline: "2023-12-25",
-  },
-];
-
-// Filter options
 const LOCATIONS = ["Remote", "New York, NY", "San Francisco, CA", "Boston, MA"];
 const EXPERIENCE_LEVELS = ["Entry Level", "Mid Level", "Senior Level"];
 const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
@@ -107,19 +36,29 @@ export const ListJob = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
 
-  // Filter logic would go here if implementing actual filtering
+  const { data: jobList, isLoading, isError } = useGetAllJobsQuery();
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     setPage(value);
   };
-
+  const checkJobExpired = jobList?.data.filter((job) => {
+    const now = new Date().getTime();
+    const deadline = new Date(job.applicationDeadline).getTime();
+    return job.status === statusJob.OnGoing && deadline >= now;
+  });
   return (
-    <Container maxWidth="lg" sx={{ py: 4 }}>
+    <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Header */}
       <Box mb={4}>
-        <Typography variant="h4" component="h1" fontWeight="bold" gutterBottom>
+        <Typography
+          variant="h4"
+          component="h1"
+          fontWeight="bold"
+          sx={{ color: colorButtonOrange }}
+          gutterBottom
+        >
           Find Your Dream Job
         </Typography>
         <Typography variant="subtitle1" color="text.secondary">
@@ -139,12 +78,14 @@ export const ListJob = () => {
                 variant="outlined"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon />
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <SearchIcon />
+                      </InputAdornment>
+                    ),
+                  },
                 }}
               />
             </Grid2>
@@ -157,7 +98,11 @@ export const ListJob = () => {
                 color="primary"
                 startIcon={<FilterIcon />}
                 onClick={() => setShowFilters(!showFilters)}
-                sx={{ height: "100%" }}
+                sx={{
+                  height: "100%",
+                  border: `1px solid ${colorButtonOrange}`,
+                  color: colorButtonOrange,
+                }}
               >
                 Filters
               </Button>
@@ -236,153 +181,58 @@ export const ListJob = () => {
       </Card>
 
       {/* Job Listings */}
-      <Stack spacing={3}>
-        {SAMPLE_JOBS.map((job) => (
-          <Card
-            key={job._id}
-            variant="outlined"
-            sx={{ "&:hover": { boxShadow: 3 }, transition: "box-shadow 0.3s" }}
-          >
-            <CardContent>
-              <Grid2 container>
-                {/* Company Logo */}
-                <Grid2
-                  size={{ xs: 12, md: 1.5, sm: 2 }}
-                  sx={{ pr: 2, display: "flex", alignItems: "flex-start" }}
-                >
-                  <Avatar
-                    src={job.companyId.logo}
-                    alt={`${job.companyId.companyName} logo`}
-                    variant="rounded"
-                    sx={{ width: 64, height: 64 }}
-                  />
-                </Grid2>
-
-                {/* Job Details */}
-                <Grid2 size={{ xs: 12, md: 10.5, sm: 10 }}>
-                  <Box
-                    display="flex"
-                    justifyContent="space-between"
-                    alignItems="flex-start"
-                  >
-                    <Box>
-                      <Typography variant="h6" component="h2" fontWeight="bold">
-                        {job.title}
-                      </Typography>
-                      <Typography
-                        variant="subtitle1"
-                        color="text.secondary"
-                        gutterBottom
-                      >
-                        {job.companyId.companyName}
-                      </Typography>
-                    </Box>
-                    <IconButton aria-label="Save job">
-                      <BookmarkIcon />
-                    </IconButton>
-                  </Box>
-
-                  <Typography variant="body2" paragraph>
-                    {job.description.summary}
-                  </Typography>
-
-                  {/* Job Metadata */}
-                  <Grid2 container spacing={2} sx={{ mb: 2 }}>
-                    <Grid2 size={{ sm: 4, md: 3, lg: 2, xs: 6 }}>
-                      <Box display="flex" alignItems="center">
-                        <LocationIcon
-                          fontSize="small"
-                          color="action"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          {job.location}
-                        </Typography>
-                      </Box>
-                    </Grid2>
-
-                    <Grid2 size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
-                      <Box display="flex" alignItems="center">
-                        <WorkIcon
-                          fontSize="small"
-                          color="action"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          {job.experience}+ years
-                        </Typography>
-                      </Box>
-                    </Grid2>
-
-                    <Grid2 size={{ xs: 6, sm: 4, md: 3, lg: 3 }}>
-                      <Box display="flex" alignItems="center">
-                        <MoneyIcon
-                          fontSize="small"
-                          color="action"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          ${job.minRange.toLocaleString()} - $
-                          {job.maxRange.toLocaleString()}
-                        </Typography>
-                      </Box>
-                    </Grid2>
-
-                    <Grid2 size={{ xs: 6, sm: 4, md: 3, lg: 3 }}>
-                      <Box display="flex" alignItems="center">
-                        <CalendarIcon
-                          fontSize="small"
-                          color="action"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          Deadline:{" "}
-                          {new Date(
-                            job.applicationDeadline
-                          ).toLocaleDateString()}
-                        </Typography>
-                      </Box>
-                    </Grid2>
-
-                    <Grid2 size={{ xs: 6, sm: 4, md: 3, lg: 2 }}>
-                      <Box display="flex" alignItems="center">
-                        <PeopleIcon
-                          fontSize="small"
-                          color="action"
-                          sx={{ mr: 1 }}
-                        />
-                        <Typography variant="body2" color="text.secondary">
-                          Hiring {job.sizingPeople} people
-                        </Typography>
-                      </Box>
-                    </Grid2>
-                  </Grid2>
-
-                  {/* Skills/Majors */}
-                  <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
-                    {job.majorId.map((major, index) => (
-                      <Chip
-                        key={index}
-                        label={major.value}
-                        size="small"
-                        color="primary"
-                        variant="outlined"
-                      />
-                    ))}
-                  </Box>
-
-                  {/* Apply Button */}
-                  <Box display="flex" justifyContent="flex-end">
-                    <Button variant="contained" color="primary">
-                      View Details
-                    </Button>
-                  </Box>
-                </Grid2>
-              </Grid2>
-            </CardContent>
-          </Card>
-        ))}
-      </Stack>
+      {isError && <Typography>Error</Typography>}
+      {isLoading && <Typography>Loading</Typography>}
+      {jobList && (
+        <Stack spacing={3}>
+          {checkJobExpired && checkJobExpired?.length > 0 ? (
+            jobList.data.map((job) => <CardJob key={job._id} job={job} />)
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                py: 8,
+                px: 2,
+                backgroundColor: "white",
+                borderRadius: 2,
+                boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+              }}
+            >
+              <WorkOutlineIcon
+                sx={{
+                  fontSize: 64,
+                  color: "text.secondary",
+                  opacity: 0.5,
+                  mb: 2,
+                }}
+              />
+              <Typography
+                variant="h6"
+                sx={{
+                  color: "text.secondary",
+                  fontWeight: 500,
+                  mb: 1,
+                }}
+              >
+                Không tìm thấy công việc phù hợp
+              </Typography>
+              <Typography
+                variant="body2"
+                sx={{
+                  color: "text.secondary",
+                  opacity: 0.7,
+                  textAlign: "center",
+                }}
+              >
+                Hãy thử tìm kiếm với các tiêu chí khác hoặc quay lại sau
+              </Typography>
+            </Box>
+          )}
+        </Stack>
+      )}
 
       {/* Pagination */}
       <Box display="flex" justifyContent="center" mt={4}>

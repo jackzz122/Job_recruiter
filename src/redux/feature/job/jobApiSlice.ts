@@ -15,6 +15,22 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
       providesTags: (results) =>
         generateProvidesTags("Jobs", results?.data, (item) => item._id),
     }),
+    changeStatus: builder.mutation<
+      JobTypeResponse<JobResponse>,
+      { id: string; status: string }
+    >({
+      query: (body) => ({
+        url: `changeStatusJobPosting/${body.id}`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: [{ type: "Jobs", id: "LIST" }],
+    }),
+    getAllJobs: builder.query<JobTypeResponse<JobResponse[]>, void>({
+      query: () => "getAllJobPosting",
+      providesTags: (results) =>
+        generateProvidesTags("Jobs", results?.data, (item) => item._id),
+    }),
     createJobs: builder.mutation<JobTypeResponse<JobResponse>, JobFormData>({
       query: (body) => ({
         url: "createJobPosting",
@@ -58,7 +74,9 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
         method: "POST",
         body: data.applicant,
       }),
-      invalidatesTags: [{ type: "Jobs", id: "LIST" }],
+      invalidatesTags: (results, error, data) => [
+        { type: "Jobs", id: data.id },
+      ],
     }),
     removeApplicant: builder.mutation<
       JobTypeResponse<JobResponse[]>,
@@ -108,6 +126,7 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
 });
 
 export const {
+  useGetAllJobsQuery,
   useGetJobPostingsQuery,
   useCreateJobsMutation,
   useDeleteJobMutation,
@@ -117,4 +136,5 @@ export const {
   useGetCandidateJobPosingListQuery,
   useChangeStatusApplicantMutation,
   useRemoveApplicantMutation,
+  useChangeStatusMutation,
 } = jobApiSlice;

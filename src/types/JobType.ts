@@ -12,6 +12,11 @@ export enum statusApplication {
   Rejected = "Rejected",
   Success = "Success",
 }
+export enum statusJob {
+  OnGoing = "ongoing",
+  Stop = "stop",
+  Close = "close",
+}
 
 interface DescriptionSection {
   mainText: string;
@@ -74,7 +79,7 @@ export interface JobResponse {
   experience: number;
   startDate: string;
   majorId: { value: string }[];
-  status: string;
+  status: statusJob;
   minRange: number;
   maxRange: number;
   description: JobDescription;

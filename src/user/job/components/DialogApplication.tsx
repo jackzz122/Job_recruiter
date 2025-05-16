@@ -17,12 +17,35 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
 import { useAddApplicantMutation } from "../../../redux/feature/job/jobApiSlice";
 import { toast } from "react-toastify";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FormControl from "@mui/material/FormControl";
+import FormLabel from "@mui/material/FormLabel";
+import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import Chip from "@mui/material/Chip";
+import Box from "@mui/material/Box";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(3),
   borderRadius: theme.spacing(2),
   boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.05)",
   marginBottom: theme.spacing(2),
+  backgroundColor: "#ffffff",
+  border: "1px solid #f0f0f0",
+}));
+
+const StyledRadio = styled(Radio)(() => ({
+  "&.Mui-checked": {
+    color: "#E74C3C",
+  },
+}));
+
+const StyledFormLabel = styled(FormLabel)(({ theme }) => ({
+  color: "#2C3E50",
+  fontWeight: 600,
+  marginBottom: theme.spacing(1),
 }));
 
 export const DialogApplication = ({
@@ -36,29 +59,40 @@ export const DialogApplication = ({
 }) => {
   const pdfRef = useRef<HTMLInputElement>(null);
   const [pdfName, setPdfName] = useState("");
+  const [cvSource, setCvSource] = useState<"existing" | "new">("existing");
   const { id: postId } = useParams();
   const user = useSelector(selectUser);
+  const hasExistingCV = user?.uploadCV?.nameFile && user?.uploadCV?.linkPdf;
+
   const handlePdfChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0];
     if (file) {
       setPdfName(file.name);
     }
   };
+
   const [addApplicant, { isLoading }] = useAddApplicantMutation();
   const { register, handleSubmit, reset } = useForm<{ coverLetter: string }>({
     defaultValues: {
       coverLetter: "",
     },
   });
+
   const onSubmit: SubmitHandler<{ coverLetter: string }> = async (data) => {
     try {
       if (user && postId) {
-        const file = pdfRef.current?.files?.[0];
         const formData = new FormData();
         formData.append("coverLetter", data.coverLetter);
-        if (file) {
+
+        if (cvSource === "new") {
+          const file = pdfRef.current?.files?.[0];
+          if (!file) {
+            toast.error("Please select a CV file");
+            return;
+          }
           formData.append("linkPdf", file);
         }
+
         const response = await addApplicant({
           id: postId,
           applicant: formData,
@@ -75,6 +109,105 @@ export const DialogApplication = ({
       console.log(error);
     }
   };
+
+  const renderCVOptions = () => {
+    return (
+      <FormControl component="fieldset" sx={{ width: "100%" }}>
+        <StyledFormLabel>Choose CV Source</StyledFormLabel>
+        <RadioGroup
+          value={cvSource}
+          onChange={(e) => setCvSource(e.target.value as "existing" | "new")}
+        >
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              mb: 2,
+              border: "1px solid #f0f0f0",
+              borderRadius: 2,
+              transition: "all 0.3s ease",
+              opacity: hasExistingCV ? 1 : 0.5,
+              "&:hover": {
+                borderColor: hasExistingCV ? "#E74C3C" : "#f0f0f0",
+                backgroundColor: hasExistingCV ? "#fff5f5" : "transparent",
+              },
+            }}
+          >
+            <FormControlLabel
+              value="existing"
+              control={<StyledRadio />}
+              disabled={!hasExistingCV}
+              label={
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <PictureAsPdfIcon sx={{ color: "#E74C3C", fontSize: 32 }} />
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight={500}>
+                      Use Existing CV
+                    </Typography>
+                    {hasExistingCV ? (
+                      <>
+                        <Typography variant="body2" color="text.secondary">
+                          {user?.uploadCV?.nameFile}
+                        </Typography>
+                        <Chip
+                          label="PDF"
+                          size="small"
+                          sx={{
+                            mt: 1,
+                            backgroundColor: "rgba(231, 76, 60, 0.1)",
+                            color: "#E74C3C",
+                            fontWeight: 500,
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <Typography variant="body2" color="error">
+                        You need to create a CV first. Please visit the CV page
+                        to create one.
+                      </Typography>
+                    )}
+                  </Box>
+                </Stack>
+              }
+            />
+          </Paper>
+
+          <Paper
+            elevation={0}
+            sx={{
+              p: 2,
+              border: "1px solid #f0f0f0",
+              borderRadius: 2,
+              transition: "all 0.3s ease",
+              "&:hover": {
+                borderColor: "#E74C3C",
+                backgroundColor: "#fff5f5",
+              },
+            }}
+          >
+            <FormControlLabel
+              value="new"
+              control={<StyledRadio />}
+              label={
+                <Stack direction="row" alignItems="center" spacing={2}>
+                  <UploadFileIcon sx={{ color: "#E74C3C", fontSize: 32 }} />
+                  <Box>
+                    <Typography variant="subtitle1" fontWeight={500}>
+                      Upload New CV
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Choose a new CV file from your computer
+                    </Typography>
+                  </Box>
+                </Stack>
+              }
+            />
+          </Paper>
+        </RadioGroup>
+      </FormControl>
+    );
+  };
+
   return (
     <Dialog
       fullWidth
@@ -82,84 +215,96 @@ export const DialogApplication = ({
       onClose={handleClose}
       open={open}
       PaperProps={{
-        sx: { borderRadius: 2, padding: 2 },
+        sx: {
+          borderRadius: 3,
+          padding: 3,
+          backgroundColor: "#fafafa",
+        },
       }}
     >
       <DialogTitle
         textAlign="center"
         sx={{
-          fontSize: "1.5rem",
+          fontSize: "1.75rem",
           fontWeight: 600,
           color: "#2C3E50",
+          mb: 1,
         }}
       >
         {title}
       </DialogTitle>
 
-      <Divider sx={{ mb: 2 }} />
+      <Divider sx={{ mb: 3 }} />
 
       <form>
         <StyledPaper elevation={0}>
-          <Stack direction="row" alignItems="center" spacing={1} mb={2}>
-            <DescriptionIcon sx={{ color: "#E74C3C" }} />
-            <Typography variant="subtitle1" fontWeight={500}>
+          <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+            <DescriptionIcon sx={{ color: "#E74C3C", fontSize: 28 }} />
+            <Typography variant="h6" fontWeight={500}>
               Select your resume
             </Typography>
           </Stack>
 
-          <TextField
-            fullWidth
-            variant="outlined"
-            placeholder={`${pdfName || "Choose your CV"}`}
-            disabled
-            sx={{
-              "& .MuiInputBase-input::placeholder": {
-                fontWeight: "bold",
-                opacity: 1,
-                color: "text.primary",
-              },
-            }}
-            slotProps={{
-              input: {
-                startAdornment: (
-                  <Button
-                    variant="contained"
-                    component="label"
-                    size="small"
-                    sx={{
-                      mr: 1,
-                      backgroundColor: "#E74C3C",
-                      "&:hover": {
-                        backgroundColor: "#C0392B",
-                      },
-                    }}
-                  >
-                    Browse
-                    <input
-                      ref={pdfRef}
-                      hidden
-                      onChange={handlePdfChange}
-                      accept="application/pdf"
-                      type="file"
-                    />
-                  </Button>
-                ),
-              },
-            }}
-          />
-          <Typography
-            variant="caption"
-            color="text.secondary"
-            sx={{ mt: 1, display: "block" }}
-          >
-            Accepted formats: PDF, DOCX (Max: 5MB)
-          </Typography>
+          {renderCVOptions()}
+
+          {cvSource === "new" && (
+            <>
+              <TextField
+                fullWidth
+                variant="outlined"
+                placeholder={`${pdfName || "Choose your CV"}`}
+                disabled
+                sx={{
+                  mt: 3,
+                  "& .MuiInputBase-input::placeholder": {
+                    fontWeight: "bold",
+                    opacity: 1,
+                    color: "text.primary",
+                  },
+                }}
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <Button
+                        variant="contained"
+                        component="label"
+                        size="small"
+                        sx={{
+                          mr: 1,
+                          backgroundColor: "#E74C3C",
+                          "&:hover": {
+                            backgroundColor: "#C0392B",
+                          },
+                        }}
+                      >
+                        Browse
+                        <input
+                          ref={pdfRef}
+                          hidden
+                          onChange={handlePdfChange}
+                          accept="application/pdf"
+                          type="file"
+                        />
+                      </Button>
+                    ),
+                  },
+                }}
+              />
+              <Typography
+                variant="caption"
+                color="text.secondary"
+                sx={{ mt: 1, display: "block" }}
+              >
+                Accepted formats: PDF, DOCX (Max: 5MB)
+              </Typography>
+            </>
+          )}
         </StyledPaper>
 
         <StyledPaper elevation={0}>
-          <Stack direction="row" alignItems="center" spacing={1} mb={2}>
-            <HistoryEduIcon sx={{ color: "#E74C3C" }} />
-            <Typography variant="subtitle1" fontWeight={500}>
+          <Stack direction="row" alignItems="center" spacing={2} mb={3}>
+            <HistoryEduIcon sx={{ color: "#E74C3C", fontSize: 28 }} />
+            <Typography variant="h6" fontWeight={500}>
               Write your introduction letter
             </Typography>
           </Stack>
@@ -167,7 +312,13 @@ export const DialogApplication = ({
           <Typography
             variant="body2"
             fontStyle="italic"
-            sx={{ mb: 2, color: "#7F8C8D" }}
+            sx={{
+              mb: 3,
+              color: "#7F8C8D",
+              backgroundColor: "#f8f9fa",
+              p: 2,
+              borderRadius: 2,
+            }}
           >
             Một thư giới thiệu ngắn gọn, chỉn chu sẽ giúp bạn trở nên chuyên
             nghiệp và gây ấn tượng hơn với nhà tuyển dụng.
@@ -180,7 +331,12 @@ export const DialogApplication = ({
             {...register("coverLetter")}
             variant="outlined"
             placeholder="Write about yourself to introduce to the recruiter. Highlight your relevant skills and experience for this position."
-            sx={{ mb: 1 }}
+            sx={{
+              mb: 1,
+              "& .MuiOutlinedInput-root": {
+                borderRadius: 2,
+              },
+            }}
           />
           <Typography
             variant="caption"
@@ -196,7 +352,7 @@ export const DialogApplication = ({
           direction="row"
           spacing={2}
           justifyContent="flex-end"
-          sx={{ mt: 3, mb: 1 }}
+          sx={{ mt: 4, mb: 1 }}
         >
           <Button
             variant="outlined"
@@ -204,6 +360,9 @@ export const DialogApplication = ({
             sx={{
               borderColor: "#E74C3C",
               color: "#E74C3C",
+              px: 4,
+              py: 1,
+              borderRadius: 2,
               "&:hover": {
                 borderColor: "#C0392B",
                 backgroundColor: "rgba(231, 76, 60, 0.04)",
@@ -217,10 +376,13 @@ export const DialogApplication = ({
             type="submit"
             loading={isLoading}
             onClick={handleSubmit(onSubmit)}
+            disabled={!hasExistingCV && cvSource === "existing"}
             sx={{
               backgroundColor: "#E74C3C",
               color: "white",
               px: 4,
+              py: 1,
+              borderRadius: 2,
               "&:hover": {
                 backgroundColor: "#C0392B",
               },

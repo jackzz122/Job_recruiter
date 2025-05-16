@@ -10,25 +10,15 @@ import LogoDevIcon from "@mui/icons-material/LogoDev";
 import Button from "@mui/material/Button";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useState } from "react";
-import { MenuNavHomePage } from "../../homepage/component/MenuNavHomePage";
-import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { MenuNavUser } from "../../homepage/component/MenuNavUser";
 import { SkeletonCircle } from "../../../shared/components/SkeletonCircle";
 import { LayoutFooter } from "../../../shared/layout/LayoutFooter";
 import { useGetCurrentUser } from "../../../context/useGetCurrentUser";
 
 export const LayoutHome = () => {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [anchorAvatar, setAnchorAvatar] = useState<null | HTMLElement>(null);
   const navigate = useNavigate();
-  const open = Boolean(anchorEl);
   const openAvatar = Boolean(anchorAvatar);
-  const handleClickJob = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
   const handleCloseAvatar = () => {
     setAnchorAvatar(null);
   };
@@ -77,16 +67,6 @@ export const LayoutHome = () => {
             sx={{ display: { xs: "none", lg: "flex" } }}
           >
             <Button
-              sx={{ color: "white" }}
-              id="resources_btn"
-              onClick={handleClickJob}
-              aria-controls={open ? "job_resources" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-            >
-              Việc làm IT <KeyboardArrowDownRoundedIcon />
-            </Button>
-            <Button
               onClick={() => navigate("/list_job")}
               sx={{ color: "white" }}
             >
@@ -102,14 +82,7 @@ export const LayoutHome = () => {
               Create CV
             </Button>
           </Stack>
-          {
-            <MenuNavHomePage
-              menuJobId="job_resources"
-              open={open}
-              anchorEl={anchorEl}
-              handleClose={handleClose}
-            />
-          }
+
           <Box sx={{ flexGrow: 1 }}></Box>
 
           <Box>

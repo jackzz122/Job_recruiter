@@ -17,7 +17,6 @@ import { useNavigate } from "react-router-dom";
 export const EmployeeInfor = () => {
   const user = useSelector(selectUser);
   const navigate = useNavigate();
-  console.log(user);
   return (
     <Box sx={{ margin: "32px 16px" }}>
       <Container maxWidth="lg">

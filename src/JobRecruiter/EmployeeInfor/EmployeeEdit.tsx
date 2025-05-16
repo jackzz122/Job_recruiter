@@ -18,6 +18,14 @@ import { useEffect, useRef, useState } from "react";
 import { useUpdateUserInfoMutation } from "../../redux/feature/user/userApiSlice";
 import { handleError } from "../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+
+const genderOptions = [
+  { value: "male", label: "Male" },
+  { value: "female", label: "Female" },
+  { value: "other", label: "Other" },
+] as const;
+
 export type userEdit = {
   fullname: string;
   email: string;
@@ -26,6 +34,7 @@ export type userEdit = {
   gender: string;
   avatarIMG: string;
 };
+
 export const EmployeeEdit = () => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
@@ -264,15 +273,22 @@ export const EmployeeEdit = () => {
                       variant="outlined"
                       {...register("address")}
                     />
-                    <TextField
-                      label="Gender"
-                      fullWidth
-                      slotProps={{
-                        inputLabel: { shrink: true },
-                      }}
-                      variant="outlined"
-                      {...register("gender")}
-                    />
+                    <FormControl fullWidth>
+                      <InputLabel id="gender-label">Gender</InputLabel>
+                      <Select
+                        labelId="gender-label"
+                        id="gender"
+                        label="Gender"
+                        defaultValue={user?.gender || ""}
+                        {...register("gender")}
+                      >
+                        {genderOptions.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Stack>
                 </Box>
               </Stack>

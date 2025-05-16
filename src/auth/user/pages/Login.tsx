@@ -10,6 +10,9 @@ import { toast } from "react-toastify";
 import { handleError } from "../../../helper/HandleError/handleError";
 import { useUserLoginMutation } from "../../../redux/feature/auth/authApiSlice";
 import { RoleName } from "../../../types/UserType";
+import { InputAdornment } from "@mui/material";
+import MailIcon from "@mui/icons-material/Mail";
+import PasswordIcon from "@mui/icons-material/Password";
 export type FormField = {
   email: string;
   password: string;
@@ -71,17 +74,37 @@ export const Login = () => {
             {...register("email", {
               required: "Email must be provided",
             })}
+            placeholder="Enter your email"
             type="email"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MailIcon color="action" />
+                  </InputAdornment>
+                ),
+              },
+            }}
             error={!!errors.email}
             helperText={errors.email?.message}
           />
 
           <TextField
             fullWidth
+            placeholder="Enter your password"
             label="Password"
             {...register("password", {
               required: "Password must be provided",
             })}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PasswordIcon color="action" />
+                  </InputAdornment>
+                ),
+              },
+            }}
             error={!!errors.password}
             helperText={errors.password?.message}
             type="password"

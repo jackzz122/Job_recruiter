@@ -25,7 +25,7 @@ export const SimpleInforStaff = ({ staff }: SimpleInforStaffProps) => {
   const [deleteStaff, { isLoading }] = useDeleteRecruiterMutation();
   return (
     <TableContainer>
-      <Table>
+      <Table sx={{ backgroundColor: "white" }}>
         <TableHead>
           <TableRow sx={{ backgroundColor: "rgba(255, 108, 48, 0.05)" }}>
             <TableCell>

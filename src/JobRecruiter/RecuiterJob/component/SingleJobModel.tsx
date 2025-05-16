@@ -10,7 +10,7 @@ import Delete from "@mui/icons-material/Delete";
 import LocationOn from "@mui/icons-material/LocationOn";
 import CalendarToday from "@mui/icons-material/CalendarToday";
 import Group from "@mui/icons-material/Group";
-import { JobResponse } from "../../../types/JobType";
+import { JobResponse, statusJob } from "../../../types/JobType";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { DialogDeleteJob } from "./DialogJob/DialogDeleteJob";
 import { DialogViewJob } from "./DialogJob/DialogViewJob";
@@ -18,23 +18,73 @@ import { useNavigate } from "react-router-dom";
 import PersonIcon from "@mui/icons-material/Person";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
+import { RoleName } from "../../../types/UserType";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import PlayCircleOutlineIcon from "@mui/icons-material/PlayCircleOutline";
+import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
+import BlockIcon from "@mui/icons-material/Block";
+import { useChangeStatusMutation } from "../../../redux/feature/job/jobApiSlice";
+import { toast } from "react-toastify";
+
 export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
   const [openViewDialog, setOpenViewDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [status, setStatus] = useState<statusJob>(jobs.status);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const recruiter = useSelector(selectUser);
   const poster_id = jobs.accountId._id;
+  const [changeStatus, { isLoading }] = useChangeStatusMutation();
+  const handleStatusClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleStatusClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleStatusChange = async (
+    newStatus: statusJob.OnGoing | statusJob.Stop | statusJob.Close
+  ) => {
+    const response = await changeStatus({
+      id: jobs._id,
+      status: newStatus,
+    }).unwrap();
+    if (response?.success) {
+      toast.success(response?.message);
+      handleStatusClose();
+      setStatus(newStatus);
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case statusJob.OnGoing:
+        return <PlayCircleOutlineIcon color="success" />;
+      case statusJob.Stop:
+        return <StopCircleOutlinedIcon color="error" />;
+      case statusJob.Close:
+        return <BlockIcon color="action" />;
+      default:
+        return <PlayCircleOutlineIcon />;
+    }
+  };
+
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "OnGoing":
+      case statusJob.OnGoing:
         return "success";
-      case "Stop":
+      case statusJob.Stop:
         return "error";
-      case "Close":
+      case statusJob.Close:
         return "default";
       default:
         return "primary";
     }
   };
+
   const navigate = useNavigate();
   return (
     <>
@@ -55,13 +105,77 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
           <Typography variant="h6" sx={{ fontWeight: 600 }}>
             {jobs.title}
           </Typography>
-          <Chip
-            label={jobs.status}
-            color={getStatusColor(jobs.status)}
-            size="small"
-            sx={{ textTransform: "capitalize" }}
-          />
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <Tooltip title="Change Status">
+              <IconButton
+                onClick={handleStatusClick}
+                disabled={
+                  poster_id !== recruiter?._id &&
+                  recruiter?.role !== RoleName.RECRUIT
+                }
+                size="small"
+              >
+                {getStatusIcon(status)}
+              </IconButton>
+            </Tooltip>
+            <Chip
+              label={status}
+              color={getStatusColor(status)}
+              size="small"
+              sx={{ textTransform: "capitalize" }}
+            />
+          </Box>
         </Box>
+
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleStatusClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+            },
+          }}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+        >
+          <MenuItem
+            disabled={isLoading}
+            onClick={() => handleStatusChange(statusJob.OnGoing)}
+          >
+            <ListItemIcon>
+              <PlayCircleOutlineIcon color="success" />
+            </ListItemIcon>
+            <ListItemText>OnGoing</ListItemText>
+          </MenuItem>
+          <MenuItem
+            disabled={isLoading}
+            onClick={() => handleStatusChange(statusJob.Stop)}
+          >
+            <ListItemIcon>
+              <StopCircleOutlinedIcon color="error" />
+            </ListItemIcon>
+            <ListItemText>Stop</ListItemText>
+          </MenuItem>
+          <MenuItem
+            disabled={isLoading}
+            onClick={() => handleStatusChange(statusJob.Close)}
+          >
+            <ListItemIcon>
+              <BlockIcon color="action" />
+            </ListItemIcon>
+            <ListItemText>Close</ListItemText>
+          </MenuItem>
+        </Menu>
 
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1, mb: 2 }}>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
@@ -108,7 +222,10 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
           <Tooltip title="Edit">
             <span>
               <IconButton
-                disabled={poster_id !== recruiter?._id}
+                disabled={
+                  poster_id !== recruiter?._id &&
+                  recruiter?.role !== RoleName.RECRUIT
+                }
                 onClick={() =>
                   navigate(`/recruiter/job_management/${jobs._id}/update`)
                 }
@@ -121,7 +238,10 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
           <Tooltip title="Delete">
             <span>
               <IconButton
-                disabled={poster_id !== recruiter?._id}
+                disabled={
+                  poster_id !== recruiter?._id &&
+                  recruiter?.role !== RoleName.RECRUIT
+                }
                 size="small"
                 color="error"
                 onClick={() => setOpenDeleteDialog(true)}

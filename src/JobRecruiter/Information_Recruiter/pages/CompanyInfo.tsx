@@ -28,7 +28,6 @@ import { RoleName } from "../../../types/UserType";
 
 export const CompanyInfo = () => {
   const user = useSelector(selectUser);
-
   const [companyInfor, setCompanyInfor] = useState<CompanyType>();
   useEffect(() => {
     if (user) {
@@ -36,7 +35,6 @@ export const CompanyInfo = () => {
     }
   }, [user]);
   const navigate = useNavigate();
-  console.log(companyInfor);
   const companyInformation = [
     {
       title: "Company Information",

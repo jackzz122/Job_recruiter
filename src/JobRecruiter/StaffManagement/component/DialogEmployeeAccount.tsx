@@ -12,7 +12,12 @@ import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
 import { CompanyType } from "../../../types/CompanyType";
-
+import { InputAdornment } from "@mui/material";
+import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import EmailOutlinedIcon from "@mui/icons-material/EmailOutlined";
+import LockClockIcon from "@mui/icons-material/LockClock";
+import Box from "@mui/material/Box";
+import KeyIcon from "@mui/icons-material/Key";
 export interface StaffType extends FormRegisterField {
   companyId: { _id: string | undefined };
 }
@@ -65,6 +70,16 @@ export const DialogEmployeeAccount = ({
     }
   };
 
+  const generatePassword = (length = 12) => {
+    const chars =
+      "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    reset({ ...register("password"), password });
+  };
+
   return (
     <Dialog fullWidth open={open} onClose={closeAccountFunct}>
       <DialogTitle textAlign="center">Create Employee account</DialogTitle>
@@ -78,6 +93,16 @@ export const DialogEmployeeAccount = ({
                 message: "Invalid email address",
               },
             })}
+            placeholder="Enter your email"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <EmailOutlinedIcon sx={{ color: colorButtonOrange }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
             error={!!errors.email}
             helperText={errors.email?.message}
             label="Email"
@@ -88,30 +113,78 @@ export const DialogEmployeeAccount = ({
             {...register("fullname", {
               required: "Full name is required",
             })}
+            placeholder="Enter your full name"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PersonOutlineIcon sx={{ color: colorButtonOrange }} />
+                  </InputAdornment>
+                ),
+              },
+            }}
             error={!!errors.fullname}
             helperText={errors.fullname?.message}
-            label="full Name"
+            label="Full Name"
             fullWidth
             sx={{ marginBlock: 1 }}
           />
-          <TextField
-            label="Password"
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "Password must be at least 8 characters long",
-              },
-            })}
-            error={!!errors.password}
-            helperText={errors.password?.message}
-            type="password"
-            fullWidth
-            sx={{ marginBlock: 1 }}
-          />
+          <Box sx={{ position: "relative", marginBlock: 1 }}>
+            <TextField
+              label="Password"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 8,
+                  message: "Password must be at least 8 characters long",
+                },
+              })}
+              placeholder="Enter your password"
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockClockIcon sx={{ color: colorButtonOrange }} />
+                    </InputAdornment>
+                  ),
+                },
+              }}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+              fullWidth
+            />
+            <Button
+              variant="outlined"
+              size="small"
+              onClick={() => generatePassword()}
+              startIcon={<KeyIcon />}
+              sx={{
+                position: "absolute",
+                right: 0,
+                top: "50%",
+                transform: "translateY(-50%)",
+                mr: 1,
+                borderColor: colorButtonOrange,
+                color: colorButtonOrange,
+                "&:hover": {
+                  borderColor: colorButtonOrange,
+                  backgroundColor: "rgba(255, 108, 48, 0.04)",
+                },
+              }}
+            >
+              Generate
+            </Button>
+          </Box>
           <Button
             fullWidth
-            sx={{ backgroundColor: colorButtonOrange, color: "white" }}
+            sx={{
+              backgroundColor: colorButtonOrange,
+              color: "white",
+              mt: 2,
+              "&:hover": {
+                backgroundColor: "#E65100",
+              },
+            }}
             variant="contained"
             type="submit"
             loading={isLoading}

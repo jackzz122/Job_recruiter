@@ -3,13 +3,11 @@ import Button from "@mui/material/Button";
 import { pendingType } from "../../../types/pendingType";
 import { useState } from "react";
 import {
-  //   useUnblockPendingMutation,
+  useChangeStatusPendingItemMutation,
   useDeletePendingItemMutation,
   useGetPendingListQuery,
-  useUnblockPendingMutation,
 } from "../../../redux/feature/pending/pendingApiSlice";
 import { toast } from "react-toastify";
-import CircularProgress from "@mui/material/CircularProgress";
 import { RecruitItem } from "../components/RecruitItem";
 import { TableBody, TableCell } from "@mui/material";
 import { PendingStatus } from "../../../types/PendingStatus";
@@ -20,7 +18,8 @@ export const BlockedItem = () => {
 
   const [openUnblockDialog, setOpenUnblockDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [unblockPending, { isLoading }] = useUnblockPendingMutation();
+  const [changeStatusPendingItem, { isLoading: isChanging }] =
+    useChangeStatusPendingItemMutation();
   const [id, setId] = useState<string>("");
   const [data, setData] = useState<pendingType | null>(null);
   const [deletePending, { isLoading: isDeleting }] =
@@ -38,9 +37,25 @@ export const BlockedItem = () => {
 
   const handleConfirmUnblock = async (data: pendingType) => {
     try {
-      await unblockPending(data._id).unwrap();
-      toast.success("Recruiter unblocked successfully!");
-      setOpenUnblockDialog(false);
+      if (data.prevStatus === PendingStatus.APPROVED) {
+        const response = await changeStatusPendingItem({
+          status: PendingStatus.APPROVED,
+          id: data._id,
+        });
+        if (response?.data?.success) {
+          toast.success("Recruiter unblocked successfully!");
+          setOpenUnblockDialog(false);
+        }
+      } else if (data.prevStatus === PendingStatus.PENDING) {
+        const response = await changeStatusPendingItem({
+          status: PendingStatus.PENDING,
+          id: data._id,
+        });
+        if (response?.data?.success) {
+          toast.success("Recruiter unblocked successfully!");
+          setOpenUnblockDialog(false);
+        }
+      }
     } catch (err) {
       toast.error("Failed to unblock recruiter. Please try again.");
       console.error("Unblock error:", err);
@@ -71,9 +86,9 @@ export const BlockedItem = () => {
             variant="outlined"
             color="success"
             onClick={() => handleUnblock(blocked)}
-            disabled={isLoading}
+            disabled={isChanging}
           >
-            {isLoading ? <CircularProgress size={24} /> : "Unblock"}
+            Unblock
           </Button>
           <Button
             fullWidth
@@ -111,7 +126,7 @@ export const BlockedItem = () => {
         content="Are you sure you want to unblock this recruiter? They will regain access to the platform."
         confirmText="Unblock"
         cancelText="Cancel"
-        isLoading={isLoading}
+        isLoading={isChanging}
         confirmColor="success"
       />
 

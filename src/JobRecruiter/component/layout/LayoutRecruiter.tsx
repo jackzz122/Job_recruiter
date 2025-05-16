@@ -5,7 +5,7 @@ import {
 } from "../../../shared/layout/LayoutForRecruiter_Admin";
 import WorkOutlineRoundedIcon from "@mui/icons-material/WorkOutlineRounded";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
+// import ManageAccountsRoundedIcon from "@mui/icons-material/ManageAccountsRounded";
 import CommentRoundedIcon from "@mui/icons-material/CommentRounded";
 import SettingsIcon from "@mui/icons-material/Settings";
 import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
@@ -26,11 +26,11 @@ const recruiter_settings: setting_types[] = [
     href: "candidate_management",
     icons: <GroupRoundedIcon />,
   },
-  {
-    name: "Staff management",
-    href: "staff_management",
-    icons: <ManageAccountsRoundedIcon />,
-  },
+  // {
+  //   name: "Staff management",
+  //   href: "staff_management",
+  //   icons: <ManageAccountsRoundedIcon />,
+  // },
   {
     name: "Comment management",
     href: "comment_management",

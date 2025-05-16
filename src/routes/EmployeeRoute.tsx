@@ -6,9 +6,6 @@ import { ChangePass } from "../user/information/UserSetting/ChangePass";
 import { CVPages } from "../user/CV/pages/CVPages";
 import { ListOfCompany } from "../user/company/ListCompany/ListOfCompany";
 import { DetailsJob } from "../user/job/Detail/DetailsJob";
-import { LayoutListComp } from "../user/component/Layout/LayoutListComp";
-import { ListCompCareer } from "../user/company/ListCompany/ListCompCareer";
-import { ShortInfoComp } from "../user/company/ListCompany/ShortInfoComp";
 import { LayoutDetailsComp } from "../user/company/components/LayoutDetailsComp";
 import { DetailsComp } from "../user/company/DetailsCompany/DetailsComp";
 import { ReviewComp } from "../user/company/Review/ReviewComp";
@@ -58,12 +55,7 @@ export const EmployeeRoute = [
     <Route path="list_company" element={<ListOfCompany />} />
     <Route path="list_job" element={<ListJob />} />
     <Route path="job/:id" element={<DetailsJob />} />
-    {/* Company related routes */}
-    <Route element={<LayoutListComp />}>
-      <Route path="list_job/:name/:nameComp" element={<ListCompCareer />}>
-        <Route index element={<ShortInfoComp />} />
-      </Route>
-    </Route>
+
     <Route path="writeReview" element={<WriteReview />} />
     <Route path="company/:id" element={<LayoutDetailsComp />}>
       <Route index element={<DetailsComp />} />

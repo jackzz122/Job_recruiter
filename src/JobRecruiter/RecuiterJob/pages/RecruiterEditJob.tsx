@@ -20,7 +20,6 @@ import { RenderBulletPointSection } from "../component/RenderBulletPointSection"
 import { useGetMajorbyNameQuery } from "../../../redux/feature/major/majorApiSlice";
 import { SelectMajorField } from "../component/SelectMajorField";
 import { BasicInformation } from "../component/BasicInformation";
-// import { UploadImage } from "../component/UploadImage";
 import { handleError } from "../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
 
@@ -46,20 +45,14 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
       methods.reset(getJobDefaultValues(jobData));
     }
   }, [jobData, mode, methods]);
-  const { handleSubmit, reset } = methods;
+  const {
+    handleSubmit,
+    reset,
+    formState: { isValid },
+  } = methods;
 
-  // const [previewImage, setPreviewImage] = useState<string | null>(null);
-  // const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file) {
-  //     setPreviewImage(URL.createObjectURL(file));
-  //     setValue("image", file);
-  //   }
-  // };
   const { data: majors } = useGetMajorbyNameQuery();
-  // const handleRemoveImage = () => {
-  //   setPreviewImage(null);
-  // };
+
   const [createJob, { isLoading }] = useCreateJobsMutation();
   const [updateJob, { isLoading: isUpdating }] = useUpdateJobsMutation();
   const onSubmit: SubmitHandler<JobFormData> = async (data) => {
@@ -89,12 +82,12 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
     <Container maxWidth="lg">
       <Stack spacing={3}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-          <IconButton onClick={() => navigate(-1)}>
+          <IconButton sx={{ marginTop: 2 }} onClick={() => navigate(-1)}>
             <ArrowBackIcon />
           </IconButton>
           <Typography
             variant="h5"
-            sx={{ fontWeight: 600, color: colorButtonOrange }}
+            sx={{ fontWeight: 600, color: colorButtonOrange, marginTop: 2 }}
           >
             Edit Job Posting
           </Typography>
@@ -105,7 +98,7 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
           <Link
             underline="hover"
             color="inherit"
-            onClick={() => navigate("/recruiter/dashboard")}
+            onClick={() => navigate("/recruiter")}
             sx={{ cursor: "pointer" }}
           >
             Dashboard
@@ -113,7 +106,7 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
           <Link
             underline="hover"
             color="inherit"
-            onClick={() => navigate("/recruiter/recruiter_job")}
+            onClick={() => navigate("/recruiter/job_management")}
             sx={{ cursor: "pointer" }}
           >
             Jobs
@@ -157,14 +150,6 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
 
               <SelectMajorField majors={majors?.data || []} />
 
-              {/* Image Upload */}
-              {/* <UploadImage
-                register={register}
-                handleImageUpload={handleImageUpload}
-                handleRemoveImage={handleRemoveImage}
-                previewImage={previewImage}
-              /> */}
-
               {/* Action Buttons */}
               <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end" }}>
                 <Button
@@ -184,6 +169,7 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
                     startIcon={<SaveIcon />}
                     loading={isUpdating}
                     onClick={handleSubmit(onSubmit)}
+                    disabled={!isValid}
                     sx={{
                       backgroundColor: "primary.main",
                       "&:hover": { backgroundColor: "primary.dark" },
@@ -199,6 +185,7 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
                     startIcon={<SaveIcon />}
                     loading={isLoading}
                     onClick={handleSubmit(onSubmit)}
+                    disabled={!isValid}
                     sx={{
                       backgroundColor: "primary.main",
                       "&:hover": { backgroundColor: "primary.dark" },

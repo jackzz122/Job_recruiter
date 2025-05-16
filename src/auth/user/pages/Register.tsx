@@ -11,7 +11,8 @@ import PersonIcon from "@mui/icons-material/Person";
 import { toast } from "react-toastify";
 import authApi from "../../../api/auth/auth";
 import { handleError } from "../../../helper/HandleError/handleError";
-
+import MailIcon from "@mui/icons-material/Mail";
+import PasswordIcon from "@mui/icons-material/Password";
 export type FormRegisterField = {
   fullname: string;
   email: string;
@@ -71,6 +72,7 @@ export const Register = () => {
             })}
             error={!!errors.fullname}
             helperText={errors.fullname?.message}
+            placeholder="Enter your full name"
             slotProps={{
               input: {
                 startAdornment: (
@@ -89,6 +91,16 @@ export const Register = () => {
             fullWidth
             label="Email"
             type="email"
+            placeholder="Enter your email"
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <MailIcon color="action" />
+                  </InputAdornment>
+                ),
+              },
+            }}
             error={!!errors.email}
             helperText={errors.email?.message}
           />
@@ -101,9 +113,19 @@ export const Register = () => {
                 message: "Password must be at least 6 characters",
               },
             })}
+            slotProps={{
+              input: {
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <PasswordIcon color="action" />
+                  </InputAdornment>
+                ),
+              },
+            }}
             fullWidth
             label="Password"
             type="password"
+            placeholder="Enter your password"
             error={!!errors.password}
             helperText={errors.password?.message}
           />

@@ -6,6 +6,7 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPendingList: builder.query<PendingTypeResponse<pendingType[]>, void>({
       query: () => "/getPendingList",
+      // providesTags: [{ type: "Pendings", id: "LIST" }],
       providesTags: (results) =>
         generateProvidesTags(
           "Pendings",
@@ -26,20 +27,37 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
         { type: "Pendings", id: data.id },
       ],
     }),
-    blockPending: builder.mutation<PendingTypeResponse<pendingType>, string>({
+    blockAccount: builder.mutation<PendingTypeResponse<pendingType>, string>({
       query: (id) => ({
-        url: `/blockPending/${id}`,
-        method: "POST",
+        url: `/blockedAccount/${id}`,
+        method: "PUT",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Pendings", id }],
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
-    unblockPending: builder.mutation<PendingTypeResponse<pendingType>, string>({
+    approveAccount: builder.mutation<PendingTypeResponse<pendingType>, string>({
       query: (id) => ({
-        url: `/unblockPending/${id}`,
-        method: "POST",
+        url: `/approveAccount/${id}`,
+        method: "PUT",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Pendings", id }],
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
+    changeStatusPendingItem: builder.mutation<
+      PendingTypeResponse<pendingType>,
+      {
+        id: string;
+        status: string;
+      }
+    >({
+      query: (data) => ({
+        url: `changePendingApproveStatus/${data.id}`,
+        method: "PUT",
+        body: {
+          status: data.status,
+        },
+      }),
+      invalidatesTags: [{ type: "Pendings", id: "LIST" }],
+    }),
+
     deletePendingItem: builder.mutation<
       PendingTypeResponse<pendingType>,
       string
@@ -50,12 +68,23 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: (result, error, id) => [{ type: "Pendings", id }],
     }),
+    deleteUserByAdmin: builder.mutation<
+      PendingTypeResponse<pendingType>,
+      string
+    >({
+      query: (id) => ({
+        url: `/deleteAccountByAdmin/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
   }),
 });
 export const {
   useGetPendingListQuery,
   useConfirmPendingMutation,
-  useBlockPendingMutation,
   useDeletePendingItemMutation,
-  useUnblockPendingMutation,
+  useBlockAccountMutation,
+  useApproveAccountMutation,
+  useChangeStatusPendingItemMutation,
 } = pendingApiSlice;

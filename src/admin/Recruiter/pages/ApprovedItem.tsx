@@ -3,12 +3,11 @@ import Button from "@mui/material/Button";
 import { pendingType } from "../../../types/pendingType";
 import { useState } from "react";
 import {
-  useBlockPendingMutation,
+  useChangeStatusPendingItemMutation,
   useDeletePendingItemMutation,
   useGetPendingListQuery,
 } from "../../../redux/feature/pending/pendingApiSlice";
 import { toast } from "react-toastify";
-import CircularProgress from "@mui/material/CircularProgress";
 import { RecruitItem } from "../components/RecruitItem";
 import { TableBody, TableCell } from "@mui/material";
 import { PendingStatus } from "../../../types/PendingStatus";
@@ -19,7 +18,8 @@ export const ApprovedItem = () => {
 
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [blockPending, { isLoading }] = useBlockPendingMutation();
+  const [changeStatusPendingItem, { isLoading: isChanging }] =
+    useChangeStatusPendingItemMutation();
   const [id, setId] = useState<string>("");
   const [data, setData] = useState<pendingType | null>(null);
   const [deletePending, { isLoading: isDeleting }] =
@@ -37,9 +37,14 @@ export const ApprovedItem = () => {
 
   const handleConfirmBlock = async (data: pendingType) => {
     try {
-      await blockPending(data._id).unwrap();
-      toast.success("Recruiter blocked successfully!");
-      setOpenBlockDialog(false);
+      const response = await changeStatusPendingItem({
+        status: PendingStatus.BLOCKED,
+        id: data._id,
+      });
+      if (response?.data?.success) {
+        toast.success("Recruiter blocked successfully!");
+        setOpenBlockDialog(false);
+      }
     } catch (err) {
       toast.error("Failed to block recruiter. Please try again.");
       console.error("Block error:", err);
@@ -69,9 +74,9 @@ export const ApprovedItem = () => {
             variant="outlined"
             color="warning"
             onClick={() => handleBlock(approved)}
-            disabled={isLoading}
+            disabled={isChanging}
           >
-            {isLoading ? <CircularProgress size={24} /> : "Block"}
+            Blocked
           </Button>
           <Button
             fullWidth
@@ -109,7 +114,7 @@ export const ApprovedItem = () => {
         content="Are you sure you want to block this recruiter? They will no longer be able to access the platform."
         confirmText="Block"
         cancelText="Cancel"
-        isLoading={isLoading}
+        isLoading={isChanging}
         confirmColor="warning"
       />
 

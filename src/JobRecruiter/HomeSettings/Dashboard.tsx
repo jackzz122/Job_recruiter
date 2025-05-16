@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import LinearProgress from "@mui/material/LinearProgress";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import Grid2 from "@mui/material/Grid2";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
@@ -13,6 +11,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
 
 import {
   TrendingUp as TrendingUpIcon,
@@ -20,104 +19,105 @@ import {
   Work as WorkIcon,
   Assessment as AssessmentIcon,
   CheckCircle as CheckCircleIcon,
-  Schedule as ScheduleIcon,
-  Person as PersonIcon,
+  FileDownload as FileDownloadIcon,
 } from "@mui/icons-material";
+
+import { useGetJobPostingsQuery } from "../../redux/feature/job/jobApiSlice";
+import { statusJob } from "../../types/JobType";
+import * as XLSX from "xlsx";
+import { StatCard } from "./components/StatCard";
+import { CompanyType } from "../../types/CompanyType";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/feature/user/userSlice";
 
 // Types for our dashboard data
 interface DashboardStats {
   totalJobs: number;
-  activeCandidates: number;
+  activeJobs: number;
   totalApplications: number;
   conversionRate: number;
 }
 
-// Mock data - Replace with actual API calls
-const mockStats: DashboardStats = {
-  totalJobs: 150,
-  activeCandidates: 1200,
-  totalApplications: 450,
-  conversionRate: 25,
-};
-
-const StatCard = ({
-  title,
-  value,
-  icon: Icon,
-}: {
-  title: string;
-  value: number;
-  icon: React.ElementType;
-  color: string;
-}) => (
-  <Card
-    sx={{
-      height: "100%",
-      background: "linear-gradient(135deg, #fff 0%, #fff 100%)",
-      boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
-      transition: "transform 0.2s",
-      "&:hover": {
-        transform: "translateY(-5px)",
-      },
-    }}
-  >
-    <CardContent>
-      <Stack direction="row" justifyContent="space-between" alignItems="center">
-        <Box>
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 1 }}>
-            {title}
-          </Typography>
-          <Typography
-            variant="h4"
-            sx={{
-              color: "#FF6B35",
-              fontWeight: "bold",
-            }}
-          >
-            {value}
-          </Typography>
-        </Box>
-        <Box
-          sx={{
-            p: 2,
-            borderRadius: "50%",
-            bgcolor: "#FFF5F0",
-            color: "#FF6B35",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Icon fontSize="large" />
-        </Box>
-      </Stack>
-    </CardContent>
-  </Card>
-);
-
 export const Dashboard = () => {
-  const [loading, setLoading] = useState(true);
-  const [stats] = useState<DashboardStats>(mockStats);
+  const user = useSelector(selectUser);
+  const { data: jobs, isLoading } = useGetJobPostingsQuery(
+    (user?.companyId as CompanyType)?._id || "",
+    {
+      skip: !user?.companyId,
+    }
+  );
+
+  const [stats, setStats] = useState<DashboardStats>({
+    totalJobs: 0,
+    activeJobs: 0,
+    totalApplications: 0,
+    conversionRate: 0,
+  });
 
   useEffect(() => {
-    // Simulate API call
-    const fetchDashboardData = async () => {
-      try {
-        // Replace with actual API call
-        // const response = await fetch('/api/dashboard');
-        // const data = await response.json();
-        // setStats(data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching dashboard data:", error);
-        setLoading(false);
-      }
-    };
+    if (jobs?.data) {
+      const activeJobs = jobs.data.filter(
+        (job) => job.status === statusJob.OnGoing
+      );
+      const totalApplications = activeJobs.reduce(
+        (acc, job) => acc + (job.listAccount?.length || 0),
+        0
+      );
+      const conversionRate =
+        activeJobs.length > 0
+          ? Math.round((totalApplications / activeJobs.length) * 100)
+          : 0;
 
-    fetchDashboardData();
-  }, []);
+      setStats({
+        totalJobs: jobs.data.length,
+        activeJobs: activeJobs.length,
+        totalApplications,
+        conversionRate,
+      });
+    }
+  }, [jobs]);
 
-  if (loading) {
+  const handleExportToExcel = () => {
+    if (!jobs?.data) return;
+
+    const activeJobs = jobs.data.filter(
+      (job) => job.status === statusJob.OnGoing
+    );
+
+    // Prepare jobs data
+    const jobsData = activeJobs.map((job) => ({
+      "Job Title": job.title,
+      Status: job.status,
+      Applicants: job.listAccount?.length || 0,
+      "Created At": new Date(job.createdAt).toLocaleDateString(),
+      Location: job.location,
+    }));
+
+    // Prepare applications data
+    const applicationsData = activeJobs.flatMap((job) =>
+      (job.listAccount || []).map((applicant) => ({
+        "Job Title": job.title,
+        "Applied Date": new Date(job.createdAt).toLocaleDateString(),
+        Status: applicant.status || "Pending",
+      }))
+    );
+
+    // Create workbook with multiple sheets
+    const wb = XLSX.utils.book_new();
+
+    // Add jobs sheet
+    const jobsSheet = XLSX.utils.json_to_sheet(jobsData);
+    XLSX.utils.book_append_sheet(wb, jobsSheet, "Active Jobs");
+
+    // Add applications sheet
+    const applicationsSheet = XLSX.utils.json_to_sheet(applicationsData);
+    XLSX.utils.book_append_sheet(wb, applicationsSheet, "Applications");
+
+    // Save the file
+    XLSX.writeFile(wb, "recruiter_dashboard_report.xlsx");
+  };
+
+  if (isLoading) {
     return (
       <Box
         sx={{
@@ -143,16 +143,35 @@ export const Dashboard = () => {
           borderRadius: 2,
         }}
       >
-        <Typography
-          variant="h4"
-          sx={{
-            mb: 3,
-            color: "#FF6B35",
-            fontWeight: "bold",
-          }}
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={3}
         >
-          Dashboard Overview
-        </Typography>
+          <Typography
+            variant="h4"
+            sx={{
+              color: "#FF6B35",
+              fontWeight: "bold",
+            }}
+          >
+            Dashboard Overview
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<FileDownloadIcon />}
+            onClick={handleExportToExcel}
+            sx={{
+              bgcolor: "#FF6B35",
+              "&:hover": {
+                bgcolor: "#FF8B5A",
+              },
+            }}
+          >
+            Export to Excel
+          </Button>
+        </Stack>
 
         <Grid2 container spacing={3}>
           <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
@@ -165,9 +184,9 @@ export const Dashboard = () => {
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
             <StatCard
-              title="Active Candidates"
-              value={stats.activeCandidates}
-              icon={PeopleIcon}
+              title="Active Jobs"
+              value={stats.activeJobs}
+              icon={AssessmentIcon}
               color="success"
             />
           </Grid2>
@@ -175,13 +194,13 @@ export const Dashboard = () => {
             <StatCard
               title="Total Applications"
               value={stats.totalApplications}
-              icon={AssessmentIcon}
+              icon={PeopleIcon}
               color="info"
             />
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
             <StatCard
-              title="Conversion Rate"
+              title="Applications per Job"
               value={stats.conversionRate}
               icon={TrendingUpIcon}
               color="warning"
@@ -191,7 +210,7 @@ export const Dashboard = () => {
       </Paper>
 
       <Grid2 container spacing={3}>
-        <Grid2 size={{ xs: 12, sm: 6, md: 8 }}>
+        <Grid2 size={{ xs: 12, md: 8 }}>
           <Paper
             elevation={0}
             sx={{
@@ -209,52 +228,34 @@ export const Dashboard = () => {
                 fontWeight: "bold",
               }}
             >
-              Recent Activity
+              Recent Applications
             </Typography>
             <List sx={{ width: "100%" }}>
-              <ListItem>
-                <ListItemIcon>
-                  <CheckCircleIcon sx={{ color: "#FF6B35" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="New Application Received"
-                  secondary="Frontend Developer position"
-                />
-                <Typography variant="caption" color="text.secondary">
-                  2 hours ago
-                </Typography>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemIcon>
-                  <ScheduleIcon sx={{ color: "#FF6B35" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Interview Scheduled"
-                  secondary="Senior Backend Developer"
-                />
-                <Typography variant="caption" color="text.secondary">
-                  5 hours ago
-                </Typography>
-              </ListItem>
-              <Divider />
-              <ListItem>
-                <ListItemIcon>
-                  <PersonIcon sx={{ color: "#FF6B35" }} />
-                </ListItemIcon>
-                <ListItemText
-                  primary="New Candidate Registered"
-                  secondary="John Doe - Full Stack Developer"
-                />
-                <Typography variant="caption" color="text.secondary">
-                  1 day ago
-                </Typography>
-              </ListItem>
+              {jobs?.data
+                ?.filter((job) => job.status === statusJob.OnGoing)
+                .slice(0, 5)
+                .map((job) => (
+                  <Box key={job._id}>
+                    <ListItem>
+                      <ListItemIcon>
+                        <CheckCircleIcon sx={{ color: "#FF6B35" }} />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={job.title}
+                        secondary={`${job.listAccount?.length || 0} applicants`}
+                      />
+                      <Typography variant="caption" color="text.secondary">
+                        {new Date(job.createdAt).toLocaleDateString()}
+                      </Typography>
+                    </ListItem>
+                    <Divider />
+                  </Box>
+                ))}
             </List>
           </Paper>
         </Grid2>
 
-        <Grid2 size={{ xs: 12, sm: 6, md: 4 }}>
+        <Grid2 size={{ xs: 12, md: 4 }}>
           <Paper
             elevation={0}
             sx={{
@@ -272,19 +273,19 @@ export const Dashboard = () => {
                 fontWeight: "bold",
               }}
             >
-              Job Categories
+              Job Status
             </Typography>
             <Stack spacing={2}>
               <Box>
                 <Stack direction="row" justifyContent="space-between" mb={1}>
-                  <Typography variant="body2">IT & Software</Typography>
+                  <Typography variant="body2">Active Jobs</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    40%
+                    {stats.activeJobs}
                   </Typography>
                 </Stack>
                 <LinearProgress
                   variant="determinate"
-                  value={40}
+                  value={(stats.activeJobs / stats.totalJobs) * 100}
                   sx={{
                     height: 8,
                     borderRadius: 4,
@@ -297,54 +298,17 @@ export const Dashboard = () => {
               </Box>
               <Box>
                 <Stack direction="row" justifyContent="space-between" mb={1}>
-                  <Typography variant="body2">Marketing</Typography>
+                  <Typography variant="body2">Total Applications</Typography>
                   <Typography variant="body2" color="text.secondary">
-                    30%
+                    {stats.totalApplications}
                   </Typography>
                 </Stack>
                 <LinearProgress
                   variant="determinate"
-                  value={30}
-                  sx={{
-                    height: 8,
-                    borderRadius: 4,
-                    backgroundColor: "#FFF5F0",
-                    "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#FF6B35",
-                    },
-                  }}
-                />
-              </Box>
-              <Box>
-                <Stack direction="row" justifyContent="space-between" mb={1}>
-                  <Typography variant="body2">Sales</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    20%
-                  </Typography>
-                </Stack>
-                <LinearProgress
-                  variant="determinate"
-                  value={20}
-                  sx={{
-                    height: 8,
-                    borderRadius: 4,
-                    backgroundColor: "#FFF5F0",
-                    "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#FF6B35",
-                    },
-                  }}
-                />
-              </Box>
-              <Box>
-                <Stack direction="row" justifyContent="space-between" mb={1}>
-                  <Typography variant="body2">HR</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    10%
-                  </Typography>
-                </Stack>
-                <LinearProgress
-                  variant="determinate"
-                  value={10}
+                  value={Math.min(
+                    (stats.totalApplications / (stats.activeJobs * 10)) * 100,
+                    100
+                  )}
                   sx={{
                     height: 8,
                     borderRadius: 4,
