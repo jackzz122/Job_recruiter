@@ -92,9 +92,6 @@ export const EmployeeItem = ({
           if (account?.linkPdf) {
             window.open(account?.linkPdf, "_blank");
           }
-          if (account?.status !== statusApplication.Reviewing) {
-            toast.success("Change status");
-          }
         }
       }
     }
@@ -304,12 +301,6 @@ export const EmployeeItem = ({
         onClose={() => setOpenCoverLetter(false)}
         maxWidth="sm"
         fullWidth
-        PaperProps={{
-          sx: {
-            borderRadius: 2,
-            padding: 2,
-          },
-        }}
       >
         <DialogTitle
           sx={{

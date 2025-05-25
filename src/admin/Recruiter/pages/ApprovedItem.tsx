@@ -1,31 +1,40 @@
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
-import { pendingType } from "../../../types/pendingType";
 import { useState } from "react";
 import {
-  useChangeStatusPendingItemMutation,
   useDeletePendingItemMutation,
-  useGetPendingListQuery,
+  useGetListRecruiterCompanyAccountQuery,
+  useBlockRecruiterCompanyAccountMutation,
 } from "../../../redux/feature/pending/pendingApiSlice";
 import { toast } from "react-toastify";
 import { RecruitItem } from "../components/RecruitItem";
-import { TableBody, TableCell } from "@mui/material";
-import { PendingStatus } from "../../../types/PendingStatus";
+import { TableBody, TableCell, Box, Typography } from "@mui/material";
 import { ConfirmationDialog } from "../components/ConfirmationDialog";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+
+export interface RecruiterAccount {
+  _id: string;
+  avatarIMG: string;
+  name: string;
+  companyName: string;
+  email: string;
+  status: string;
+  phone: string;
+  createdAt: string;
+}
 
 export const ApprovedItem = () => {
-  const { data: pendingList } = useGetPendingListQuery();
-
+  const { data: recruiterAccounts } = useGetListRecruiterCompanyAccountQuery();
   const [openBlockDialog, setOpenBlockDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [changeStatusPendingItem, { isLoading: isChanging }] =
-    useChangeStatusPendingItemMutation();
+  const [blockRecruiter, { isLoading: isBlocking }] =
+    useBlockRecruiterCompanyAccountMutation();
   const [id, setId] = useState<string>("");
-  const [data, setData] = useState<pendingType | null>(null);
+  const [data, setData] = useState<RecruiterAccount | null>(null);
   const [deletePending, { isLoading: isDeleting }] =
     useDeletePendingItemMutation();
 
-  const handleBlock = (data: pendingType) => {
+  const handleBlock = (data: RecruiterAccount) => {
     setOpenBlockDialog(true);
     setData(data);
   };
@@ -35,13 +44,10 @@ export const ApprovedItem = () => {
     setId(id);
   };
 
-  const handleConfirmBlock = async (data: pendingType) => {
+  const handleConfirmBlock = async (data: RecruiterAccount) => {
     try {
-      const response = await changeStatusPendingItem({
-        status: PendingStatus.BLOCKED,
-        id: data._id,
-      });
-      if (response?.data?.success) {
+      const response = await blockRecruiter(data._id).unwrap();
+      if (response.success) {
         toast.success("Recruiter blocked successfully!");
         setOpenBlockDialog(false);
       }
@@ -61,46 +67,71 @@ export const ApprovedItem = () => {
       console.error("Delete error:", err);
     }
   };
-  const filterForApproved = pendingList?.data?.filter(
-    (approved) => approved.status === PendingStatus.APPROVED
-  );
-  const getApproved = filterForApproved?.map((approved) => {
-    return (
-      <TableRow key={approved._id} hover>
-        <RecruitItem props={approved}>
+
+  const getApprovedRecruiters = recruiterAccounts?.data
+    ?.filter((recruiter: RecruiterAccount) => recruiter.status === "approve")
+    .map((recruiter: RecruiterAccount) => (
+      <TableRow key={recruiter._id} hover>
+        <RecruitItem props={recruiter}>
           <Button
             fullWidth
             sx={{ marginBottom: 2 }}
             variant="outlined"
             color="warning"
-            onClick={() => handleBlock(approved)}
-            disabled={isChanging}
+            onClick={() => handleBlock(recruiter)}
+            disabled={isBlocking}
           >
-            Blocked
+            Block
           </Button>
           <Button
             fullWidth
             sx={{ border: "1px solid red", color: "red" }}
             variant="outlined"
-            onClick={() => handleDelete(approved._id)}
+            onClick={() => handleDelete(recruiter._id)}
             disabled={isDeleting}
           >
             Delete
           </Button>
         </RecruitItem>
       </TableRow>
-    );
-  });
+    ));
+
+  const hasApprovedRecruiters = recruiterAccounts?.data?.some(
+    (recruiter: RecruiterAccount) => recruiter.status === "approve"
+  );
 
   return (
     <>
       <TableBody>
-        {filterForApproved && filterForApproved?.length > 0 ? (
-          getApproved
+        {hasApprovedRecruiters ? (
+          getApprovedRecruiters
         ) : (
           <TableRow>
-            <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
-              No approved recruiters found
+            <TableCell colSpan={7}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  py: 8,
+                  gap: 2,
+                }}
+              >
+                <CheckCircleIcon
+                  sx={{
+                    fontSize: 64,
+                    color: "text.secondary",
+                    opacity: 0.5,
+                  }}
+                />
+                <Typography variant="h6" color="text.secondary">
+                  No Approved Recruiters
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  There are currently no approved recruiters in the system.
+                </Typography>
+              </Box>
             </TableCell>
           </TableRow>
         )}
@@ -109,12 +140,12 @@ export const ApprovedItem = () => {
       <ConfirmationDialog
         open={openBlockDialog}
         onClose={() => setOpenBlockDialog(false)}
-        onConfirm={() => handleConfirmBlock(data as pendingType)}
+        onConfirm={() => handleConfirmBlock(data as RecruiterAccount)}
         title="Confirm Block"
         content="Are you sure you want to block this recruiter? They will no longer be able to access the platform."
         confirmText="Block"
         cancelText="Cancel"
-        isLoading={isChanging}
+        isLoading={isBlocking}
         confirmColor="warning"
       />
 

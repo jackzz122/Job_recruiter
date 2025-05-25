@@ -1,11 +1,5 @@
 import { ResponseType } from "./ResponseType";
 
-export type JobType = {
-  title: string;
-  sizingPeople: number;
-  description: [];
-  salaryRange: number;
-};
 export enum statusApplication {
   Submitted = "Submitted",
   Reviewing = "Reviewing",
@@ -17,6 +11,19 @@ export enum statusJob {
   Stop = "stop",
   Close = "close",
 }
+export enum statusCompany {
+  APPROVED = "approve",
+  PENDING = "pending",
+  REJECTED = "blocked",
+}
+export type JobType = {
+  _id: string;
+  title: string;
+  sizingPeople: number;
+  description: [];
+  salaryRange: number;
+  status: statusJob;
+};
 
 interface DescriptionSection {
   mainText: string;
@@ -70,12 +77,14 @@ export type candidateJobPostingType = {
 // For API responses
 export interface JobResponse {
   _id: string;
-  accountId: { _id: string; fullname: string };
+  accountId: string | { _id: string; fullname: string };
   title: string;
   sizingPeople: number;
   location: string;
   applicationDeadline: string;
-  companyId: string | { _id: string; companyName: string; logo: string };
+  companyId:
+    | string
+    | { _id: string; companyName: string; logo: string; status: statusCompany };
   experience: number;
   startDate: string;
   majorId: { value: string }[];

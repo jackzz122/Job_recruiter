@@ -37,7 +37,7 @@ export const CardItemCompanyList = ({ company }: { company: CompanyType }) => {
             borderBottom: "1px solid",
             borderColor: "divider",
           }}
-          image={company.logo || "/bss_avatar.png"}
+          image={company.logo || "/companyNotFound.png"}
           title={company.companyName}
         />
         <Box

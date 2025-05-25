@@ -6,6 +6,8 @@ import { JobAppliedItem } from "../components/JobAppliedItem";
 import { useEffect, useState } from "react";
 import { JobResponse } from "../../../../types/JobType";
 import { NotFoundList } from "../components/NotFoundList";
+import { PendingStatus } from "../../../../types/PendingStatus";
+import { CompanyType } from "../../../../types/CompanyType";
 
 export const JobApplied = () => {
   const user = useSelector(selectUser);
@@ -38,10 +40,14 @@ export const JobApplied = () => {
     );
   }
 
-  if (!appliedJobs || appliedJobs.length === 0) {
+  if (
+    !appliedJobs ||
+    appliedJobs.filter(
+      (job) => (job.companyId as CompanyType).status === PendingStatus.APPROVED
+    ).length === 0
+  ) {
     return <NotFoundList title="job applications" content="apply for jobs" />;
   }
-
   return (
     <Box sx={{ padding: "16px 0" }}>
       <Typography variant="h6" fontWeight="bold" marginBottom={2}>

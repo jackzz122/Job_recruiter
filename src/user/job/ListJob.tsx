@@ -21,8 +21,9 @@ import Pagination from "@mui/material/Pagination";
 import { CardJob } from "./components/Card/CardJob";
 import { useGetAllJobsQuery } from "../../redux/feature/job/jobApiSlice";
 import { colorButtonOrange } from "../../themeContext";
-import { statusJob } from "../../types/JobType";
+import { statusCompany, statusJob } from "../../types/JobType";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
+import { CompanyType } from "../../types/CompanyType";
 
 const LOCATIONS = ["Remote", "New York, NY", "San Francisco, CA", "Boston, MA"];
 const EXPERIENCE_LEVELS = ["Entry Level", "Mid Level", "Senior Level"];
@@ -43,11 +44,6 @@ export const ListJob = () => {
   ) => {
     setPage(value);
   };
-  const checkJobExpired = jobList?.data.filter((job) => {
-    const now = new Date().getTime();
-    const deadline = new Date(job.applicationDeadline).getTime();
-    return job.status === statusJob.OnGoing && deadline >= now;
-  });
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Header */}
@@ -185,10 +181,21 @@ export const ListJob = () => {
       {isLoading && <Typography>Loading</Typography>}
       {jobList && (
         <Stack spacing={3}>
-          {checkJobExpired && checkJobExpired?.length > 0 ? (
-            jobList.data.map((job) => <CardJob key={job._id} job={job} />)
+          {jobList.data.filter(
+            (job) =>
+              job.status === statusJob.OnGoing &&
+              (job.companyId as CompanyType).status === statusCompany.APPROVED
+          ).length > 0 ? (
+            jobList.data
+              .filter(
+                (job) =>
+                  job.status === statusJob.OnGoing &&
+                  (job.companyId as CompanyType).status ===
+                    statusCompany.APPROVED
+              )
+              .map((job) => <CardJob key={job._id} job={job} />)
           ) : (
-            <Box
+            <Card
               sx={{
                 display: "flex",
                 flexDirection: "column",
@@ -199,37 +206,55 @@ export const ListJob = () => {
                 backgroundColor: "white",
                 borderRadius: 2,
                 boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+                minHeight: "400px",
               }}
             >
               <WorkOutlineIcon
                 sx={{
-                  fontSize: 64,
-                  color: "text.secondary",
+                  fontSize: 80,
+                  color: colorButtonOrange,
                   opacity: 0.5,
-                  mb: 2,
+                  mb: 3,
                 }}
               />
               <Typography
-                variant="h6"
+                variant="h5"
                 sx={{
-                  color: "text.secondary",
-                  fontWeight: 500,
-                  mb: 1,
+                  color: "text.primary",
+                  fontWeight: 600,
+                  mb: 2,
                 }}
               >
-                Không tìm thấy công việc phù hợp
+                No Jobs Found
               </Typography>
               <Typography
-                variant="body2"
+                variant="body1"
                 sx={{
                   color: "text.secondary",
-                  opacity: 0.7,
                   textAlign: "center",
+                  maxWidth: "400px",
+                  mb: 3,
                 }}
               >
-                Hãy thử tìm kiếm với các tiêu chí khác hoặc quay lại sau
+                We couldn't find any jobs matching your criteria. Try adjusting
+                your filters or search terms.
               </Typography>
-            </Box>
+              <Button
+                variant="outlined"
+                startIcon={<FilterIcon />}
+                onClick={() => setShowFilters(true)}
+                sx={{
+                  borderColor: colorButtonOrange,
+                  color: colorButtonOrange,
+                  "&:hover": {
+                    borderColor: colorButtonOrange,
+                    backgroundColor: "rgba(255, 152, 0, 0.04)",
+                  },
+                }}
+              >
+                Adjust Filters
+              </Button>
+            </Card>
           )}
         </Stack>
       )}

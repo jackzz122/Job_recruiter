@@ -19,7 +19,7 @@ export const ItemList = ({ id, children, onEdit, type }: ItemListProps) => {
     if (onEdit) {
       onEdit(id);
     } else {
-      console.log(`Edit item with id: ${id}`);
+      toast.error(`Edit item with id: ${id}`);
     }
   };
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
@@ -31,11 +31,11 @@ export const ItemList = ({ id, children, onEdit, type }: ItemListProps) => {
         } as { _id: string } & Partial<Omit<T, "_id">>,
       });
       if (response.data?.success) {
-        toast.success(response.data?.message);
+        toast.success(response.data?.message || "Delete success");
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Delete failed");
     }
   };
 

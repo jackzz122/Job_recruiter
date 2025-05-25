@@ -25,7 +25,7 @@ export const ListOfInformation = ({
       </Typography>
       <Typography sx={{ marginBlock: "1rem" }} variant="body2">
         {time && <AccessTimeIcon sx={{ marginRight: "0.5rem" }} />}
-        Đã đăng {time}
+        {time}
       </Typography>
     </>
   );

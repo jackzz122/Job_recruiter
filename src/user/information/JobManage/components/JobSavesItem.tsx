@@ -21,7 +21,7 @@ export const JobSavesItem = ({ job }: { job: JobSaveResponse }) => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Remove failed");
     }
   };
   return (
@@ -44,7 +44,7 @@ export const JobSavesItem = ({ job }: { job: JobSaveResponse }) => {
           >
             <Box>
               <img
-                src="/bss_avatar.png"
+                src={job.companyId.logo || "/companyNotFound.png"}
                 alt=""
                 className="w-20 h-20 rounded-2xl border border-gray-300"
               />

@@ -93,7 +93,9 @@ export const CompanyInfo = () => {
             >
               <Avatar
                 src={
-                  companyInfor?.logo ? companyInfor?.logo : "/bss_avatar.png"
+                  companyInfor?.logo
+                    ? companyInfor?.logo
+                    : "/companyNotFound.png"
                 }
                 sx={{
                   width: 160,

@@ -8,15 +8,17 @@ export const ListOfRequirement = ({
 }) => {
   return (
     <Stack direction="row" spacing={1} marginBlock={1}>
-      {listOfRequire?.map((require, index) => {
-        return (
-          <Chip
-            sx={{ color: "white", bgcolor: colorButtonOrange }}
-            key={index}
-            label={require.value}
-          />
-        );
-      })}
+      {listOfRequire
+        ?.filter((require) => require.value !== "")
+        .map((require, index) => {
+          return (
+            <Chip
+              sx={{ color: "white", bgcolor: colorButtonOrange }}
+              key={index}
+              label={require.value}
+            />
+          );
+        })}
     </Stack>
   );
 };

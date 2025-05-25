@@ -1,31 +1,30 @@
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
-import { pendingType } from "../../../types/pendingType";
 import { useState } from "react";
 import {
-  useChangeStatusPendingItemMutation,
   useDeletePendingItemMutation,
-  useGetPendingListQuery,
+  useGetListRecruiterCompanyAccountQuery,
+  useUnblockRecruiterCompanyAccountMutation,
 } from "../../../redux/feature/pending/pendingApiSlice";
 import { toast } from "react-toastify";
 import { RecruitItem } from "../components/RecruitItem";
-import { TableBody, TableCell } from "@mui/material";
-import { PendingStatus } from "../../../types/PendingStatus";
+import { TableBody, TableCell, Box, Typography } from "@mui/material";
 import { ConfirmationDialog } from "../components/ConfirmationDialog";
+import { RecruiterAccount } from "./ApprovedItem";
+import BlockIcon from "@mui/icons-material/Block";
 
 export const BlockedItem = () => {
-  const { data: pendingList } = useGetPendingListQuery();
-
+  const { data: recruiterAccounts } = useGetListRecruiterCompanyAccountQuery();
   const [openUnblockDialog, setOpenUnblockDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [changeStatusPendingItem, { isLoading: isChanging }] =
-    useChangeStatusPendingItemMutation();
+  const [unblockRecruiter, { isLoading: isUnblocking }] =
+    useUnblockRecruiterCompanyAccountMutation();
   const [id, setId] = useState<string>("");
-  const [data, setData] = useState<pendingType | null>(null);
+  const [data, setData] = useState<RecruiterAccount | null>(null);
   const [deletePending, { isLoading: isDeleting }] =
     useDeletePendingItemMutation();
 
-  const handleUnblock = (data: pendingType) => {
+  const handleUnblock = (data: RecruiterAccount) => {
     setOpenUnblockDialog(true);
     setData(data);
   };
@@ -35,26 +34,12 @@ export const BlockedItem = () => {
     setId(id);
   };
 
-  const handleConfirmUnblock = async (data: pendingType) => {
+  const handleConfirmUnblock = async (data: RecruiterAccount) => {
     try {
-      if (data.prevStatus === PendingStatus.APPROVED) {
-        const response = await changeStatusPendingItem({
-          status: PendingStatus.APPROVED,
-          id: data._id,
-        });
-        if (response?.data?.success) {
-          toast.success("Recruiter unblocked successfully!");
-          setOpenUnblockDialog(false);
-        }
-      } else if (data.prevStatus === PendingStatus.PENDING) {
-        const response = await changeStatusPendingItem({
-          status: PendingStatus.PENDING,
-          id: data._id,
-        });
-        if (response?.data?.success) {
-          toast.success("Recruiter unblocked successfully!");
-          setOpenUnblockDialog(false);
-        }
+      const response = await unblockRecruiter(data._id).unwrap();
+      if (response.success) {
+        toast.success("Recruiter unblocked successfully!");
+        setOpenUnblockDialog(false);
       }
     } catch (err) {
       toast.error("Failed to unblock recruiter. Please try again.");
@@ -73,20 +58,18 @@ export const BlockedItem = () => {
     }
   };
 
-  const filterForBlocked = pendingList?.data?.filter(
-    (recruiter) => recruiter.status === PendingStatus.BLOCKED
-  );
-  const getBlocked = filterForBlocked?.map((blocked) => {
-    return (
-      <TableRow key={blocked._id} hover>
-        <RecruitItem props={blocked}>
+  const getBlockedRecruiters = recruiterAccounts?.data
+    ?.filter((recruiter: RecruiterAccount) => recruiter.status === "blocked")
+    .map((recruiter: RecruiterAccount) => (
+      <TableRow key={recruiter._id} hover>
+        <RecruitItem props={recruiter}>
           <Button
             fullWidth
             sx={{ marginBottom: 2 }}
             variant="outlined"
             color="success"
-            onClick={() => handleUnblock(blocked)}
-            disabled={isChanging}
+            onClick={() => handleUnblock(recruiter)}
+            disabled={isUnblocking}
           >
             Unblock
           </Button>
@@ -94,25 +77,51 @@ export const BlockedItem = () => {
             fullWidth
             sx={{ border: "1px solid red", color: "red" }}
             variant="outlined"
-            onClick={() => handleDelete(blocked._id)}
+            onClick={() => handleDelete(recruiter._id)}
             disabled={isDeleting}
           >
             Delete
           </Button>
         </RecruitItem>
       </TableRow>
-    );
-  });
+    ));
+
+  const hasBlockedRecruiters = recruiterAccounts?.data?.some(
+    (recruiter: RecruiterAccount) => recruiter.status === "blocked"
+  );
 
   return (
     <>
       <TableBody>
-        {filterForBlocked && filterForBlocked?.length > 0 ? (
-          getBlocked
+        {hasBlockedRecruiters ? (
+          getBlockedRecruiters
         ) : (
           <TableRow>
-            <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
-              No blocked recruiters found
+            <TableCell colSpan={7}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  py: 8,
+                  gap: 2,
+                }}
+              >
+                <BlockIcon
+                  sx={{
+                    fontSize: 64,
+                    color: "text.secondary",
+                    opacity: 0.5,
+                  }}
+                />
+                <Typography variant="h6" color="text.secondary">
+                  No Blocked Recruiters
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  There are currently no blocked recruiters in the system.
+                </Typography>
+              </Box>
             </TableCell>
           </TableRow>
         )}
@@ -121,12 +130,12 @@ export const BlockedItem = () => {
       <ConfirmationDialog
         open={openUnblockDialog}
         onClose={() => setOpenUnblockDialog(false)}
-        onConfirm={() => handleConfirmUnblock(data as pendingType)}
+        onConfirm={() => handleConfirmUnblock(data as RecruiterAccount)}
         title="Confirm Unblock"
         content="Are you sure you want to unblock this recruiter? They will regain access to the platform."
         confirmText="Unblock"
         cancelText="Cancel"
-        isLoading={isChanging}
+        isLoading={isUnblocking}
         confirmColor="success"
       />
 

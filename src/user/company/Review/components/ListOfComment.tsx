@@ -9,10 +9,17 @@ export const ListOfComment = () => {
     skip: !id,
   });
   return (
-    <HeaderOfDetails name={`${commentList?.data.length} Đánh giá`}>
-      {commentList?.data.map((comment) => {
-        return <CommentItem key={comment._id} comment={comment} />;
-      })}
+    <HeaderOfDetails
+      name={`${
+        commentList?.data?.filter((comment) => comment.status === "active")
+          .length
+      } Reviews`}
+    >
+      {commentList?.data
+        ?.filter((comment) => comment.status === "active")
+        .map((comment) => {
+          return <CommentItem key={comment._id} comment={comment} />;
+        })}
     </HeaderOfDetails>
   );
 };

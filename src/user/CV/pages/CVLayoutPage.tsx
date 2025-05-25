@@ -14,7 +14,7 @@ import { colorButtonOrange } from "../../../themeContext";
 import { handleError } from "../../../helper/HandleError/handleError";
 import { usePdfExport } from "../../../hooks/usePdfExport";
 import { RefObject, useRef, useState } from "react";
-
+import { toast } from "react-toastify";
 export const CVLayoutPage = () => {
   const theme = useTheme();
   const location = useLocation();
@@ -50,7 +50,7 @@ export const CVLayoutPage = () => {
       setIsExporting(false);
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message);
     }
   };
 

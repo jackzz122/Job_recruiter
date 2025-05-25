@@ -11,6 +11,8 @@ import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import SearchIcon from "@mui/icons-material/Search";
 import HandshakeIcon from "@mui/icons-material/Handshake";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 
 export const HomePage = () => {
   const features = [
@@ -78,7 +80,7 @@ export const HomePage = () => {
       {/* Hero Section */}
       <Box
         sx={{
-          background: "linear-gradient(45deg, #990000 30%, #ff6b6b 90%)",
+          background: "linear-gradient(135deg, #000000 0%, #1a1a1a 100%)",
           color: "white",
           py: 8,
         }}
@@ -86,26 +88,167 @@ export const HomePage = () => {
         <Container>
           <Grid2 container spacing={4} alignItems="center">
             <Grid2 size={{ xs: 12, md: 6 }}>
-              <Typography variant="h2" fontWeight="bold" gutterBottom>
+              <Typography
+                variant="h2"
+                fontWeight="bold"
+                gutterBottom
+                sx={{
+                  color: "white",
+                  mb: 2,
+                }}
+              >
                 Find Your Dream Job
               </Typography>
-              <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  mb: 4,
+                  opacity: 0.9,
+                  color: "rgba(255, 255, 255, 0.9)",
+                }}
+              >
                 Connect with top employers and discover opportunities that match
                 your skills and aspirations.
               </Typography>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    bgcolor: "#dc2626",
+                    "&:hover": {
+                      bgcolor: "#b91c1c",
+                    },
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 2,
+                  }}
+                >
+                  Start Searching
+                </Button>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    borderColor: "white",
+                    color: "white",
+                    "&:hover": {
+                      borderColor: "white",
+                      bgcolor: "rgba(255, 255, 255, 0.1)",
+                    },
+                    px: 4,
+                    py: 1.5,
+                    borderRadius: 2,
+                  }}
+                >
+                  Learn More
+                </Button>
+              </Stack>
             </Grid2>
             <Grid2 size={{ xs: 12, md: 6 }}>
               <Box
-                component="img"
-                src="/hero-image.png"
-                alt="Job Search"
                 sx={{
-                  width: "100%",
-                  maxWidth: 500,
-                  height: "auto",
-                  display: { xs: "none", md: "block" },
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: 3,
+                  p: 4,
+                  borderRadius: 4,
+                  background: "rgba(255, 255, 255, 0.05)",
+                  backdropFilter: "blur(10px)",
                 }}
-              />
+              >
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      bgcolor: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <WorkIcon sx={{ color: "black" }} />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{ color: "white" }}
+                    >
+                      Diverse Job Opportunities
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                    >
+                      Explore a wide range of positions across various
+                      industries
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      bgcolor: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <BusinessIcon sx={{ color: "black" }} />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{ color: "white" }}
+                    >
+                      Trusted Companies
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                    >
+                      Connect with established and innovative companies
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: "50%",
+                      bgcolor: "white",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <PeopleIcon sx={{ color: "black" }} />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="h6"
+                      fontWeight="bold"
+                      sx={{ color: "white" }}
+                    >
+                      Growing Community
+                    </Typography>
+                    <Typography
+                      variant="body2"
+                      sx={{ color: "rgba(255, 255, 255, 0.8)" }}
+                    >
+                      Join a network of professionals and career seekers
+                    </Typography>
+                  </Box>
+                </Stack>
+              </Box>
             </Grid2>
           </Grid2>
         </Container>
@@ -119,7 +262,7 @@ export const HomePage = () => {
             textAlign="center"
             fontWeight="bold"
             gutterBottom
-            sx={{ mb: 6 }}
+            sx={{ mb: 6, color: "#000000" }}
           >
             Why Choose Us
           </Typography>
@@ -140,7 +283,12 @@ export const HomePage = () => {
                   }}
                 >
                   <Box sx={{ mb: 2 }}>{feature.icon}</Box>
-                  <Typography variant="h5" fontWeight="bold" gutterBottom>
+                  <Typography
+                    variant="h5"
+                    fontWeight="bold"
+                    gutterBottom
+                    sx={{ color: "#000000" }}
+                  >
                     {feature.title}
                   </Typography>
                   <Typography color="text.secondary">
@@ -161,7 +309,7 @@ export const HomePage = () => {
             textAlign="center"
             fontWeight="bold"
             gutterBottom
-            sx={{ mb: 6 }}
+            sx={{ mb: 6, color: "#000000" }}
           >
             How We Help You
           </Typography>
@@ -177,7 +325,7 @@ export const HomePage = () => {
                     textAlign: "center",
                     transition: "all 0.3s ease",
                     "&:hover": {
-                      bgcolor: "primary.main",
+                      bgcolor: "#000000",
                       color: "white",
                       "& .MuiSvgIcon-root": {
                         color: "white",
@@ -208,7 +356,12 @@ export const HomePage = () => {
         <Container>
           <Grid2 container spacing={4} alignItems="center">
             <Grid2 size={{ xs: 12, md: 8 }}>
-              <Typography variant="h4" fontWeight="bold" gutterBottom>
+              <Typography
+                variant="h4"
+                fontWeight="bold"
+                gutterBottom
+                sx={{ color: "#000000" }}
+              >
                 Ready to Find Your Next Opportunity?
               </Typography>
               <Typography variant="body1" color="text.secondary">
@@ -225,7 +378,7 @@ export const HomePage = () => {
                   display: "inline-flex",
                   alignItems: "center",
                   gap: 1,
-                  bgcolor: "primary.main",
+                  bgcolor: "#dc2626",
                   color: "white",
                   px: 3,
                   py: 1.5,
@@ -234,7 +387,7 @@ export const HomePage = () => {
                   cursor: "pointer",
                   transition: "all 0.2s ease",
                   "&:hover": {
-                    bgcolor: "primary.dark",
+                    bgcolor: "#b91c1c",
                     transform: "translateY(-2px)",
                   },
                 }}

@@ -62,7 +62,7 @@ export const CandidateItem = ({ candidate }: { candidate: UserType }) => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message);
     }
   };
 
@@ -75,7 +75,7 @@ export const CandidateItem = ({ candidate }: { candidate: UserType }) => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message);
     }
   };
 

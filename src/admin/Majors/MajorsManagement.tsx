@@ -35,7 +35,7 @@ export const MajorsManagement = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [selectedMajor, setSelectedMajor] = useState<MajorType | null>(null);
-  const [formData, setFormData] = useState({ name: "", level: "" });
+  const [formData, setFormData] = useState({ name: "" });
 
   const { data: majors } = useGetMajorsQuery();
   const [addMajor] = useAddMajorMutation();
@@ -45,10 +45,10 @@ export const MajorsManagement = () => {
   const handleOpenDialog = (major?: MajorType) => {
     if (major) {
       setSelectedMajor(major);
-      setFormData({ name: major.name, level: major.level });
+      setFormData({ name: major.name });
     } else {
       setSelectedMajor(null);
-      setFormData({ name: "", level: "" });
+      setFormData({ name: "" });
     }
     setOpenDialog(true);
   };
@@ -56,7 +56,7 @@ export const MajorsManagement = () => {
   const handleCloseDialog = () => {
     setOpenDialog(false);
     setSelectedMajor(null);
-    setFormData({ name: "", level: "" });
+    setFormData({ name: "" });
   };
 
   const handleOpenDeleteDialog = (major: MajorType) => {
@@ -70,15 +70,20 @@ export const MajorsManagement = () => {
   };
 
   const handleSubmit = async () => {
+    if (!formData.name.trim()) {
+      toast.error("Major name cannot be empty");
+      return;
+    }
+
     try {
       if (selectedMajor) {
         await updateMajor({
           _id: selectedMajor._id,
-          body: { ...selectedMajor, ...formData },
+          body: { name: formData.name },
         });
         toast.success("Major updated successfully");
       } else {
-        await addMajor(formData);
+        await addMajor({ name: formData.name });
         toast.success("Major added successfully");
       }
       handleCloseDialog();
@@ -102,50 +107,62 @@ export const MajorsManagement = () => {
   };
 
   return (
-    <Box sx={{ height: "100%" }}>
-      <Box sx={{ p: 3 }}>
-        <Typography
-          variant="h5"
-          sx={{ color: colorButtonOrange }}
-          fontWeight="bold"
-          gutterBottom
+    <Box sx={{ height: "100%", p: 3 }}>
+      <Stack spacing={3}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
         >
-          Major Management
-        </Typography>
-
-        <Paper sx={{ p: 2, mt: 2 }}>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
-            mb={2}
+          <Typography variant="h5" fontWeight="bold" color={colorButtonOrange}>
+            Major Management
+          </Typography>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => handleOpenDialog()}
+            sx={{
+              bgcolor: colorButtonOrange,
+              "&:hover": { bgcolor: colorButtonOrange },
+              px: 3,
+            }}
           >
-            <Typography variant="h6">Majors</Typography>
-            <Button
-              variant="contained"
-              sx={{ backgroundColor: colorButtonOrange }}
-              startIcon={<AddIcon />}
-              onClick={() => handleOpenDialog()}
-            >
-              Add Major
-            </Button>
-          </Stack>
+            Add New Major
+          </Button>
+        </Stack>
+
+        <Paper
+          elevation={0}
+          sx={{
+            border: "1px solid",
+            borderColor: "divider",
+            borderRadius: 2,
+            overflow: "hidden",
+          }}
+        >
           <TableContainer>
             <Table>
               <TableHead>
-                <TableRow>
-                  <TableCell>Major Name</TableCell>
-                  <TableCell>Level</TableCell>
-                  <TableCell align="right">Actions</TableCell>
+                <TableRow sx={{ bgcolor: "background.default" }}>
+                  <TableCell sx={{ fontWeight: "bold" }}>Major Name</TableCell>
+                  <TableCell align="right" sx={{ fontWeight: "bold" }}>
+                    Actions
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {majors?.data?.map((major) => (
-                  <TableRow key={major._id} hover>
-                    <TableCell>
+                  <TableRow
+                    key={major._id}
+                    hover
+                    sx={{
+                      "&:last-child td, &:last-child th": { border: 0 },
+                      "&:hover": { bgcolor: "action.hover" },
+                    }}
+                  >
+                    <TableCell sx={{ fontSize: "1rem" }}>
                       {major.name.charAt(0).toUpperCase() + major.name.slice(1)}
                     </TableCell>
-                    <TableCell>{major.level}</TableCell>
                     <TableCell align="right">
                       <Stack
                         direction="row"
@@ -154,15 +171,21 @@ export const MajorsManagement = () => {
                       >
                         <IconButton
                           size="small"
-                          color="primary"
                           onClick={() => handleOpenDialog(major)}
+                          sx={{
+                            color: "primary.main",
+                            "&:hover": { bgcolor: "primary.lighter" },
+                          }}
                         >
                           <EditIcon fontSize="small" />
                         </IconButton>
                         <IconButton
                           size="small"
-                          color="error"
                           onClick={() => handleOpenDeleteDialog(major)}
+                          sx={{
+                            color: "error.main",
+                            "&:hover": { bgcolor: "error.lighter" },
+                          }}
                         >
                           <DeleteIcon fontSize="small" />
                         </IconButton>
@@ -174,73 +197,99 @@ export const MajorsManagement = () => {
             </Table>
           </TableContainer>
         </Paper>
+      </Stack>
 
-        {/* Major Dialog */}
-        <Dialog
-          open={openDialog}
-          onClose={handleCloseDialog}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>
-            {selectedMajor ? "Edit Major" : "Add New Major"}
-          </DialogTitle>
-          <DialogContent>
-            <Stack spacing={2} sx={{ mt: 2 }}>
-              <TextField
-                fullWidth
-                label="Major Name"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                placeholder="e.g., Software Engineering"
-              />
-              <TextField
-                fullWidth
-                label="Level"
-                value={formData.level}
-                onChange={(e) =>
-                  setFormData({ ...formData, level: e.target.value })
-                }
-                placeholder="e.g., Bachelor's Degree"
-              />
-            </Stack>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDialog}>Cancel</Button>
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              sx={{ backgroundColor: colorButtonOrange }}
-            >
-              {selectedMajor ? "Update" : "Save"}
-            </Button>
-          </DialogActions>
-        </Dialog>
+      {/* Add/Edit Dialog */}
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            p: 1,
+          },
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>
+          {selectedMajor ? "Edit Major" : "Add New Major"}
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            fullWidth
+            label="Major Name"
+            value={formData.name}
+            onChange={(e) => setFormData({ name: e.target.value })}
+            placeholder="e.g., Software Engineering"
+            sx={{ mt: 2 }}
+            autoFocus
+          />
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            onClick={handleCloseDialog}
+            sx={{
+              color: "text.secondary",
+              "&:hover": { bgcolor: "action.hover" },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            sx={{
+              bgcolor: colorButtonOrange,
+              "&:hover": { bgcolor: colorButtonOrange },
+              px: 3,
+            }}
+          >
+            {selectedMajor ? "Update" : "Save"}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
-        {/* Delete Confirmation Dialog */}
-        <Dialog
-          open={openDeleteDialog}
-          onClose={handleCloseDeleteDialog}
-          maxWidth="sm"
-          fullWidth
-        >
-          <DialogTitle>Confirm Delete</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Are you sure you want to delete the major "{selectedMajor?.name}"?
-              This action cannot be undone.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDeleteDialog}>Cancel</Button>
-            <Button variant="contained" color="error" onClick={handleDelete}>
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </Box>
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 2,
+            p: 1,
+          },
+        }}
+      >
+        <DialogTitle sx={{ pb: 1 }}>Confirm Delete</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the major "{selectedMajor?.name}"?
+            This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 2 }}>
+          <Button
+            onClick={handleCloseDeleteDialog}
+            sx={{
+              color: "text.secondary",
+              "&:hover": { bgcolor: "action.hover" },
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            variant="contained"
+            color="error"
+            onClick={handleDelete}
+            sx={{ px: 3 }}
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

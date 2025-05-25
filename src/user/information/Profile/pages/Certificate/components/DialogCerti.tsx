@@ -56,21 +56,21 @@ export const DialogCerti = ({
           } as certificateType,
         });
         if (response.data?.success) {
-          toast.success(response.data?.message);
+          toast.success(response.data?.message || "Update success");
           setOpenCertificates(false);
           reset();
         }
       } else {
         const response = await updateUser(data);
         if (response.data?.success) {
-          toast.success(response.data?.message);
+          toast.success(response.data?.message || "Update success");
           setOpenCertificates(false);
           reset();
         }
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
   return (

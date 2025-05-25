@@ -1,4 +1,6 @@
 import { loginData, recruiterData, regisData } from "../../../types/AuthType";
+import { ResponseType } from "../../../types/ResponseType";
+import { UserType } from "../../../types/UserType";
 import ApiSlice from "../../api/apiSlice";
 
 function dataForLogin_Register<T>(data: T, url: string) {
@@ -22,9 +24,36 @@ export const authApiSlice = ApiSlice.injectEndpoints({
       query: (userData: regisData) =>
         dataForLogin_Register(userData, "createAccount"),
     }),
+    forgotPassword: builder.mutation<ResponseType<{ id: string }>, string>({
+      query: (email: string) => ({
+        url: "/forgotPassword",
+        method: "POST",
+        body: { email },
+      }),
+    }),
     recruiterRegister: builder.mutation({
       query: (recruiterData: recruiterData) =>
         dataForLogin_Register(recruiterData, "RegisterRecruiter"),
+    }),
+    verifyCode: builder.mutation<
+      ResponseType<UserType>,
+      { id: string; code: string }
+    >({
+      query: ({ id, code }) => ({
+        url: "/verifyCode",
+        method: "POST",
+        body: { id, code },
+      }),
+    }),
+    resetPassword: builder.mutation<
+      ResponseType<UserType>,
+      { id: string; newPassword: string }
+    >({
+      query: ({ id, newPassword }) => ({
+        url: "/resetPassword",
+        method: "POST",
+        body: { id, newPassword },
+      }),
     }),
     userLogOut: builder.mutation<void, void>({
       query: () => ({
@@ -40,4 +69,7 @@ export const {
   useUserRegisterMutation,
   useRecruiterRegisterMutation,
   useUserLogOutMutation,
+  useForgotPasswordMutation,
+  useVerifyCodeMutation,
+  useResetPasswordMutation,
 } = authApiSlice;

@@ -74,7 +74,7 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
 

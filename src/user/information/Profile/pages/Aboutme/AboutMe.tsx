@@ -30,12 +30,12 @@ export const AboutMe = ({ aboutMe }: { aboutMe: string }) => {
     try {
       const response = await updateUser(data);
       if (response.data?.success) {
-        toast.success(response.data.message);
+        toast.success(response.data.message || "Update success");
         setOpenAbout(false);
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
   return (

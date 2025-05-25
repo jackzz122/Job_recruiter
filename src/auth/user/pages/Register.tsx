@@ -34,7 +34,11 @@ export const Register = () => {
   });
   const onSubmitting: SubmitHandler<FormRegisterField> = async (data) => {
     try {
-      const response = await authApi.register(data);
+      const response = await authApi.register({
+        fullname: data.fullname,
+        email: data.email.toLowerCase(),
+        password: data.password,
+      });
       if (response.status === 200) {
         toast.success("Account successfully registered");
         navigate("/", {

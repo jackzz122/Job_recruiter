@@ -53,7 +53,7 @@ export const CardJob = ({ job }: { job: JobResponse }) => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Add favourite failed");
     }
   };
   const handleRemoveJob = async () => {
@@ -65,7 +65,7 @@ export const CardJob = ({ job }: { job: JobResponse }) => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Remove favourite failed");
     }
   };
   return (

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import TextField from "@mui/material/TextField";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -25,15 +25,33 @@ import { colorButtonOrange, styleButton } from "../../themeContext";
 import { ContainerBox } from "../component/ContainerBox";
 import { EmployeeItem } from "./EmployeeItem";
 import { useGetCandidateJobPosingListQuery } from "../../redux/feature/job/jobApiSlice";
+import { selectUser } from "../../redux/feature/user/userSlice";
+import { useSelector } from "react-redux";
+import { CompanyType } from "../../types/CompanyType";
 
 const ITEMS_PER_PAGE = 5;
 
 const List_employ = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [page, setPage] = useState(1);
+  const user = useSelector(selectUser);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const { data: jobPosingInfo, isLoading } =
-    useGetCandidateJobPosingListQuery();
+  const {
+    data: jobPosingInfo,
+    isLoading,
+    refetch,
+  } = useGetCandidateJobPosingListQuery(
+    (user?.companyId as CompanyType)?._id || "",
+    {
+      skip: !user?.companyId,
+    }
+  );
+
+  useEffect(() => {
+    if (user?.companyId) {
+      refetch();
+    }
+  }, [user?.companyId, refetch]);
 
   const filteredJobPostings = useMemo(() => {
     if (!jobPosingInfo?.data) return [];

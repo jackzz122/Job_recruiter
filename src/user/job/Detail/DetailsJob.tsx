@@ -1,46 +1,47 @@
-import { Link } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
 import DetailsInforCompany from "./DetailsInfoCompany";
 import DetailsJobBody from "./DetailsJobBody";
 import DetailsJobHeader from "./DetailsJobHeader";
+import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 export const DetailsJob = () => {
-  const breadCrumbs = [
-    { label: "Trang chủ", path: "/" },
-    { label: "Tất cả việc làm IT", path: "/" },
-    { label: "Tuyển thực tập sinh React/NodeJS", path: null },
-  ];
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
 
   return (
     <Box className="relative min-h-screen">
       <Box className="gradient" />
 
       <Box className="relative z-10 px-10">
-        {/* Breadcrumbs */}
         <Box sx={{ py: 2 }}>
-          <Breadcrumbs
+          <Button
+            startIcon={<ArrowBackIcon />}
+            onClick={handleBack}
             sx={{
               color: "white",
-              "& .MuiBreadcrumbs-separator": { color: "rgba(255,255,255,0.6)" },
+              bgcolor: "rgba(255, 255, 255, 0.1)",
+              backdropFilter: "blur(8px)",
+              border: "1px solid rgba(255, 255, 255, 0.2)",
+              "&:hover": {
+                bgcolor: "rgba(255, 255, 255, 0.2)",
+                border: "1px solid rgba(255, 255, 255, 0.3)",
+              },
+              mb: 2,
+              px: 3,
+              py: 1,
+              borderRadius: 2,
+              transition: "all 0.2s ease",
             }}
           >
-            {breadCrumbs.map((crumb, index) => (
-              <Link
-                key={index}
-                to={crumb.path || "#"}
-                style={{
-                  color: crumb.path ? "rgba(255,255,255,0.8)" : "white",
-                  textDecoration: "none",
-                  fontWeight: crumb.path ? "normal" : "500",
-                }}
-              >
-                {crumb.label}
-              </Link>
-            ))}
-          </Breadcrumbs>
+            Back to Jobs
+          </Button>
         </Box>
 
         {/* Main Content */}

@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { useGenerateTextAiMutation } from "../../../../../redux/feature/user/userApiSlice";
 import { handleError } from "../../../../../helper/HandleError/handleError";
 import CircularProgress from "@mui/material/CircularProgress";
-
+import { toast } from "react-toastify";
 type EditableTextProps = {
   title?: string;
   value: string;
@@ -95,7 +95,7 @@ export const EditableText = ({
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "AI suggestion failed");
     }
   };
 

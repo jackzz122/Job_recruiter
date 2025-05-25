@@ -49,6 +49,7 @@ export const CommentManage = () => {
     if (!commentList?.data) return [];
 
     return (commentList.data as CommentType[])
+      .filter((comment) => comment.status === "active")
       .filter((comment) => {
         const searchLower = searchQuery.toLowerCase();
         return (

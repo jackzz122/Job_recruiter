@@ -4,41 +4,25 @@ import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Chip from "@mui/material/Chip";
-
 import BusinessIcon from "@mui/icons-material/Business";
-type RecruitItemProps = {
-  accountID: {
-    _id: string;
-    fullname: string;
-    email: string;
-    avatarIMG?: string;
-  };
-  companyName: string;
-  phoneNumber: string;
-  createdAt: Date | string;
-  _id: string;
-  status?: string;
-  address?: string;
-  websiteUrl?: string;
-};
+import { RecruiterAccount } from "../pages/ApprovedItem";
+
 export const RecruitItem = ({
   props,
   children,
 }: {
-  props: RecruitItemProps;
+  props: RecruiterAccount;
   children: React.ReactNode;
 }) => {
   return (
     <>
       <TableCell>
         <Stack direction="row" spacing={2} alignItems="center">
-          <Avatar src={props.accountID.avatarIMG || "/default-avatar.png"} />
+          <Avatar src={props.avatarIMG || "/default-avatar.png"} />
           <Box>
-            <Typography variant="subtitle2">
-              {props.accountID.fullname}
-            </Typography>
+            <Typography variant="subtitle2">{props.name}</Typography>
             <Typography variant="body2" color="text.secondary">
-              {props.accountID._id}
+              {props._id}
             </Typography>
           </Box>
         </Stack>
@@ -52,13 +36,13 @@ export const RecruitItem = ({
       <TableCell>
         <Box>
           <Typography variant="body2" color="text.secondary">
-            {props.phoneNumber}
+            {props.phone}
           </Typography>
         </Box>
       </TableCell>
       <TableCell>
         <Box>
-          <Typography variant="body2">{props.accountID.email}</Typography>
+          <Typography variant="body2">{props.email}</Typography>
         </Box>
       </TableCell>
       <TableCell>{new Date(props.createdAt).toLocaleDateString()}</TableCell>

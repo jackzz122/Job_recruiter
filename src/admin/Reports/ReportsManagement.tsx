@@ -16,30 +16,82 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListIcon from "@mui/icons-material/FilterList";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { colorButtonOrange } from "../../themeContext";
 import { ReportItem } from "./components/ReportItem";
 import { useGetReportsQuery } from "../../redux/feature/report/reportApiSlice";
 import { CircularProgress } from "@mui/material";
+import { statusTypeReport } from "../../types/ReportType";
 
 export const ReportsManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [reportType, setReportType] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+
+  const { data: reportList, isLoading, isError } = useGetReportsQuery();
+
+  const filteredReports = useMemo(() => {
+    if (!reportList?.data) return [];
+
+    return reportList.data.filter((report) => {
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch =
+        report.accountId?.fullname?.toLowerCase().includes(searchLower) ||
+        report.accountId?.email?.toLowerCase().includes(searchLower) ||
+        report.target_id?.email?.toLowerCase().includes(searchLower) ||
+        report.reason.reasonTitle.toLowerCase().includes(searchLower);
+
+      const matchesType =
+        reportType === "all" ||
+        (reportType === "job" && report.target_type === "jobPosting") ||
+        (reportType === "company" && report.target_type === "companyInfo") ||
+        (reportType === "comment" && report.target_type === "comment");
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        (statusFilter === "pending" &&
+          report.status === statusTypeReport.PENDING) ||
+        (statusFilter === "resolved" &&
+          report.status === statusTypeReport.RESOLVED) ||
+        (statusFilter === "rejected" &&
+          report.status === statusTypeReport.REJECTED);
+
+      return matchesSearch && matchesType && matchesStatus;
+    });
+  }, [reportList?.data, searchQuery, reportType, statusFilter]);
+
+  const paginatedReports = useMemo(() => {
+    const start = page * rowsPerPage;
+    return filteredReports.slice(start, start + rowsPerPage);
+  }, [filteredReports, page, rowsPerPage]);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+    setPage(0);
   };
 
   const handleReportTypeChange = (event: SelectChangeEvent) => {
     setReportType(event.target.value);
+    setPage(0);
   };
 
   const handleStatusChange = (event: SelectChangeEvent) => {
     setStatusFilter(event.target.value);
+    setPage(0);
   };
 
-  const { data: reportList, isLoading, isError } = useGetReportsQuery();
+  const handleChangePage = (_: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
   return (
     <Box sx={{ p: 3 }}>
       <Typography
@@ -53,16 +105,18 @@ export const ReportsManagement = () => {
 
       <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
         <TextField
-          placeholder="Search reports..."
+          placeholder="Search by name, email, or reason..."
           size="small"
           value={searchQuery}
           onChange={handleSearchChange}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon color="action" />
-              </InputAdornment>
-            ),
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            },
           }}
           sx={{ width: 300 }}
         />
@@ -97,7 +151,17 @@ export const ReportsManagement = () => {
       {/* Reports Table */}
       {isError && <Typography>Error fetching reports</Typography>}
       {isLoading ? (
-        <CircularProgress />
+        <Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+          <CircularProgress />
+        </Box>
+      ) : filteredReports.length === 0 ? (
+        <Paper sx={{ p: 3, textAlign: "center" }}>
+          <Typography color="text.secondary">
+            {searchQuery || reportType !== "all" || statusFilter !== "all"
+              ? "No reports found matching your filters"
+              : "No reports found"}
+          </Typography>
+        </Paper>
       ) : (
         <TableContainer component={Paper}>
           <Table>
@@ -113,19 +177,19 @@ export const ReportsManagement = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {reportList?.data?.map((report) => {
-                return <ReportItem key={report._id} report={report} />;
-              })}
+              {paginatedReports.map((report) => (
+                <ReportItem key={report._id} report={report} />
+              ))}
             </TableBody>
           </Table>
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={100}
-            rowsPerPage={10}
-            page={0}
-            onPageChange={() => {}}
-            onRowsPerPageChange={() => {}}
+            count={filteredReports.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
           />
         </TableContainer>
       )}

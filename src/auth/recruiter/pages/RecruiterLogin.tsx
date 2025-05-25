@@ -25,7 +25,8 @@ export const RecruiterLogin = () => {
   const onSubmitTing: SubmitHandler<FormField> = async (data: FormField) => {
     try {
       await login({
-        ...data,
+        email: data.email.toLowerCase(),
+        password: data.password,
         roleGroup: [RoleName.RECRUIT, RoleName.STAFF_RECRUIT],
       }).unwrap();
       if (!isLoading) {

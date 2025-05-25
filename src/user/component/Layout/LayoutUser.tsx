@@ -15,17 +15,17 @@ const listOfInformations: {
   icon: React.ReactNode;
 }[] = [
   {
-    name: "Hồ sơ",
+    name: "My Info",
     href: "myInfo",
     icon: <PersonOutlineOutlinedIcon />,
   },
   {
-    name: "Việc làm của tôi",
+    name: "Job Manage",
     href: "jobManage",
     icon: <WorkOutlineOutlinedIcon />,
   },
   {
-    name: "Cài đặt",
+    name: "Settings",
     href: "settings",
     icon: <SettingsOutlinedIcon />,
   },
@@ -56,7 +56,7 @@ export const LayoutUser = () => {
         <div className="w-1/4 h-fit bg-white p-4 rounded-lg border border-gray-200 sticky top-20">
           <div className="flex items-center gap-2 mb-2">
             <WavingHandIcon sx={{ color: "red" }} />
-            <p>Xin Chào </p>
+            <p>Hello {user?.fullname}</p>
           </div>
           <Typography variant="h5" fontWeight="bold">
             {user?.fullname}

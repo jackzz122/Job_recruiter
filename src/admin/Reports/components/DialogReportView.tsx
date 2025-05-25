@@ -8,26 +8,20 @@ import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import Chip from "@mui/material/Chip";
 import FlagIcon from "@mui/icons-material/Flag";
-import { getReportItem, statusTypeReport } from "../../../types/ReportType";
-import Avatar from "@mui/material/Avatar";
-import { useUpdateStatusReportMutation } from "../../../redux/feature/report/reportApiSlice";
+import { useGetDetailReportQuery } from "../../../redux/feature/report/reportApiSlice";
+import CircularProgress from "@mui/material/CircularProgress";
+import { CommentType } from "../../../types/CommentType";
+import { CompanyType } from "../../../types/CompanyType";
+import { JobTarget, targetType } from "../../../types/ReportType";
+import { useRef, useEffect } from "react";
 
-interface CommentTarget {
-  content: string;
-}
-
-interface JobTarget {
-  title: string;
-  description: string;
-}
-
-interface CompanyTarget {
-  name: string;
-  description: string;
-}
-
-const isCommentTarget = (target: unknown): target is CommentTarget => {
-  return typeof target === "object" && target !== null && "content" in target;
+const isCommentTarget = (target: unknown): target is CommentType => {
+  return (
+    typeof target === "object" &&
+    target !== null &&
+    "title" in target &&
+    "details" in target
+  );
 };
 
 const isJobTarget = (target: unknown): target is JobTarget => {
@@ -35,46 +29,81 @@ const isJobTarget = (target: unknown): target is JobTarget => {
     typeof target === "object" &&
     target !== null &&
     "title" in target &&
-    "description" in target
+    "sizingPeople" in target &&
+    "minRange" in target &&
+    "maxRange" in target
   );
 };
 
-const isCompanyTarget = (target: unknown): target is CompanyTarget => {
+const isCompanyTarget = (target: unknown): target is CompanyType => {
+  console.log("target", target);
   return (
     typeof target === "object" &&
     target !== null &&
-    "name" in target &&
-    "description" in target
+    "companyName" in target &&
+    "country" in target &&
+    "phoneNumberCompany" in target
   );
 };
 
 export const DialogReportView = ({
   openDialog,
+  isUpdating,
   handleCloseDialog,
   getReportTypeLabel,
-  report,
+  reportId,
   color,
+  onApprove,
+  onReject,
 }: {
   openDialog: boolean;
+  isUpdating: boolean;
   getReportTypeLabel: (type: string) => string;
   handleCloseDialog: () => void;
-  report: getReportItem;
+  reportId: string;
   color: string;
+  onApprove: () => void;
+  onReject: () => void;
 }) => {
-  const getReportContent = () => {
-    const target = report.reportTarget;
-    let content = null;
+  const { data: reportDetail, isLoading } = useGetDetailReportQuery(reportId, {
+    skip: !openDialog,
+  });
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-    if (report.target_type === "comment" && isCommentTarget(target)) {
+  useEffect(() => {
+    if (openDialog && dialogRef.current) {
+      dialogRef.current.focus();
+    }
+  }, [openDialog]);
+
+  const getReportContent = () => {
+    if (!reportDetail?.data) return null;
+
+    const target = reportDetail.data.reportContent;
+    console.log("target", reportDetail.data);
+    let content = null;
+    if (
+      reportDetail.data.targetType === targetType.COMMENT &&
+      isCommentTarget(target)
+    ) {
       content = (
         <Box>
           <Typography variant="subtitle2" color="text.secondary">
             Comment Content
           </Typography>
-          <Typography variant="body1">{target.content}</Typography>
+          <Typography variant="body1">{target.title}</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Why Love: {target.details.whyLove}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Suggestion: {target.details.suggest}
+          </Typography>
         </Box>
       );
-    } else if (report.target_type === "jobPosting" && isJobTarget(target)) {
+    } else if (
+      reportDetail.data.targetType === targetType.JOB &&
+      isJobTarget(target)
+    ) {
       content = (
         <Box>
           <Typography variant="subtitle2" color="text.secondary">
@@ -82,12 +111,15 @@ export const DialogReportView = ({
           </Typography>
           <Typography variant="body1">{target.title}</Typography>
           <Typography variant="body2" color="text.secondary">
-            {target.description}
+            Required People: {target.sizingPeople}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Salary Range: ${target.minRange} - ${target.maxRange}
           </Typography>
         </Box>
       );
     } else if (
-      report.target_type === "companyInfo" &&
+      reportDetail.data.targetType === targetType.COMPANY &&
       isCompanyTarget(target)
     ) {
       content = (
@@ -95,9 +127,12 @@ export const DialogReportView = ({
           <Typography variant="subtitle2" color="text.secondary">
             Company Information
           </Typography>
-          <Typography variant="body1">{target.name}</Typography>
+          <Typography variant="body1">{target.companyName}</Typography>
           <Typography variant="body2" color="text.secondary">
-            {target.description}
+            Country: {target.country}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Companny Phone: {target.phoneNumberCompany}
           </Typography>
         </Box>
       );
@@ -105,15 +140,65 @@ export const DialogReportView = ({
 
     return content;
   };
-  const [updateStatus] = useUpdateStatusReportMutation();
+
+  if (isLoading) {
+    return (
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+        keepMounted={false}
+        disablePortal={false}
+        container={document.body}
+        aria-labelledby="report-dialog-title"
+      >
+        <DialogContent
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "200px",
+          }}
+        >
+          <CircularProgress />
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  if (!reportDetail?.data) {
+    return (
+      <Dialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        maxWidth="md"
+        fullWidth
+        keepMounted={false}
+        disablePortal={false}
+        container={document.body}
+        aria-labelledby="report-dialog-title"
+      >
+        <DialogContent>
+          <Typography color="error">Failed to load report details</Typography>
+        </DialogContent>
+      </Dialog>
+    );
+  }
   return (
     <Dialog
       open={openDialog}
       onClose={handleCloseDialog}
       maxWidth="md"
       fullWidth
+      keepMounted={false}
+      disablePortal={false}
+      container={document.body}
+      aria-labelledby="report-dialog-title"
+      ref={dialogRef}
+      tabIndex={-1}
     >
-      <DialogTitle>Report Details</DialogTitle>
+      <DialogTitle id="report-dialog-title">Report Details</DialogTitle>
       <DialogContent dividers>
         <Stack spacing={3} sx={{ pt: 1 }}>
           <Box>
@@ -122,7 +207,7 @@ export const DialogReportView = ({
             </Typography>
             <Chip
               icon={<FlagIcon />}
-              label={getReportTypeLabel(report.target_type)}
+              label={getReportTypeLabel(reportDetail.data.targetType)}
               color={
                 color as
                   | "primary"
@@ -142,11 +227,16 @@ export const DialogReportView = ({
               Reported By
             </Typography>
             <Stack direction="row" spacing={2} alignItems="center">
-              <Avatar src="/path-to-avatar.jpg" />
               <Box>
-                <Typography>{report.accountId.fullname}</Typography>
+                <Typography>
+                  {typeof reportDetail.data.report.accountId === "string"
+                    ? reportDetail.data.report.accountId
+                    : reportDetail.data.report.accountId.fullname}
+                </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {report.accountId.email}
+                  {typeof reportDetail.data.report.accountId === "string"
+                    ? reportDetail.data.report.accountId
+                    : reportDetail.data.report.accountId.email}
                 </Typography>
               </Box>
             </Stack>
@@ -158,9 +248,15 @@ export const DialogReportView = ({
             </Typography>
             <Stack direction="row" spacing={2} alignItems="center">
               <Box>
-                <Typography>{report.target_id.fullname}</Typography>
+                <Typography>
+                  {typeof reportDetail.data.report.target_id === "string"
+                    ? reportDetail.data.report.target_id
+                    : reportDetail.data.report.target_id.fullname}
+                </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {report.target_id.email}
+                  {typeof reportDetail.data.report.target_id === "string"
+                    ? reportDetail.data.report.target_id
+                    : reportDetail.data.report.target_id.email}
                 </Typography>
               </Box>
             </Stack>
@@ -172,10 +268,12 @@ export const DialogReportView = ({
             <Typography variant="subtitle2" color="text.secondary">
               Reason for Report
             </Typography>
-            <Typography>{report.reason.reasonTitle}</Typography>
-            {report.reason.additionalReason && (
+            <Typography>
+              {reportDetail.data.report.reason.reasonTitle}
+            </Typography>
+            {reportDetail.data.report.reason.additionalReason && (
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                {report.reason.additionalReason}
+                {reportDetail.data.report.reason.additionalReason}
               </Typography>
             )}
           </Box>
@@ -185,7 +283,7 @@ export const DialogReportView = ({
               Report Date
             </Typography>
             <Typography>
-              {new Date(report.createdAt).toLocaleString()}
+              {new Date(reportDetail.data.report.createdAt).toLocaleString()}
             </Typography>
           </Box>
         </Stack>
@@ -194,26 +292,20 @@ export const DialogReportView = ({
         <Button
           variant="outlined"
           color="error"
-          onClick={() => {
-            updateStatus({
-              id: report._id,
-              status: statusTypeReport.REJECTED,
-            });
-            handleCloseDialog();
-          }}
+          onClick={onReject}
+          loading={isUpdating}
+          aria-label="Reject report"
         >
           Reject Report
         </Button>
         <Button
           variant="contained"
           color="success"
+          loading={isUpdating}
           onClick={() => {
-            updateStatus({
-              id: report._id,
-              status: statusTypeReport.RESOLVED,
-            });
-            handleCloseDialog();
+            onApprove();
           }}
+          aria-label="Approve report"
         >
           Approve Report
         </Button>

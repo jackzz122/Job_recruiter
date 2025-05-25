@@ -8,6 +8,7 @@ export type DescriptionCompanyType = {
 
 export type CompanyType = {
   _id: string;
+  accountID: string;
   companyName: string;
   address: string;
   phoneNumber: string;
@@ -18,6 +19,7 @@ export type CompanyType = {
   phoneNumberCompany: string;
   logo: string;
   years: number;
+  status: string;
   overTime: boolean;
   keySkills: { value: string }[];
   description: DescriptionCompanyType[];

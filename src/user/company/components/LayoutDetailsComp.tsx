@@ -6,6 +6,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import { RecruiterComp } from "./RecruiterComp";
 import { useGetJobPostingsQuery } from "../../../redux/feature/job/jobApiSlice";
+import { statusJob } from "../../../types/JobType";
 
 export const LayoutDetailsComp = () => {
   const { id } = useParams();
@@ -66,7 +67,7 @@ export const LayoutDetailsComp = () => {
                   `${isActive ? "text-red-500 font-bold" : ""}`
                 }
               >
-                Giới thiệu
+                Introduction
               </NavLink>
               <NavLink
                 to="reviews"
@@ -74,7 +75,7 @@ export const LayoutDetailsComp = () => {
                   `ml-5 ${isActive ? "text-red-500 font-bold" : ""}`
                 }
               >
-                Đánh giá
+                Reviews
               </NavLink>
             </Box>
             <Box sx={{ flex: 1 }}>
@@ -93,7 +94,8 @@ export const LayoutDetailsComp = () => {
             }}
           >
             <Typography variant="h6" fontWeight="bold">
-              {jobs?.data?.length} việc làm đang tuyển dụng
+              {jobs?.data && jobs?.data?.length > 0 ? jobs?.data?.length : 0}{" "}
+              jobs are hiring
             </Typography>
             <Box
               sx={{
@@ -115,9 +117,15 @@ export const LayoutDetailsComp = () => {
                 },
               }}
             >
-              {jobs?.data?.map((job) => (
-                <RecruiterComp key={job._id} jobDetail={job} />
-              ))}
+              {jobs?.data
+                ?.filter(
+                  (job) =>
+                    job.status === statusJob.OnGoing ||
+                    job.status === statusJob.Stop
+                )
+                .map((job) => (
+                  <RecruiterComp key={job._id} jobDetail={job} />
+                ))}
             </Box>
           </Box>
         </Stack>

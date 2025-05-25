@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -29,17 +29,24 @@ const RecruiterCompany = () => {
   const [page, setPage] = useState(1);
   const navigate = useNavigate();
   const user = useSelector(selectUser);
+  const {
+    data: jobs,
+    isLoading,
+    refetch,
+  } = useGetJobPostingsQuery((user?.companyId as CompanyType)?._id || "", {
+    skip: !user?.companyId,
+  });
 
-  const { data: jobs, isLoading } = useGetJobPostingsQuery(
-    (user?.companyId as CompanyType)?._id || "",
-    {
-      skip: !user?.companyId,
+  useEffect(() => {
+    if (user?.companyId) {
+      console.log("refetch");
+      refetch();
     }
-  );
+  }, [user?.companyId, refetch]);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setPage(1); // Reset to first page on search
+    setPage(1);
   };
 
   const handleCreateJob = () => {

@@ -96,9 +96,9 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
     }),
     getCandidateJobPosingList: builder.query<
       JobTypeResponse<candidateJobPostingType[]>,
-      void
+      string
     >({
-      query: () => "getCandidateFromJobPosting",
+      query: (id) => `getCandidateFromJobPosting/${id}`,
       providesTags: (results) =>
         generateProvidesTags("Jobs", results?.data, (item) => item.jobId),
     }),

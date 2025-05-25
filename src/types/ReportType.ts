@@ -14,6 +14,40 @@ export enum statusTypeReport {
   REJECTED = "rejected",
 }
 
+export type CommentTarget = {
+  _id: string;
+  title: string;
+  details: {
+    whyLove: string;
+    suggest: string;
+  };
+  account_id: {
+    _id: string;
+    fullname: string;
+    email: string;
+  };
+};
+export type JobTarget = {
+  _id: string;
+  title: string;
+  sizingPeople: number;
+  minRange: number;
+  maxRange: number;
+  companyId: {
+    _id: string;
+    companyName: string;
+  };
+};
+export type CompanyTarget = {
+  _id: string;
+  companyName: string;
+  accountID: {
+    _id: string;
+    fullname: string;
+    email: string;
+  };
+};
+
 export type ReasonType = {
   reasonTitle: string;
   additionalReason: string;
@@ -21,10 +55,22 @@ export type ReasonType = {
 
 export type ReportType = {
   _id: string;
-  accountId: string;
-  target_id: string;
+  accountId:
+    | string
+    | {
+        _id: string;
+        fullname: string;
+        email: string;
+      };
+  target_id:
+    | string
+    | {
+        _id: string;
+        email: string;
+        fullname: string;
+      };
   target_type: targetType;
-  reportTarget: string;
+  reportTarget: string | CommentType | JobType | CompanyType;
   reason: ReasonType;
   status: statusTypeReport;
   createdAt: string;

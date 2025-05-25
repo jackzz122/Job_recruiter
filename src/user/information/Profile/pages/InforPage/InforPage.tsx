@@ -110,12 +110,12 @@ export const InforPage = ({
 
       const response = await updateUser(formData);
       if (response.data?.success) {
-        toast.success(response.data?.message);
+        toast.success(response.data?.message || "Update success");
         setOpenBasicInfo(false);
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
   const handleAddImage = (event: React.ChangeEvent<HTMLInputElement>) => {

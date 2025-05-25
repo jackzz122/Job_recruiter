@@ -1,6 +1,5 @@
 import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
-import { pendingType } from "../../../types/pendingType";
 import { useState } from "react";
 import {
   useConfirmPendingMutation,
@@ -10,10 +9,25 @@ import {
 import { toast } from "react-toastify";
 import CircularProgress from "@mui/material/CircularProgress";
 import { RecruitItem } from "../components/RecruitItem";
-import { TableBody } from "@mui/material";
-import { PendingStatus } from "../../../types/PendingStatus";
+import { TableBody, TableCell, Box, Typography } from "@mui/material";
 import { ConfirmationDialog } from "../components/ConfirmationDialog";
-import TableCell from "@mui/material/TableCell";
+import PendingIcon from "@mui/icons-material/Pending";
+import { pendingType } from "../../../types/pendingType";
+import { RecruiterAccount } from "./ApprovedItem";
+
+const transformPendingToRecruiter = (
+  pending: pendingType
+): RecruiterAccount => ({
+  _id: pending._id,
+  avatarIMG: pending.accountID.avatarIMG || "",
+  name: pending.accountID.fullname,
+  companyName: pending.companyName,
+  email: pending.accountID.email,
+  status: pending.status,
+  phone: pending.phoneNumber,
+  createdAt: pending.createdAt.toISOString(),
+});
+
 export const PendingItem = () => {
   const { data: pendingList } = useGetPendingListQuery();
 
@@ -46,7 +60,7 @@ export const PendingItem = () => {
           phoneNumber: data.phoneNumber,
           address: data.address,
           websiteUrl: data.websiteUrl,
-          createdAt: data.createdAt,
+          createdAt: new Date(data.createdAt),
         },
       }).unwrap();
       toast.success("Recruiter verified successfully!");
@@ -67,19 +81,22 @@ export const PendingItem = () => {
       console.error("Delete error:", err);
     }
   };
-  const filterForPending = pendingList?.data?.filter(
-    (pending) => pending.status === PendingStatus.PENDING
+
+  const hasPendingRecruiters = pendingList?.data?.some(
+    (recruiter) => recruiter.status === "pending"
   );
-  const getPending = filterForPending?.map((pending) => {
-    return (
-      <TableRow key={pending._id} hover>
-        <RecruitItem props={pending}>
+
+  const getPendingRecruiters = pendingList?.data
+    ?.filter((recruiter) => recruiter.status === "pending")
+    .map((recruiter) => (
+      <TableRow key={recruiter._id} hover>
+        <RecruitItem props={transformPendingToRecruiter(recruiter)}>
           <Button
             fullWidth
             sx={{ marginBottom: 2 }}
             variant="outlined"
             color="primary"
-            onClick={() => handleVerify(pending)}
+            onClick={() => handleVerify(recruiter)}
             disabled={isLoading}
           >
             {isLoading ? <CircularProgress size={24} /> : "Verify"}
@@ -88,24 +105,48 @@ export const PendingItem = () => {
             fullWidth
             sx={{ border: "1px solid red", color: "red" }}
             variant="outlined"
-            onClick={() => handleCancel(pending._id)}
-            disabled={isLoading}
+            onClick={() => handleCancel(recruiter._id)}
+            disabled={isDeleting}
           >
             Cancel
           </Button>
         </RecruitItem>
       </TableRow>
-    );
-  });
+    ));
+
   return (
     <>
       <TableBody>
-        {filterForPending && filterForPending?.length > 0 ? (
-          getPending
+        {hasPendingRecruiters ? (
+          getPendingRecruiters
         ) : (
           <TableRow>
-            <TableCell colSpan={7} align="center" sx={{ py: 4 }}>
-              No approved recruiters found
+            <TableCell colSpan={7}>
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  py: 8,
+                  gap: 2,
+                }}
+              >
+                <PendingIcon
+                  sx={{
+                    fontSize: 64,
+                    color: "text.secondary",
+                    opacity: 0.5,
+                  }}
+                />
+                <Typography variant="h6" color="text.secondary">
+                  No Pending Recruiters
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  There are currently no pending recruiters waiting for
+                  verification.
+                </Typography>
+              </Box>
             </TableCell>
           </TableRow>
         )}

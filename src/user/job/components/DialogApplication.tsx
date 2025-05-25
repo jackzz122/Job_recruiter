@@ -92,7 +92,14 @@ export const DialogApplication = ({
           }
           formData.append("linkPdf", file);
         }
-
+        if (cvSource === "existing") {
+          console.log("user?.uploadCV?.linkPdf", user?.uploadCV?.linkPdf);
+          if (!user?.uploadCV?.linkPdf) {
+            toast.error("No existing CV found. Please upload a new CV.");
+            return;
+          }
+          formData.append("cvLink", user.uploadCV.linkPdf);
+        }
         const response = await addApplicant({
           id: postId,
           applicant: formData,
@@ -106,7 +113,7 @@ export const DialogApplication = ({
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Apply failed");
     }
   };
 

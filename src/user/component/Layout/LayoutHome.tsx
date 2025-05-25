@@ -70,13 +70,13 @@ export const LayoutHome = () => {
               onClick={() => navigate("/list_job")}
               sx={{ color: "white" }}
             >
-              Các công việc
+              Jobs
             </Button>
             <Button
               onClick={() => navigate("/list_company")}
               sx={{ color: "white" }}
             >
-              Công ty IT
+              Companies
             </Button>
             <Button sx={{ color: "white" }} onClick={() => navigate("/CV")}>
               Create CV
@@ -87,7 +87,7 @@ export const LayoutHome = () => {
 
           <Box>
             <Typography fontSize={12} sx={{ color: "white" }}>
-              Bạn là nhà tuyển dụng ?
+              You are a recruiter ?
             </Typography>
             <Typography
               fontSize={12}
@@ -102,7 +102,7 @@ export const LayoutHome = () => {
                 })
               }
             >
-              Đăng tuyển ngay
+              Sign up now
             </Typography>
           </Box>
           <Button

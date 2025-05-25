@@ -7,11 +7,18 @@ import Button from "@mui/material/Button";
 import Grid2 from "@mui/material/Grid2";
 import { CardItemCompanyList } from "../../job/components/Card/CardItemCompanyList";
 import { useGetCompanyQuery } from "../../../redux/feature/company/companyApiSlice";
-import { CircularProgress, InputAdornment, Paper, alpha } from "@mui/material";
+import {
+  CircularProgress,
+  InputAdornment,
+  Paper,
+  alpha,
+  Card,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import BusinessIcon from "@mui/icons-material/Business";
 import { useState } from "react";
 import { colorButtonOrange } from "../../../themeContext";
+import { PendingStatus } from "../../../types/PendingStatus";
 
 export const ListOfCompany = () => {
   const { data: companyList, isLoading } = useGetCompanyQuery();
@@ -21,11 +28,15 @@ export const ListOfCompany = () => {
     company.companyName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const listOfCompany = filteredCompanies?.map((company) => (
-    <Grid2 size={{ xs: 12, sm: 6, md: 3 }} key={company._id}>
-      <CardItemCompanyList company={company} />
-    </Grid2>
-  ));
+  const listOfCompany = filteredCompanies
+    ?.filter((company) => company.status === PendingStatus.APPROVED)
+    .map((company) => (
+      <Grid2 size={{ xs: 12, sm: 6, md: 3 }} key={company._id}>
+        <CardItemCompanyList company={company} />
+      </Grid2>
+    ));
+
+  console.log("companyList", listOfCompany);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -60,12 +71,14 @@ export const ListOfCompany = () => {
               placeholder="Search companies..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <SearchIcon color="action" />
-                  </InputAdornment>
-                ),
+              slotProps={{
+                input: {
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <SearchIcon color="action" />
+                    </InputAdornment>
+                  ),
+                },
               }}
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -112,22 +125,67 @@ export const ListOfCompany = () => {
       )}
 
       {/* No Results State */}
-      {!isLoading && filteredCompanies?.length === 0 && (
-        <Box
+      {!isLoading && listOfCompany?.length === 0 && (
+        <Card
           sx={{
-            textAlign: "center",
-            py: 6,
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.05),
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            py: 8,
+            px: 2,
+            backgroundColor: "white",
             borderRadius: 2,
+            boxShadow: "0 2px 4px rgba(0,0,0,0.05)",
+            minHeight: "400px",
           }}
         >
-          <Typography variant="h6" color="text.secondary" gutterBottom>
-            No companies found
+          <BusinessIcon
+            sx={{
+              fontSize: 80,
+              color: colorButtonOrange,
+              opacity: 0.5,
+              mb: 3,
+            }}
+          />
+          <Typography
+            variant="h5"
+            sx={{
+              color: "text.primary",
+              fontWeight: 600,
+              mb: 2,
+            }}
+          >
+            No Companies Found
           </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Try adjusting your search criteria
+          <Typography
+            variant="body1"
+            sx={{
+              color: "text.secondary",
+              textAlign: "center",
+              maxWidth: "400px",
+              mb: 3,
+            }}
+          >
+            We couldn't find any companies matching your search. Try adjusting
+            your search terms or browse all companies.
           </Typography>
-        </Box>
+          <Button
+            variant="outlined"
+            startIcon={<SearchIcon />}
+            onClick={() => setSearchQuery("")}
+            sx={{
+              borderColor: colorButtonOrange,
+              color: colorButtonOrange,
+              "&:hover": {
+                borderColor: colorButtonOrange,
+                backgroundColor: "rgba(255, 152, 0, 0.04)",
+              },
+            }}
+          >
+            Clear Search
+          </Button>
+        </Card>
       )}
     </Container>
   );

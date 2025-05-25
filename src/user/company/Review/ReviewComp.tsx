@@ -2,24 +2,69 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
 import LinearProgress from "@mui/material/LinearProgress";
-import CircularProgress from "@mui/material/CircularProgress";
 import { HeaderOfDetails } from "../../../user/company/DetailsCompany/HeaderOfDetails";
 import { ListOfComment } from "./components/ListOfComment";
 import { useGetCommentsQuery } from "../../../redux/feature/comment/commentApiSlice";
 import { useParams } from "react-router-dom";
+import { useMemo } from "react";
+import Stack from "@mui/material/Stack";
+import Paper from "@mui/material/Paper";
+import Grid2 from "@mui/material/Grid2";
+import StarIcon from "@mui/icons-material/Star";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import CommentIcon from "@mui/icons-material/Comment";
 
 export const ReviewComp = () => {
   const { id } = useParams();
-  const ratingDistribution = [
-    { star: 5, percentage: 20 },
-    { star: 4, percentage: 37 },
-    { star: 3, percentage: 33 },
-    { star: 2, percentage: 8 },
-    { star: 1, percentage: 2 },
-  ];
   const { data: commentList } = useGetCommentsQuery(id as string, {
     skip: !id,
   });
+
+  const ratingStats = useMemo(() => {
+    if (!commentList?.data) {
+      return {
+        averageRating: 0,
+        totalReviews: 0,
+        ratingDistribution: [0, 0, 0, 0, 0],
+        positiveReviews: 0,
+      };
+    }
+
+    const comments = commentList.data;
+    const totalReviews = comments.length;
+
+    // Calculate average rating
+    const totalRating = comments.reduce(
+      (sum, comment) => sum + comment.rating,
+      0
+    );
+    const averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
+
+    // Calculate rating distribution
+    const ratingCounts = [0, 0, 0, 0, 0];
+    comments.forEach((comment) => {
+      ratingCounts[comment.rating - 1]++;
+    });
+
+    // Calculate positive reviews (rating >= 4)
+    const positiveReviews = comments.filter(
+      (comment) => comment.rating >= 4
+    ).length;
+
+    return {
+      averageRating,
+      totalReviews,
+      ratingDistribution: ratingCounts.reverse(),
+      positiveReviews,
+    };
+  }, [commentList?.data]);
+
+  const getRatingColor = (rating: number) => {
+    if (rating >= 4) return "#2e7d32";
+    if (rating >= 3) return "#ed6c02";
+    return "#d32f2f";
+  };
+
   return (
     <Box
       sx={{
@@ -48,135 +93,219 @@ export const ReviewComp = () => {
           zIndex: 1,
         }}
       >
-        <HeaderOfDetails name="Đánh giá chung">
-          <Box
-            sx={{
-              display: "flex",
-              gap: 4,
-              marginTop: "1rem",
-            }}
-          >
-            {/* Left section - Average Rating */}
-            <Box
+        <HeaderOfDetails name="Reviews">
+          <Stack spacing={2}>
+            {/* Top Section - Rating Overview */}
+            <Paper
+              elevation={0}
               sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
+                p: 3,
+                border: "1px solid #e0e0e0",
+                borderRadius: 2,
+                background: "linear-gradient(to right, #ffffff, #f8f9fa)",
               }}
             >
-              <Typography variant="h2" sx={{ fontWeight: "bold", mb: 1 }}>
-                3.7
-              </Typography>
-              <Rating value={3.7} readOnly size="large" sx={{ mb: 1 }} />
-              <Typography color="text.secondary">
-                {commentList?.data.length} đánh giá
-              </Typography>
-            </Box>
-
-            {/* Middle section - Rating Distribution */}
-            <Box sx={{ flex: 1 }}>
-              {ratingDistribution.map((rating) => (
-                <Box
-                  key={rating.star}
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    mb: 1,
-                    gap: 1,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      width: "40px",
-                    }}
-                  >
-                    <Typography>{rating.star}</Typography>
-                    <Box component="span" sx={{ color: "orange", ml: 0.5 }}>
-                      ★
-                    </Box>
-                  </Box>
-                  <LinearProgress
-                    variant="determinate"
-                    value={rating.percentage}
-                    sx={{
-                      flex: 1,
-                      height: 8,
-                      borderRadius: 4,
-                      backgroundColor: "rgba(255, 152, 0, 0.1)",
-                      "& .MuiLinearProgress-bar": {
-                        backgroundColor: "orange",
-                        borderRadius: 4,
-                      },
-                    }}
-                  />
-                  <Typography sx={{ minWidth: "45px" }}>
-                    {rating.percentage}%
-                  </Typography>
-                </Box>
-              ))}
-            </Box>
-
-            {/* Right section - Recommendation Percentage */}
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                position: "relative",
-                minWidth: "150px",
-              }}
-            >
-              <Box sx={{ position: "relative", width: 120, height: 120 }}>
-                <CircularProgress
-                  variant="determinate"
-                  value={82}
-                  size={120}
-                  thickness={4}
-                  sx={{
-                    color: "#2e7d32",
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                  }}
-                />
-                <Box
-                  sx={{
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
+              <Stack direction="row" spacing={4} alignItems="center">
+                {/* Average Rating */}
+                <Box sx={{ textAlign: "center", minWidth: 200 }}>
                   <Typography
-                    variant="h4"
-                    component="div"
-                    sx={{ fontWeight: "bold" }}
+                    variant="h2"
+                    sx={{
+                      fontWeight: "bold",
+                      mb: 1,
+                      color: getRatingColor(ratingStats.averageRating),
+                      fontSize: { xs: "2.5rem", md: "3rem" },
+                    }}
                   >
-                    82
-                    <Typography component="span" variant="h6">
-                      %
-                    </Typography>
+                    {ratingStats.averageRating.toFixed(1)}
+                  </Typography>
+                  <Rating
+                    value={ratingStats.averageRating}
+                    readOnly
+                    size="large"
+                    sx={{ mb: 1 }}
+                    precision={0.1}
+                  />
+                  <Typography
+                    variant="subtitle1"
+                    color="text.secondary"
+                    sx={{
+                      fontWeight: 500,
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    Based on {ratingStats.totalReviews} reviews
                   </Typography>
                 </Box>
-              </Box>
-              <Typography
-                sx={{
-                  mt: 1,
-                  textAlign: "center",
-                  fontWeight: "medium",
-                }}
-              >
-                Khuyến khích làm việc tại đây
-              </Typography>
-            </Box>
-          </Box>
+
+                {/* Rating Distribution */}
+                <Box sx={{ flex: 1 }}>
+                  <Stack spacing={1.5}>
+                    {ratingStats.ratingDistribution.map((count, index) => (
+                      <Box
+                        key={index}
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 2,
+                          p: 0.5,
+                          borderRadius: 1,
+                          "&:hover": {
+                            backgroundColor: "rgba(0, 0, 0, 0.02)",
+                          },
+                        }}
+                      >
+                        <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            width: 100,
+                          }}
+                        >
+                          <Typography
+                            variant="body2"
+                            sx={{
+                              mr: 1,
+                              fontWeight: 500,
+                              color: "text.primary",
+                            }}
+                          >
+                            {5 - index} stars
+                          </Typography>
+                          <StarIcon sx={{ color: "gold", fontSize: 16 }} />
+                        </Box>
+                        <LinearProgress
+                          variant="determinate"
+                          value={(count / ratingStats.totalReviews) * 100}
+                          sx={{
+                            flex: 1,
+                            height: 6,
+                            borderRadius: 3,
+                            backgroundColor: "rgba(0, 0, 0, 0.05)",
+                            "& .MuiLinearProgress-bar": {
+                              backgroundColor: getRatingColor(5 - index),
+                              borderRadius: 3,
+                            },
+                          }}
+                        />
+                        <Typography
+                          variant="body2"
+                          sx={{
+                            minWidth: 40,
+                            fontWeight: 500,
+                            color: "text.primary",
+                          }}
+                        >
+                          {count}
+                        </Typography>
+                      </Box>
+                    ))}
+                  </Stack>
+                </Box>
+              </Stack>
+            </Paper>
+
+            {/* Bottom Section - Statistics */}
+            <Grid2 container spacing={2}>
+              {/* Positive Reviews */}
+              <Grid2 size={{ xs: 12, sm: 6 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 2.5,
+                    border: "1px solid #e0e0e0",
+                    borderRadius: 2,
+                    background:
+                      "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+                  }}
+                >
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <Box
+                      sx={{
+                        backgroundColor: "success.light",
+                        borderRadius: 2,
+                        p: 1,
+                        width: "fit-content",
+                      }}
+                    >
+                      <ThumbUpIcon
+                        sx={{ color: "success.main", fontSize: 24 }}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          fontWeight: "bold",
+                          color: "success.main",
+                        }}
+                      >
+                        {ratingStats.positiveReviews}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontWeight: 500,
+                        }}
+                      >
+                        Positive Reviews
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Paper>
+              </Grid2>
+
+              {/* Total Reviews */}
+              <Grid2 size={{ xs: 12, sm: 6 }}>
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 2.5,
+                    border: "1px solid #e0e0e0",
+                    borderRadius: 2,
+                    background:
+                      "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+                  }}
+                >
+                  <Stack direction="row" alignItems="center" spacing={2}>
+                    <Box
+                      sx={{
+                        backgroundColor: "primary.light",
+                        borderRadius: 2,
+                        p: 1,
+                        width: "fit-content",
+                      }}
+                    >
+                      <CommentIcon
+                        sx={{ color: "primary.main", fontSize: 24 }}
+                      />
+                    </Box>
+                    <Box>
+                      <Typography
+                        variant="h4"
+                        sx={{
+                          fontWeight: "bold",
+                          color: "primary.main",
+                        }}
+                      >
+                        {ratingStats.totalReviews}
+                      </Typography>
+                      <Typography
+                        variant="body2"
+                        color="text.secondary"
+                        sx={{
+                          fontWeight: 500,
+                        }}
+                      >
+                        Total Reviews
+                      </Typography>
+                    </Box>
+                  </Stack>
+                </Paper>
+              </Grid2>
+            </Grid2>
+          </Stack>
         </HeaderOfDetails>
       </Box>
       <ListOfComment />

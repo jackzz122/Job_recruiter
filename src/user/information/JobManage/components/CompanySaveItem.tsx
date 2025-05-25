@@ -23,7 +23,7 @@ export const CompanySaveItem = ({
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Remove failed");
     }
   };
   return (
@@ -45,7 +45,7 @@ export const CompanySaveItem = ({
         >
           <Box>
             <img
-              src={company.logo ? company.logo : "/bss_avatar.png"}
+              src={company.logo ? company.logo : "/companyNotFound.png"}
               alt=""
               className="w-20 h-20 rounded-2xl border border-gray-300"
             />

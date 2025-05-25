@@ -34,7 +34,7 @@ export const DialogRemove = ({
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Delete failed");
     }
   };
   return (

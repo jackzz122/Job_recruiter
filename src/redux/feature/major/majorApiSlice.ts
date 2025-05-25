@@ -30,7 +30,7 @@ export const majorApiSlice = ApiSlice.injectEndpoints({
     }),
     updateMajor: builder.mutation<
       MajorTypeResponse<MajorType>,
-      { _id: string; body: MajorType }
+      { _id: string; body: Omit<MajorType, "_id"> }
     >({
       query: (data) => ({
         url: `updateMajorCate/${data._id}`,

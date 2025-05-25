@@ -64,21 +64,21 @@ export const DialogEdu = ({
           } as educationType,
         });
         if (response.data?.success) {
-          toast.success(response.data?.message);
+          toast.success(response.data?.message || "Update success");
           setOpenEducation(false);
           reset();
         }
       } else {
         const response = await updateUser(data);
         if (response.data?.success) {
-          toast.success(response.data?.message);
+          toast.success(response.data?.message || "Update success");
           setOpenEducation(false);
           reset();
         }
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
 

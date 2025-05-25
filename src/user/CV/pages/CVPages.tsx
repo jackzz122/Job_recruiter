@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
 import CircularProgress from "@mui/material/CircularProgress";
 import { handleError } from "../../../helper/HandleError/handleError";
+import { colorButtonOrange } from "../../../themeContext";
 
 export const CVPages = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,6 +41,13 @@ export const CVPages = () => {
   ) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Check file size (5MB = 5 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        toast.error("File size must be less than 5MB");
+        return;
+      }
+
       try {
         const formData = new FormData();
         formData.append("nameFile", file.name);
@@ -50,7 +58,7 @@ export const CVPages = () => {
         }
       } catch (err) {
         const error = handleError(err);
-        console.log(error);
+        toast.error(error?.message || "Upload CV failed");
       }
     }
   };
@@ -63,7 +71,7 @@ export const CVPages = () => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Delete CV failed");
     }
   };
 
@@ -205,7 +213,7 @@ export const CVPages = () => {
         <Typography
           flexGrow={1}
           variant="h5"
-          sx={{ color: "red" }}
+          sx={{ color: colorButtonOrange }}
           fontWeight="bold"
         >
           CV Builder

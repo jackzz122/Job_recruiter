@@ -85,7 +85,7 @@ export const Setting = () => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error?.message);
+      toast.error(error?.message || "Update password failed");
     }
   };
   const handleDeleteAccount = async () => {
@@ -99,7 +99,7 @@ export const Setting = () => {
         }
       } catch (err) {
         const error = handleError(err);
-        console.log(error);
+        toast.error(error?.message || "Delete account failed");
       }
       setOpenDeleteDialog(false);
     }
@@ -118,7 +118,7 @@ export const Setting = () => {
           {/* Account Information */}
           <Paper sx={{ p: 4, borderRadius: 2 }} elevation={1}>
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
-              Thông tin tài khoản
+              Account Information
             </Typography>
 
             <Box sx={{ mb: 3 }}>
@@ -138,7 +138,7 @@ export const Setting = () => {
                       sx={{ color: "text.disabled", fontSize: 16 }}
                     />
                     <Typography variant="body2" color="text.secondary">
-                      Không thể thay đổi email đăng nhập.
+                      Cannot change login email.
                     </Typography>
                   </Stack>
                 </Grid2>
@@ -149,7 +149,7 @@ export const Setting = () => {
               <Grid2 container spacing={2}>
                 <Grid2 size={{ xs: 12, sm: 3 }}>
                   <Typography variant="body1" fontWeight="500">
-                    Họ và Tên:
+                    Fullname:
                   </Typography>
                 </Grid2>
                 <Grid2 size={{ xs: 12, sm: 9 }}>
@@ -162,7 +162,7 @@ export const Setting = () => {
                       sx={{ color: "text.disabled", fontSize: 16 }}
                     />
                     <Typography variant="body2" color="text.secondary">
-                      Tên tài khoản được đồng bộ với thông tin hồ sơ.
+                      Account name is synced with profile information.
                     </Typography>
                   </Stack>
                   <Button
@@ -171,7 +171,7 @@ export const Setting = () => {
                     sx={{ mt: 1, p: 0, textTransform: "none" }}
                     endIcon={<ArrowForwardIcon />}
                   >
-                    Cập nhật thông tin hồ sơ
+                    Update profile information
                   </Button>
                 </Grid2>
               </Grid2>
@@ -181,7 +181,7 @@ export const Setting = () => {
           {/* Password Section */}
           <Paper sx={{ p: 4, borderRadius: 2 }} elevation={1}>
             <Typography variant="h5" fontWeight="bold" sx={{ mb: 3 }}>
-              Mật khẩu
+              Password
             </Typography>
 
             <Button
@@ -195,7 +195,7 @@ export const Setting = () => {
               loading={updateLoading}
               onClick={handleOpenPasswordDialog}
             >
-              Thay đổi mật khẩu
+              Change password
             </Button>
           </Paper>
 
@@ -207,13 +207,13 @@ export const Setting = () => {
               color="error"
               gutterBottom
             >
-              Xóa tài khoản
+              Delete account
             </Typography>
             <Divider sx={{ mb: 3 }} />
 
             <Alert severity="warning" sx={{ mb: 3 }}>
-              Cảnh báo: Hành động này không thể hoàn tác. Tất cả dữ liệu của bạn
-              sẽ bị xóa vĩnh viễn.
+              Warning: This action cannot be undone. All your data will be
+              permanently deleted.
             </Alert>
 
             <Button
@@ -222,7 +222,7 @@ export const Setting = () => {
               startIcon={<DeleteIcon />}
               onClick={handleOpenDeleteDialog}
             >
-              Xóa tài khoản của tôi
+              Delete my account
             </Button>
           </Paper>
         </Stack>
@@ -236,17 +236,17 @@ export const Setting = () => {
           keepMounted
         >
           <DialogTitle id="delete-dialog-title" sx={{ fontWeight: "bold" }}>
-            Bạn có chắc chắn muốn xóa tài khoản?
+            Are you sure you want to delete your account?
           </DialogTitle>
           <DialogContent>
             <DialogContentText>
-              Hành động này không thể hoàn tác. Tất cả thông tin cá nhân, công
-              việc đã lưu và lịch sử ứng tuyển của bạn sẽ bị xóa vĩnh viễn.
+              This action cannot be undone. All your personal information, saved
+              jobs and application history will be permanently deleted.
             </DialogContentText>
             <TextField
               autoFocus
               margin="dense"
-              label="Nhập 'XÓA' để xác nhận"
+              label="Enter 'DELETE' to confirm"
               onChange={(e) => setIsDeleted(e.target.value)}
               fullWidth
               variant="outlined"
@@ -256,7 +256,7 @@ export const Setting = () => {
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 3 }}>
             <Button onClick={handleCloseDeleteDialog} variant="outlined">
-              Hủy
+              Cancel
             </Button>
             <Button
               onClick={handleDeleteAccount}
@@ -264,7 +264,7 @@ export const Setting = () => {
               color="error"
               loading={isLoading}
             >
-              Xóa vĩnh viễn
+              Permanently delete
             </Button>
           </DialogActions>
         </Dialog>
@@ -280,30 +280,30 @@ export const Setting = () => {
           keepMounted
         >
           <DialogTitle id="password-dialog-title" sx={{ fontWeight: "bold" }}>
-            Thay đổi mật khẩu
+            Change password
           </DialogTitle>
           <DialogContent>
             <Stack spacing={2} sx={{ mt: 1 }}>
               <TextField
-                label="Mật khẩu hiện tại"
+                label="Current password"
                 type="password"
                 fullWidth
                 {...register("oldPassword")}
                 variant="outlined"
               />
               <TextField
-                label="Mật khẩu mới"
+                label="New password"
                 type="password"
                 fullWidth
                 {...register("newPassword")}
                 variant="outlined"
               />
               <TextField
-                label="Xác nhận mật khẩu mới"
+                label="Confirm new password"
                 type="password"
                 {...register("confirmPassword", {
                   validate: (value) => {
-                    return value === newPassword || "Mật khẩu không khớp";
+                    return value === newPassword || "Passwords do not match";
                   },
                 })}
                 error={!!errors.confirmPassword}
@@ -315,14 +315,14 @@ export const Setting = () => {
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 3 }}>
             <Button onClick={handleClosePasswordDialog} variant="outlined">
-              Hủy
+              Cancel
             </Button>
             <Button
               onClick={handleSubmit(onSubmit)}
               variant="contained"
               color="primary"
             >
-              Cập nhật
+              Update
             </Button>
           </DialogActions>
         </Dialog>

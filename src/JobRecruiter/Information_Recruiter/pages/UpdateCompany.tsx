@@ -41,6 +41,7 @@ const defaultCompanyInfo: Omit<CompanyType, "_id"> = {
   years: 0,
   overTime: false,
   keySkills: [],
+  status: "active",
   description: [
     {
       about: "",
@@ -123,7 +124,7 @@ export const UpdateCompany = () => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
   return (

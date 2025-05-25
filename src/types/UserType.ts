@@ -1,4 +1,5 @@
 import { CompanyType } from "./CompanyType";
+import { PendingStatus } from "./PendingStatus";
 import { ResponseType } from "./ResponseType";
 export const RoleName = {
   ADMIN: "admin",
@@ -11,7 +12,12 @@ export type UserRole = (typeof RoleName)[keyof typeof RoleName];
 
 export type JobSaveResponse = {
   _id: string;
-  companyId: { _id: string; companyName: string };
+  companyId: {
+    _id: string;
+    companyName: string;
+    logo: string;
+    status: PendingStatus;
+  };
   location: string;
   maxRange: number;
   minRange: number;
@@ -26,6 +32,7 @@ export type CompanySaveResponse = {
   address: string;
   country: string;
   logo: string;
+  status: PendingStatus;
 };
 export type educationType = {
   _id: string;

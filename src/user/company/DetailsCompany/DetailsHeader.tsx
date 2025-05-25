@@ -24,12 +24,23 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
 import { useEffect, useState } from "react";
 import { CompanySaveResponse } from "../../../types/UserType";
+import { useForm } from "react-hook-form";
+import { useCreateReportMutation } from "../../../redux/feature/report/reportApiSlice";
+import { targetType } from "../../../types/ReportType";
 
 export const DetailsHeader = () => {
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
-  const [reportReason, setReportReason] = useState("");
+  const { register, handleSubmit } = useForm<{
+    reportTitle: string;
+    reportReason: string;
+  }>({
+    defaultValues: {
+      reportTitle: "",
+      reportReason: "",
+    },
+  });
   const { id } = useParams<{ id: string }>();
   const { data: companyDetail } = useGetDetailCompanyQuery(id ?? "", {
     skip: !id,
@@ -42,7 +53,8 @@ export const DetailsHeader = () => {
     useRemoveFavouriteCompanyMutation();
   const [addFavouriteCompany, { isLoading: addLoading }] =
     useAddFavouriteCompanyMutation();
-
+  const [createReport, { isLoading: createReportLoading }] =
+    useCreateReportMutation();
   const handleAddFavourite = async () => {
     if (!id) return;
     try {
@@ -53,7 +65,7 @@ export const DetailsHeader = () => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Add favourite failed");
     }
   };
 
@@ -67,7 +79,7 @@ export const DetailsHeader = () => {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Remove favourite failed");
     }
   };
 
@@ -89,13 +101,30 @@ export const DetailsHeader = () => {
 
   const handleCloseReportDialog = () => {
     setOpenReportDialog(false);
-    setReportReason("");
   };
 
-  const handleSubmitReport = () => {
-    // TODO: Implement report submission logic
-    toast.success("Báo cáo đã được gửi thành công");
-    handleCloseReportDialog();
+  const handleSubmitReport = async (data: {
+    reportTitle: string;
+    reportReason: string;
+  }) => {
+    try {
+      const response = await createReport({
+        target_id: companyDetail?.data.accountID ?? "",
+        target_type: targetType.COMPANY,
+        reportTarget: id as string,
+        reason: {
+          reasonTitle: data.reportTitle,
+          additionalReason: data.reportReason,
+        },
+      }).unwrap();
+      if (response.success) {
+        toast.success("Report submitted successfully");
+        handleCloseReportDialog();
+      }
+    } catch (err) {
+      const error = handleError(err);
+      toast.error(error.message);
+    }
   };
 
   return (
@@ -108,9 +137,9 @@ export const DetailsHeader = () => {
       >
         <Stack direction="row" spacing={2}>
           <img
-            src={companyDetail?.data.logo || "/bss_avatar.png"}
+            src={companyDetail?.data.logo || "/companyNotFound.png"}
             alt=""
-            className="w-1/4 h-40 rounded-lg"
+            className="w-1/4 h-40 rounded-lg bg-white"
           />
           <Box sx={{ color: "white" }}>
             <Typography fontWeight="bold" variant="h5">
@@ -124,8 +153,7 @@ export const DetailsHeader = () => {
               </Typography>
               <Typography>
                 {" "}
-                <WorkOutlineOutlinedIcon /> {jobs?.data?.length} việc làm đang
-                tuyển dụng
+                <WorkOutlineOutlinedIcon /> {jobs?.data?.length} jobs are hiring
               </Typography>
             </Stack>
             <br />
@@ -143,7 +171,7 @@ export const DetailsHeader = () => {
                   padding: "0.75rem",
                 }}
               >
-                Viết đánh giá
+                Write Review
               </Button>
               {!isFavourite ? (
                 <Button
@@ -157,7 +185,7 @@ export const DetailsHeader = () => {
                     padding: "0.75rem",
                   }}
                 >
-                  Theo Dõi
+                  Follow
                 </Button>
               ) : (
                 <Button
@@ -171,7 +199,7 @@ export const DetailsHeader = () => {
                     padding: "0.75rem",
                   }}
                 >
-                  Hủy Theo Dõi
+                  Unfollow
                 </Button>
               )}
               <Button
@@ -185,7 +213,7 @@ export const DetailsHeader = () => {
                   padding: "0.75rem",
                 }}
               >
-                Báo cáo
+                Report
               </Button>
             </Stack>
           </Box>
@@ -199,23 +227,35 @@ export const DetailsHeader = () => {
         fullWidth
       >
         <DialogTitle sx={{ color: "red", fontWeight: "bold" }}>
-          Báo cáo công ty
+          Report Company
         </DialogTitle>
         <DialogContent>
           <Typography sx={{ mb: 2, color: "text.secondary" }}>
-            Vui lòng cho chúng tôi biết lý do bạn muốn báo cáo công ty này.
-            Chúng tôi sẽ xem xét báo cáo của bạn một cách cẩn thận.
+            Please let us know the reason you want to report this company. We
+            will review your report carefully.
           </Typography>
           <TextField
             autoFocus
             margin="dense"
-            label="Lý do báo cáo"
+            label="Report Title"
+            type="text"
+            fullWidth
+            {...register("reportTitle", {
+              required: true,
+            })}
+            variant="outlined"
+            sx={{ mb: 2 }}
+          />
+          <TextField
+            margin="dense"
+            label="Report Reason"
             type="text"
             fullWidth
             multiline
             rows={4}
-            value={reportReason}
-            onChange={(e) => setReportReason(e.target.value)}
+            {...register("reportReason", {
+              required: true,
+            })}
             variant="outlined"
           />
         </DialogContent>
@@ -227,11 +267,12 @@ export const DetailsHeader = () => {
               mr: 1,
             }}
           >
-            Hủy
+            Cancel
           </Button>
           <Button
-            onClick={handleSubmitReport}
+            onClick={handleSubmit(handleSubmitReport)}
             variant="contained"
+            loading={createReportLoading}
             sx={{
               backgroundColor: "red",
               color: "white",
@@ -239,9 +280,8 @@ export const DetailsHeader = () => {
                 backgroundColor: "darkred",
               },
             }}
-            disabled={!reportReason.trim()}
           >
-            Gửi báo cáo
+            Submit Report
           </Button>
         </DialogActions>
       </Dialog>

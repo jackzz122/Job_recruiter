@@ -29,7 +29,7 @@ export const DialogDeleteJob = ({
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Delete failed");
     }
   };
   return (

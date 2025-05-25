@@ -17,6 +17,7 @@ import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ReportProblemOutlinedIcon from "@mui/icons-material/ReportProblemOutlined";
 import { useGetJobByIdQuery } from "../../../redux/feature/job/jobApiSlice";
 import {
   useAddFavouriteJobMutation,
@@ -28,11 +29,14 @@ import { handleError } from "../../../helper/HandleError/handleError";
 import { JobSaveResponse } from "../../../types/UserType";
 import { ListOfRequirement } from "../../component/lists/ListOfRequirement";
 import { DialogApplication } from "../components/DialogApplication";
-
+import { DialogJobReport } from "../components/DialogJobReport";
+import { statusJob } from "../../../types/JobType";
+import { colorButtonOrange } from "../../../themeContext";
 export default function DetailsJobHeader() {
   const [isFavourite, setIsFavourite] = useState(false);
   const { id } = useParams();
   const [openApplication, setOpenApplication] = useState(false);
+  const [openReport, setOpenReport] = useState(false);
   const [addFavouriteJob, { isLoading: addLoading }] =
     useAddFavouriteJobMutation();
   const [removeFavouriteJob, { isLoading: removeLoading }] =
@@ -51,7 +55,7 @@ export default function DetailsJobHeader() {
 
   const company = job?.data.companyId;
   const isString = typeof company === "string";
-
+  console.log("job", job);
   const handleAddFavourite = async () => {
     if (!id) return;
     try {
@@ -62,7 +66,7 @@ export default function DetailsJobHeader() {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Add favourite failed");
     }
   };
 
@@ -76,10 +80,12 @@ export default function DetailsJobHeader() {
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Remove favourite failed");
     }
   };
-
+  const checkJobExpired =
+    job?.data.applicationDeadline &&
+    new Date(job?.data.applicationDeadline) < new Date();
   return (
     <Box sx={{ p: 3, borderBottom: 1, borderColor: "divider" }}>
       <Stack spacing={2}>
@@ -107,18 +113,28 @@ export default function DetailsJobHeader() {
               "& .MuiChip-icon": { color: "inherit" },
             }}
           />
-          <Box>
+          <Box sx={{ display: "flex", gap: 1 }}>
             <Button
               variant="contained"
               size="large"
+              disabled={checkJobExpired || job?.data.status === statusJob.Stop}
               onClick={() => setOpenApplication(true)}
               sx={{
-                bgcolor: "error.main",
+                bgcolor:
+                  job?.data.status === statusJob.Stop || checkJobExpired
+                    ? "rgba(255, 108, 48, 0.1)"
+                    : "error.main",
+                color:
+                  job?.data.status === statusJob.Stop || checkJobExpired
+                    ? colorButtonOrange
+                    : "white",
                 "&:hover": { bgcolor: "error.dark" },
                 px: 4,
               }}
             >
-              Ứng tuyển
+              {job?.data.status === statusJob.Stop || checkJobExpired
+                ? "Đã dừng tuyển"
+                : "Ứng tuyển"}
             </Button>
             <IconButton
               onClick={isFavourite ? handleRemoveFavourite : handleAddFavourite}
@@ -135,6 +151,16 @@ export default function DetailsJobHeader() {
                 <FavoriteBorderIcon sx={{ color: "text.secondary" }} />
               )}
             </IconButton>
+            <IconButton
+              onClick={() => setOpenReport(true)}
+              sx={{
+                border: 1,
+                borderColor: "divider",
+                "&:hover": { borderColor: "error.main" },
+              }}
+            >
+              <ReportProblemOutlinedIcon sx={{ color: "error.main" }} />
+            </IconButton>
           </Box>
         </Stack>
 
@@ -142,6 +168,14 @@ export default function DetailsJobHeader() {
           handleClose={() => setOpenApplication(false)}
           title="Ứng tuyển cho vị trí"
           open={openApplication}
+        />
+
+        <DialogJobReport
+          open={openReport}
+          jobId={job?.data._id as string}
+          accountJobId={job?.data.accountId as string}
+          handleClose={() => setOpenReport(false)}
+          jobTitle={job?.data?.title || ""}
         />
 
         <Paper
@@ -189,9 +223,7 @@ export default function DetailsJobHeader() {
           <Typography variant="subtitle1" color="text.secondary" gutterBottom>
             Kỹ năng yêu cầu
           </Typography>
-          <ListOfRequirement
-            listOfRequire={job?.data?.description.keySkills.bulletPoints}
-          />
+          <ListOfRequirement listOfRequire={job?.data?.majorId} />
         </Box>
       </Stack>
     </Box>

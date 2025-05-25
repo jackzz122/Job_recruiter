@@ -40,13 +40,18 @@ interface DashboardStats {
 
 export const Dashboard = () => {
   const user = useSelector(selectUser);
-  const { data: jobs, isLoading } = useGetJobPostingsQuery(
-    (user?.companyId as CompanyType)?._id || "",
-    {
-      skip: !user?.companyId,
+  const {
+    data: jobs,
+    isLoading,
+    refetch,
+  } = useGetJobPostingsQuery((user?.companyId as CompanyType)?._id || "", {
+    skip: !user?.companyId,
+  });
+  useEffect(() => {
+    if (user?.companyId) {
+      refetch();
     }
-  );
-
+  }, [user?.companyId, refetch]);
   const [stats, setStats] = useState<DashboardStats>({
     totalJobs: 0,
     activeJobs: 0,

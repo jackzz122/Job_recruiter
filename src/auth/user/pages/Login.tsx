@@ -35,7 +35,8 @@ export const Login = () => {
   const onSubmitTing: SubmitHandler<FormField> = async (data) => {
     try {
       await login({
-        ...data,
+        email: data.email.toLowerCase(),
+        password: data.password,
         roleGroup: [RoleName.GUEST],
       }).unwrap();
       if (!isLoading) {

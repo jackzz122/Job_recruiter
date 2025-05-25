@@ -6,21 +6,18 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Button from "@mui/material/Button";
 import CircularProgress from "@mui/material/CircularProgress";
-
-// Icons
 import PeopleIcon from "@mui/icons-material/People";
 import WorkIcon from "@mui/icons-material/Work";
 import BusinessIcon from "@mui/icons-material/Business";
 import ReportIcon from "@mui/icons-material/Report";
 import FileDownloadIcon from "@mui/icons-material/FileDownload";
-
 import { themeColors } from "../../utils/themeColor";
 import { StatCard } from "./components/StatCard";
 import { useGetAllJobsQuery } from "../../redux/feature/job/jobApiSlice";
 import { useGetPendingListQuery } from "../../redux/feature/pending/pendingApiSlice";
-import { PendingStatus } from "../../types/PendingStatus";
 import { statusJob } from "../../types/JobType";
 import * as XLSX from "xlsx";
+import { pendingType } from "../../types/pendingType";
 
 export const Dashboard = () => {
   const { data: jobs, isLoading: isLoadingJobs } = useGetAllJobsQuery();
@@ -31,11 +28,11 @@ export const Dashboard = () => {
     jobs?.data?.filter((job) => job.status === statusJob.OnGoing) || [];
   const pendingRecruiters =
     pendingList?.data?.filter(
-      (pending) => pending.status === PendingStatus.PENDING
+      (pending: pendingType) => pending.status === "pending"
     ) || [];
   const approvedRecruiters =
     pendingList?.data?.filter(
-      (pending) => pending.status === PendingStatus.APPROVED
+      (pending: pendingType) => pending.status === "approve"
     ) || [];
 
   const statsData = [
@@ -79,8 +76,9 @@ export const Dashboard = () => {
     }));
 
     const recruitersData = [...approvedRecruiters, ...pendingRecruiters].map(
-      (recruiter) => ({
-        Email: recruiter.email,
+      (recruiter: pendingType) => ({
+        Email: recruiter.accountID.email,
+        "Company Name": recruiter.companyName,
         Status: recruiter.status,
         "Created At": new Date(recruiter.createdAt).toLocaleDateString(),
       })
@@ -201,7 +199,7 @@ export const Dashboard = () => {
               <Stack spacing={2}>
                 {[...approvedRecruiters, ...pendingRecruiters]
                   .slice(0, 5)
-                  .map((recruiter) => (
+                  .map((recruiter: pendingType) => (
                     <Box
                       key={recruiter._id}
                       sx={{
@@ -212,10 +210,10 @@ export const Dashboard = () => {
                       }}
                     >
                       <Typography variant="subtitle1" color={themeColors.text}>
-                        {recruiter.email}
+                        {recruiter.accountID.email}
                       </Typography>
                       <Typography variant="body2" color="text.secondary">
-                        {recruiter.status}
+                        {recruiter.companyName} - {recruiter.status}
                       </Typography>
                     </Box>
                   ))}

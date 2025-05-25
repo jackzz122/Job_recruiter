@@ -1,3 +1,4 @@
+import { CompanyType, CompanyTypeResponse } from "./../../../types/CompanyType";
 import { pendingType, PendingTypeResponse } from "../../../types/pendingType";
 import ApiSlice from "../../api/apiSlice";
 import { generateProvidesTags } from "../../generateProvideTags";
@@ -6,7 +7,6 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPendingList: builder.query<PendingTypeResponse<pendingType[]>, void>({
       query: () => "/getPendingList",
-      // providesTags: [{ type: "Pendings", id: "LIST" }],
       providesTags: (results) =>
         generateProvidesTags(
           "Pendings",
@@ -41,6 +41,45 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
+    getListRecruiterCompanyAccount: builder.query<
+      PendingTypeResponse<
+        {
+          _id: string;
+          avatarIMG: string;
+          name: string;
+          companyName: string;
+          email: string;
+          status: string;
+          phone: string;
+          createdAt: string;
+        }[]
+      >,
+      void
+    >({
+      query: () => "/getListRecruiterCompanyAccount",
+      providesTags: [{ type: "Pendings", id: "LIST" }],
+    }),
+    blockRecruiterCompanyAccount: builder.mutation<
+      CompanyTypeResponse<CompanyType>,
+      string
+    >({
+      query: (id) => ({
+        url: `/blockedCompanyAccount/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: [{ type: "Pendings", id: "LIST" }],
+    }),
+    unblockRecruiterCompanyAccount: builder.mutation<
+      CompanyTypeResponse<CompanyType>,
+      string
+    >({
+      query: (id) => ({
+        url: `/unBlockedCompanyAccount/${id}`,
+        method: "PUT",
+      }),
+      invalidatesTags: [{ type: "Pendings", id: "LIST" }],
+    }),
+
     changeStatusPendingItem: builder.mutation<
       PendingTypeResponse<pendingType>,
       {
@@ -87,4 +126,7 @@ export const {
   useBlockAccountMutation,
   useApproveAccountMutation,
   useChangeStatusPendingItemMutation,
+  useGetListRecruiterCompanyAccountQuery,
+  useBlockRecruiterCompanyAccountMutation,
+  useUnblockRecruiterCompanyAccountMutation,
 } = pendingApiSlice;

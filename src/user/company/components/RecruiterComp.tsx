@@ -8,12 +8,12 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 import { ListOfRequirement } from "../../component/lists/ListOfRequirement";
-import { ListOfHighlightComp } from "../../component/lists/ListOfHighlightComp";
 import { Link } from "react-router-dom";
 import { ListOfInformation } from "../../component/lists/ListOfInformation";
-import { JobResponse } from "../../../types/JobType";
+import { JobResponse, statusJob } from "../../../types/JobType";
 import { formatDistanceToNow } from "date-fns";
 import { vi } from "date-fns/locale";
+
 export const RecruiterComp = ({
   jobDetail,
   isChoose,
@@ -23,36 +23,45 @@ export const RecruiterComp = ({
   isChoose?: boolean;
   isHotOrNot?: boolean;
 }) => {
-  const highlights = [
-    { value: "Nâng cao kĩ thuật với các kĩ sư giàu kinh nghiệm" },
-    { value: "Làm việc trong công nghệ Nhật Bản chuyên nghiệp" },
-    { value: "Thu nhập cạnh tranh, nhiều chế độ hấp dẫn" },
-  ];
   const company = jobDetail.companyId;
   const isString = typeof company === "string";
-
-  const isActive = new Date(jobDetail.applicationDeadline) > new Date();
+  const isActive =
+    new Date(jobDetail.applicationDeadline) > new Date() &&
+    jobDetail.status === statusJob.OnGoing;
 
   return (
-    <Link to={`/job/${jobDetail._id}`}>
+    <Link to={`/job/${jobDetail._id}`} style={{ textDecoration: "none" }}>
       <Box
         padding={3}
         sx={{
           border: "1px solid #fff4ec",
-          borderRadius: "0.75rem",
+          borderRadius: "1rem",
           backgroundColor: `${isHotOrNot ? "#fff4ec" : "white"}`,
-          borderColor: `${isChoose && "red"}`,
-          marginBottom: "1rem",
+          borderColor: `${isChoose ? "red" : "#fff4ec"}`,
+          marginBottom: "1.5rem",
           position: "relative",
+          transition: "all 0.3s ease",
+          "&:hover": {
+            transform: "translateY(-2px)",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+            borderColor: isChoose ? "red" : "#ffe0cc",
+          },
         }}
       >
         <Stack
           direction="row"
           justifyContent="space-between"
           alignItems="center"
-          mb={1}
+          mb={2}
         >
-          <Typography variant="body2" sx={{ color: "gray" }}>
+          <Typography
+            variant="body2"
+            sx={{
+              color: "gray",
+              fontSize: "0.875rem",
+              fontWeight: 500,
+            }}
+          >
             {formatDistanceToNow(new Date(jobDetail?.startDate), {
               addSuffix: true,
               locale: vi,
@@ -68,16 +77,38 @@ export const RecruiterComp = ({
                 : "rgba(158, 158, 158, 0.1)",
               color: isActive ? "#4caf50" : "#9e9e9e",
               fontWeight: 500,
+              borderRadius: "6px",
               "& .MuiChip-icon": {
                 color: "inherit",
               },
             }}
           />
         </Stack>
-        <Typography variant="h6" fontWeight="bold">
+
+        <Typography
+          variant="h6"
+          fontWeight="bold"
+          sx={{
+            mb: 2,
+            fontSize: "1.25rem",
+            color: "#1a1a1a",
+            lineHeight: 1.4,
+          }}
+        >
           {jobDetail.title}
         </Typography>
-        <Stack direction="row" spacing={2} alignItems="center">
+
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          sx={{
+            mb: 2,
+            p: 1,
+            borderRadius: "8px",
+            backgroundColor: "rgba(0, 0, 0, 0.02)",
+          }}
+        >
           <img
             src={
               isString
@@ -87,33 +118,59 @@ export const RecruiterComp = ({
                 : "/bss_avatar.png"
             }
             alt={isString ? company : company.companyName}
-            className="w-1/6 border "
+            style={{
+              width: "48px",
+              height: "48px",
+              borderRadius: "8px",
+              objectFit: "cover",
+              border: "1px solid #f0f0f0",
+            }}
           />
-          <Typography variant="body2">
+          <Typography
+            variant="body2"
+            sx={{
+              fontWeight: 500,
+              color: "#424242",
+            }}
+          >
             {isString ? company : company.companyName}
           </Typography>
         </Stack>
+
         <Typography
           fontWeight="bold"
-          sx={{ color: "green", marginBlock: "0.5rem" }}
+          sx={{
+            color: "#2e7d32",
+            marginBlock: "1rem",
+            display: "flex",
+            alignItems: "center",
+            gap: 0.5,
+            fontSize: "1.1rem",
+          }}
         >
-          <MonetizationOnIcon />
+          <MonetizationOnIcon sx={{ fontSize: "1.25rem" }} />
           {jobDetail.minRange} - {jobDetail.maxRange} USD
         </Typography>
+
         <Divider
           sx={{
             borderBottomStyle: "dotted",
-            borderColor: "rgba(0, 0, 0, 0.2)",
+            borderColor: "rgba(0, 0, 0, 0.1)",
+            my: 2,
           }}
         />
+
         <Box marginTop={2}>
-          <ListOfInformation
-            workType="Tại công ty"
-            place={jobDetail.location}
+          <ListOfInformation place={jobDetail.location} />
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+          <ListOfRequirement
+            listOfRequire={jobDetail.majorId.map((major) => ({
+              value: major.value,
+            }))}
           />
         </Box>
-        <ListOfRequirement listOfRequire={jobDetail.majorId} />
-        {isHotOrNot && <ListOfHighlightComp listHighlights={highlights} />}
       </Box>
     </Link>
   );

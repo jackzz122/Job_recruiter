@@ -36,13 +36,13 @@ export const DialogSkill = ({
     try {
       const response = await updateUser(data);
       if (response?.data?.success) {
-        toast.success(response?.data.message);
+        toast.success(response?.data.message || "Update success");
         setOpenSkills(false);
         reset();
       }
     } catch (err) {
       const error = handleError(err);
-      console.log(error);
+      toast.error(error?.message || "Update failed");
     }
   };
 

@@ -1,5 +1,6 @@
 import { useUserLogOutMutation } from "../redux/feature/auth/authApiSlice";
-
+import { handleError } from "../helper/HandleError/handleError";
+import { toast } from "react-toastify";
 export const useLogout = () => {
   const [userLogOut, { isLoading, isSuccess, isError, error }] =
     useUserLogOutMutation();
@@ -8,7 +9,8 @@ export const useLogout = () => {
     try {
       await userLogOut().unwrap();
     } catch (error) {
-      console.log(error);
+      const err = handleError(error);
+      toast.error(err?.message);
     }
   };
 

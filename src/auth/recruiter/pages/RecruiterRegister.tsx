@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import Alert from "@mui/material/Alert";
 import Grid2 from "@mui/material/Grid2";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Business } from "@mui/icons-material";
 import { colorButtonOrange } from "../../../themeContext";
@@ -14,6 +14,8 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import authApi from "../../../api/auth/auth";
 import { toast } from "react-toastify";
 import { handleError } from "../../../helper/HandleError/handleError";
+import { useState } from "react";
+
 interface RegisterFormData {
   companyName: string;
   email: string;
@@ -23,8 +25,7 @@ interface RegisterFormData {
 }
 
 export const RecruiterRegister = () => {
-  const { state } = useLocation();
-  console.log("State", state);
+  const [isSuccess, setIsSuccess] = useState(false);
   const {
     register,
     handleSubmit,
@@ -38,10 +39,18 @@ export const RecruiterRegister = () => {
       websiteUrl: "",
     },
   });
+
   const onSubmitting: SubmitHandler<RegisterFormData> = async (data) => {
     try {
-      const response = await authApi.recruiterRegister(data);
+      const response = await authApi.recruiterRegister({
+        companyName: data.companyName,
+        email: data.email.toLowerCase(),
+        phoneNumber: data.phoneNumber,
+        address: data.address,
+        websiteUrl: data.websiteUrl,
+      });
       if (response.status === 200) {
+        setIsSuccess(true);
         toast.success(
           "Registration successful. Please wait for admin approval."
         );
@@ -51,37 +60,43 @@ export const RecruiterRegister = () => {
       toast.error(error?.message);
     }
   };
-  // if (isSubmitSuccessful) {
-  //   return (
-  //     <Container maxWidth="xl">
-  //       <Box sx={{ minHeight: "100vh", display: "flex", aligns: "center" }}>
-  //         <Paper
-  //           elevation={3}
-  //           sx={{ p: 4, width: "100%", textAlign: "center" }}
-  //         >
-  //           <Business sx={{ fontSize: 60, color: "success.main", mb: 2 }} />
-  //           <Typography variant="h5" gutterBottom>
-  //             Registration Submitted!
-  //           </Typography>
-  //           <Typography color="text.secondary">
-  //             Your request has been sent to admin for review. We'll notify you
-  //             by email once approved.
-  //           </Typography>
-  //           <Link
-  //             to="/recruiter/login"
-  //             className="px-4 py-2 bg-blue-500 text-white rounded-lg inline-block mt-4 hover:bg-blue-700"
-  //           >
-  //             Back to Login
-  //           </Link>
-  //         </Paper>
-  //       </Box>
-  //     </Container>
-  //   );
-  // }
+
+  if (isSuccess) {
+    return (
+      <Container maxWidth="sm">
+        <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center" }}>
+          <Paper
+            elevation={3}
+            sx={{ p: 4, width: "100%", textAlign: "center" }}
+          >
+            <Business sx={{ fontSize: 60, color: colorButtonOrange, mb: 2 }} />
+            <Typography variant="h5" gutterBottom fontWeight="bold">
+              Registration Submitted!
+            </Typography>
+            <Typography color="text.secondary" mb={3}>
+              Your request has been sent to admin for review. We'll notify you
+              by email once approved.
+            </Typography>
+            <Link to="/recruiter/login">
+              <Button
+                variant="contained"
+                sx={{
+                  bgcolor: colorButtonOrange,
+                  "&:hover": { bgcolor: colorButtonOrange },
+                }}
+              >
+                Back to Login
+              </Button>
+            </Link>
+          </Paper>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ minHeight: "100vh", display: "flex", aligns: "center" }}>
+      <Box sx={{ minHeight: "100vh", display: "flex", alignItems: "center" }}>
         <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
           <Box onSubmit={handleSubmit(onSubmitting)} component="form">
             <Box sx={{ textAlign: "center", mb: 3 }}>
@@ -131,7 +146,11 @@ export const RecruiterRegister = () => {
               <Grid2 size={{ xs: 12 }}>
                 <TextField
                   {...register("email", {
-                    required: "Email  is required",
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                      message: "Invalid email address",
+                    },
                   })}
                   error={!!errors.email}
                   helperText={errors.email?.message}
@@ -158,7 +177,7 @@ export const RecruiterRegister = () => {
               <Grid2 size={{ xs: 12 }}>
                 <TextField
                   {...register("address", {
-                    required: "Address  is required",
+                    required: "Address is required",
                   })}
                   error={!!errors.address}
                   helperText={errors.address?.message}
@@ -170,62 +189,32 @@ export const RecruiterRegister = () => {
               <Grid2 size={{ xs: 12 }}>
                 <TextField
                   {...register("websiteUrl", {
-                    required: "Website Url  is required",
+                    required: "Website URL is required",
+                    pattern: {
+                      value:
+                        /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+                      message: "Invalid website URL",
+                    },
                   })}
                   error={!!errors.websiteUrl}
                   helperText={errors.websiteUrl?.message}
                   fullWidth
-                  label="Website Url"
+                  label="Website URL"
                   name="websiteUrl"
                 />
               </Grid2>
-
-              {/* <Grid2 size={{ xs: 12 }}>
-                <Box
-                  sx={{
-                    border: "1px dashed",
-                    borderColor: "divider",
-                    borderRadius: 1,
-                    p: 2,
-                    textAlign: "center",
-                  }}
-                >
-                  <input
-                    type="file"
-                    id="businessLicense"
-                    {...register("businessLicense", {
-                      required: "BusinessLicense name is required",
-                    })}
-                    name="businessLicense"
-                    style={{ display: "none" }}
-                    accept=".pdf,.doc,.docx"
-                  />
-                  {errors.businessLicense && (
-                    <Typography variant="body2" color="error" mb={1}>
-                      {errors.businessLicense?.message}
-                    </Typography>
-                  )}
-                  <label htmlFor="businessLicense">
-                    <Button
-                      component="span"
-                      variant="outlined"
-                      startIcon={<CloudUpload />}
-                      size="small"
-                    >
-                      Upload Business License
-                    </Button>
-                  </label>
-                </Box>
-              </Grid2> */}
             </Grid2>
 
             <Button
               type="submit"
               variant="contained"
-              loading={isSubmitting}
               fullWidth
               disabled={isSubmitting}
-              sx={{ mt: 3, backgroundColor: colorButtonOrange }}
+              sx={{
+                mt: 3,
+                bgcolor: colorButtonOrange,
+                "&:hover": { bgcolor: colorButtonOrange },
+              }}
             >
               {isSubmitting ? (
                 <CircularProgress size={24} />
