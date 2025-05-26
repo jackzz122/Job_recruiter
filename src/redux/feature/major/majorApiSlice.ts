@@ -37,7 +37,7 @@ export const majorApiSlice = ApiSlice.injectEndpoints({
         method: "PUT",
         body: data.body,
       }),
-      invalidatesTags: (results, error, data) => [
+      invalidatesTags: (_results, _error, data) => [
         { type: "Majors", id: data._id },
       ],
     }),
@@ -46,7 +46,7 @@ export const majorApiSlice = ApiSlice.injectEndpoints({
         url: `deleteMajorCate/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (results, error, id) => [{ type: "Majors", id }],
+      invalidatesTags: (_results, _error, id) => [{ type: "Majors", id }],
     }),
   }),
 });

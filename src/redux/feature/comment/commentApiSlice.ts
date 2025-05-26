@@ -15,7 +15,7 @@ export const commentApiSlice = ApiSlice.injectEndpoints({
     }),
     createComment: builder.mutation<
       CommentTypeResponse<CommentType>,
-      Omit<CommentType , "_id">
+      Omit<CommentType, "_id">
     >({
       query: (data) => ({
         url: "createdComment",
@@ -29,7 +29,7 @@ export const commentApiSlice = ApiSlice.injectEndpoints({
         url: `deleteComment/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (results, error, id) => [{ type: "Comments", id }],
+      invalidatesTags: (_results, _error, id) => [{ type: "Comments", id }],
     }),
   }),
 });

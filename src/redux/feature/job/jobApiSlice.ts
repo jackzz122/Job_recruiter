@@ -74,7 +74,7 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
         method: "POST",
         body: data.applicant,
       }),
-      invalidatesTags: (results, error, data) => [
+      invalidatesTags: (_results, _error, data) => [
         { type: "Jobs", id: data.id },
       ],
     }),
@@ -111,7 +111,7 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
         method: "PUT",
         body: body,
       }),
-      invalidatesTags: (results, error, data) => [
+      invalidatesTags: (_results, _error, data) => [
         { type: "Jobs", id: data._id },
       ],
     }),
@@ -120,7 +120,7 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
         url: `/deleteJobPosting/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (results, error, id) => [{ type: "Jobs", id }],
+      invalidatesTags: (_results, _error, id) => [{ type: "Jobs", id }],
     }),
   }),
 });

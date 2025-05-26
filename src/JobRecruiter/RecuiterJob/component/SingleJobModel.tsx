@@ -35,7 +35,7 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
   const [status, setStatus] = useState<statusJob>(jobs.status);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const recruiter = useSelector(selectUser);
-  const poster_id = jobs.accountId._id;
+  const poster_id = (jobs.accountId as { _id: string })._id;
   const [changeStatus, { isLoading }] = useChangeStatusMutation();
   const handleStatusClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -181,7 +181,8 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <PersonIcon fontSize="small" color="action" />
             <Typography variant="body2">
-              Poster: {jobs.accountId.fullname}
+              Poster:{" "}
+              {(jobs.accountId as { _id: string; fullname: string }).fullname}
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

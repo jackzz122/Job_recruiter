@@ -29,6 +29,7 @@ import { useUpdateCompanyInfoMutation } from "../../../redux/feature/user/recrui
 import { toast } from "react-toastify";
 
 const defaultCompanyInfo: Omit<CompanyType, "_id"> = {
+  accountID: "",
   companyName: "",
   address: "",
   phoneNumber: "",

@@ -64,7 +64,8 @@ export const DialogViewJob = ({
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <PersonIcon fontSize="small" color="action" />
               <Typography fontWeight="bold" variant="body1">
-                Poster: {job.accountId.fullname}
+                Poster:{" "}
+                {(job.accountId as { _id: string; fullname: string }).fullname}
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

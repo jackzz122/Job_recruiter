@@ -23,7 +23,7 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
         method: "POST",
         body: data.body,
       }),
-      invalidatesTags: (result, error, data) => [
+      invalidatesTags: (_result, _error, data) => [
         { type: "Pendings", id: data.id },
       ],
     }),
@@ -105,7 +105,7 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
         url: `/deletePendingApprove/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "Pendings", id }],
+      invalidatesTags: (_result, _error, id) => [{ type: "Pendings", id }],
     }),
     deleteUserByAdmin: builder.mutation<
       PendingTypeResponse<pendingType>,

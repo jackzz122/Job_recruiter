@@ -51,7 +51,7 @@ export const reportApiSlice = ApiSlice.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: (results, error, data) => [
+      invalidatesTags: (_results, _error, data) => [
         { type: "Reports", id: "LIST" },
         { type: "Comments", id: data.id },
         { type: "Jobs", id: data.id },
@@ -67,7 +67,7 @@ export const reportApiSlice = ApiSlice.injectEndpoints({
         method: "DELETE",
         body: data,
       }),
-      invalidatesTags: (results, error, data) => [
+      invalidatesTags: (_results, _error, data) => [
         { type: "Reports", id: "LIST" },
         { type: "Comments", id: data.id },
         { type: "Jobs", id: data.id },
@@ -83,7 +83,7 @@ export const reportApiSlice = ApiSlice.injectEndpoints({
         method: "PUT",
         body: data,
       }),
-      invalidatesTags: (results, error, data) => [
+      invalidatesTags: (_results, _error, data) => [
         { type: "Reports", id: data.id },
       ],
     }),
@@ -92,7 +92,7 @@ export const reportApiSlice = ApiSlice.injectEndpoints({
         url: `/reports/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (results, error, id) => [{ type: "Reports", id }],
+      invalidatesTags: (_result, _error, id) => [{ type: "Reports", id }],
     }),
   }),
 });

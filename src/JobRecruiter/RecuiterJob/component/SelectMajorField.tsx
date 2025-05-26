@@ -19,7 +19,7 @@ export const SelectMajorField = ({ majors }: { majors: string[] }) => {
   });
 
   const selectedValues = fields
-    .map((field, index) => {
+    .map((_field, index) => {
       return watch(`majorId.${index}.value`);
     })
     .filter(Boolean);
@@ -28,7 +28,7 @@ export const SelectMajorField = ({ majors }: { majors: string[] }) => {
     <Box sx={{ mb: 3 }}>
       <FormLabel component="legend">Job Key Skills</FormLabel>
       <Stack spacing={2}>
-        {fields.map((field, index) => {
+        {fields.map((_field, index) => {
           const isLast = index === fields.length - 1;
           const currentValue = watch(`majorId.${index}.value`);
 
