@@ -17,16 +17,23 @@ import { RecruiterAccount } from "./ApprovedItem";
 
 const transformPendingToRecruiter = (
   pending: pendingType
-): RecruiterAccount => ({
-  _id: pending._id,
-  avatarIMG: pending.accountID.avatarIMG || "",
-  name: pending.accountID.fullname,
-  companyName: pending.companyName,
-  email: pending.accountID.email,
-  status: pending.status,
-  phone: pending.phoneNumber,
-  createdAt: pending.createdAt.toISOString(),
-});
+): RecruiterAccount => {
+  return {
+    _id: pending._id,
+    avatarIMG: pending.accountID.avatarIMG || "",
+    name: pending.accountID.fullname,
+    companyName: pending.companyName,
+    email: pending.accountID.email,
+    status: pending.status,
+    phone: pending.phoneNumber,
+    createdAt:
+      pending.createdAt instanceof Date
+        ? pending.createdAt.toISOString()
+        : typeof pending.createdAt === "string"
+        ? pending.createdAt
+        : new Date(pending.createdAt).toISOString(),
+  };
+};
 
 export const PendingItem = () => {
   const { data: pendingList } = useGetPendingListQuery();

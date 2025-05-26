@@ -36,7 +36,7 @@ export const ListOfCompany = () => {
       </Grid2>
     ));
 
-  console.log("companyList", listOfCompany);
+  console.log("companyList", companyList);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
