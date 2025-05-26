@@ -20,7 +20,7 @@ export const authApiSlice = ApiSlice.injectEndpoints({
         body: credentials,
       }),
     }),
-    userRegister: builder.mutation({
+    userRegister: builder.mutation<ResponseType<UserType>, regisData>({
       query: (userData: regisData) =>
         dataForLogin_Register(userData, "createAccount"),
     }),
@@ -31,7 +31,7 @@ export const authApiSlice = ApiSlice.injectEndpoints({
         body: { email },
       }),
     }),
-    recruiterRegister: builder.mutation({
+    recruiterRegister: builder.mutation<ResponseType<UserType>, recruiterData>({
       query: (recruiterData: recruiterData) =>
         dataForLogin_Register(recruiterData, "RegisterRecruiter"),
     }),

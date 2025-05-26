@@ -9,10 +9,10 @@ import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import PersonIcon from "@mui/icons-material/Person";
 import { toast } from "react-toastify";
-import authApi from "../../../api/auth/auth";
 import { handleError } from "../../../helper/HandleError/handleError";
 import MailIcon from "@mui/icons-material/Mail";
 import PasswordIcon from "@mui/icons-material/Password";
+import { useUserRegisterMutation } from "../../../redux/feature/auth/authApiSlice";
 export type FormRegisterField = {
   fullname: string;
   email: string;
@@ -21,6 +21,7 @@ export type FormRegisterField = {
 
 export const Register = () => {
   const navigate = useNavigate();
+  const [userRegister, { isLoading }] = useUserRegisterMutation();
   const {
     register,
     handleSubmit,
@@ -34,13 +35,13 @@ export const Register = () => {
   });
   const onSubmitting: SubmitHandler<FormRegisterField> = async (data) => {
     try {
-      const response = await authApi.register({
+      const response = await userRegister({
         fullname: data.fullname,
         email: data.email.toLowerCase(),
         password: data.password,
       });
-      if (response.status === 200) {
-        toast.success("Account successfully registered");
+      if (response.data?.success) {
+        toast.success(response.data?.message || "Registration successful");
         navigate("/", {
           replace: true,
         });
@@ -143,6 +144,7 @@ export const Register = () => {
             variant="contained"
             size="large"
             type="submit"
+            loading={isLoading}
             sx={{
               bgcolor: "red",
               "&:hover": { bgcolor: "#FF8A3D" },

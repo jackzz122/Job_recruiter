@@ -11,10 +11,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { Business } from "@mui/icons-material";
 import { colorButtonOrange } from "../../../themeContext";
 import { SubmitHandler, useForm } from "react-hook-form";
-import authApi from "../../../api/auth/auth";
 import { toast } from "react-toastify";
 import { handleError } from "../../../helper/HandleError/handleError";
 import { useState } from "react";
+import { useRecruiterRegisterMutation } from "../../../redux/feature/auth/authApiSlice";
 
 interface RegisterFormData {
   companyName: string;
@@ -26,6 +26,7 @@ interface RegisterFormData {
 
 export const RecruiterRegister = () => {
   const [isSuccess, setIsSuccess] = useState(false);
+  const [recruiterRegister] = useRecruiterRegisterMutation();
   const {
     register,
     handleSubmit,
@@ -42,18 +43,16 @@ export const RecruiterRegister = () => {
 
   const onSubmitting: SubmitHandler<RegisterFormData> = async (data) => {
     try {
-      const response = await authApi.recruiterRegister({
+      const response = await recruiterRegister({
         companyName: data.companyName,
         email: data.email.toLowerCase(),
         phoneNumber: data.phoneNumber,
         address: data.address,
         websiteUrl: data.websiteUrl,
       });
-      if (response.status === 200) {
+      if (response.data?.success) {
         setIsSuccess(true);
-        toast.success(
-          "Registration successful. Please wait for admin approval."
-        );
+        toast.success(response.data?.message || "Registration successful");
       }
     } catch (err) {
       const error = handleError(err);
