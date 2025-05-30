@@ -155,7 +155,7 @@ export function LayoutForRecruiter_Admin({
                           "/defaultAvatar.png"
                         ).logo
                           ? (user?.companyId as CompanyType)?.logo
-                          : "/bss_avatar.png"
+                          : "/defaultAvatar.png"
                       }
                     />
                   ))}

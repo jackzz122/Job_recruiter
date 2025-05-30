@@ -9,6 +9,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 import { colorButtonOrange } from "../../../themeContext";
 
 export const BasicInformation = () => {
@@ -43,8 +44,43 @@ export const BasicInformation = () => {
         }}
       />
 
+      {/* Experience */}
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+          Years of Experience Required
+        </Typography>
+        <TextField
+          fullWidth
+          type="number"
+          {...register("experience", {
+            required: "Experience is required",
+            valueAsNumber: true,
+            min: {
+              value: 0,
+              message: "Experience cannot be negative",
+            },
+            max: {
+              value: 50,
+              message: "Experience cannot exceed 50 years",
+            },
+          })}
+          error={!!errors.experience}
+          helperText={errors?.experience?.message}
+          placeholder="Enter years of experience required"
+          variant="outlined"
+          size="small"
+          slotProps={{
+            input: {
+              startAdornment: (
+                <WorkHistoryIcon sx={{ color: colorButtonOrange, mr: 1 }} />
+              ),
+            },
+          }}
+        />
+      </Box>
+
       {/* Number of People */}
-      <Box>
+      <Box sx={{ mt: 2 }}>
         <Typography variant="subtitle2" color="text.secondary" gutterBottom>
           Number of People Needed
         </Typography>

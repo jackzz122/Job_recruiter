@@ -138,7 +138,7 @@ export const Dashboard = () => {
   }
 
   return (
-    <Box sx={{ background: "#F8F9FA" }}>
+    <Box sx={{ background: "#F8F9FA", height: "100vh" }}>
       <Paper
         elevation={0}
         sx={{

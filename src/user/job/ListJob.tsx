@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   Search as SearchIcon,
   FilterList as FilterIcon,
@@ -21,29 +22,161 @@ import Pagination from "@mui/material/Pagination";
 import { CardJob } from "./components/Card/CardJob";
 import { useGetAllJobsQuery } from "../../redux/feature/job/jobApiSlice";
 import { colorButtonOrange } from "../../themeContext";
-import { statusCompany, statusJob } from "../../types/JobType";
+import { statusCompany, statusJob, JobResponse } from "../../types/JobType";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import { CompanyType } from "../../types/CompanyType";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const LOCATIONS = ["Remote", "New York, NY", "San Francisco, CA", "Boston, MA"];
-const EXPERIENCE_LEVELS = ["Entry Level", "Mid Level", "Senior Level"];
-const JOB_TYPES = ["Full-time", "Part-time", "Contract", "Internship"];
+const EXPERIENCE_LEVELS = [
+  { label: "All Experience Levels", value: "" },
+  { label: "Entry Level (0-2 years)", value: "0-2" },
+  { label: "Mid Level (2-5 years)", value: "2-5" },
+  { label: "Senior Level (5+ years)", value: "5+" },
+];
+
+const SALARY_RANGES = [
+  { label: "All Salary Ranges", value: "" },
+  { label: "Under $50,000", value: "0-50000" },
+  { label: "$50,000 - $100,000", value: "50000-100000" },
+  { label: "$100,000 - $150,000", value: "100000-150000" },
+  { label: "Over $150,000", value: "150000+" },
+];
+
+const PEOPLE_HIRING = [
+  { label: "All Sizes", value: "" },
+  { label: "1-5 people", value: "1-5" },
+  { label: "6-10 people", value: "6-10" },
+  { label: "11-20 people", value: "11-20" },
+  { label: "20+ people", value: "20+" },
+];
 
 export const ListJob = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedLocation, setSelectedLocation] = useState<string>("");
-  const [selectedExperience, setSelectedExperience] = useState<string>("");
-  const [selectedJobType, setSelectedJobType] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
 
+  // Get values from URL params with defaults
+  const searchTerm = searchParams.get("search") || "";
+  const selectedExperience = searchParams.get("experience") || "";
+  const selectedSalary = searchParams.get("salary") || "";
+  const selectedPeople = searchParams.get("people") || "";
+
   const { data: jobList, isLoading, isError } = useGetAllJobsQuery();
+  // Update URL params when filters change
+  const handleSearchChange = (value: string) => {
+    setSearchParams((prev) => {
+      if (value) {
+        prev.set("search", value);
+      } else {
+        prev.delete("search");
+      }
+      return prev;
+    });
+  };
+
+  const handleExperienceChange = (value: string) => {
+    setSearchParams((prev) => {
+      if (value) {
+        prev.set("experience", value);
+      } else {
+        prev.delete("experience");
+      }
+      return prev;
+    });
+  };
+
+  const handleSalaryChange = (value: string) => {
+    setSearchParams((prev) => {
+      if (value) {
+        prev.set("salary", value);
+      } else {
+        prev.delete("salary");
+      }
+      return prev;
+    });
+  };
+
+  const handlePeopleChange = (value: string) => {
+    setSearchParams((prev) => {
+      if (value) {
+        prev.set("people", value);
+      } else {
+        prev.delete("people");
+      }
+      return prev;
+    });
+  };
+
+  const handleClearFilters = () => {
+    setSearchParams({});
+    setShowFilters(true);
+  };
+
+  const filteredJobs = useMemo(() => {
+    if (!jobList?.data) return [];
+
+    return jobList.data.filter((job: JobResponse) => {
+      // Basic status filters
+      const isActiveJob = job.status === statusJob.OnGoing;
+      const companyData = job.companyId as CompanyType;
+      const isApprovedCompany = companyData.status === statusCompany.APPROVED;
+
+      if (!isActiveJob || !isApprovedCompany) return false;
+
+      // Search term filter
+      const searchTermLower = searchTerm.toLowerCase();
+      const matchesSearch =
+        searchTerm === "" ||
+        job.title.toLowerCase().includes(searchTermLower) ||
+        job.description.summary.toLowerCase().includes(searchTermLower) ||
+        companyData.companyName.toLowerCase().includes(searchTermLower) ||
+        job.description.keySkills.bulletPoints.some((skill) =>
+          skill.value.toLowerCase().includes(searchTermLower)
+        );
+
+      // Experience filter
+      const matchesExperience =
+        selectedExperience === "" ||
+        (() => {
+          const exp = job.experience;
+          const [min, max] = selectedExperience.split("-").map(Number);
+          if (selectedExperience === "5+") return exp >= 5;
+          return exp >= min && exp <= max;
+        })();
+
+      // Salary range filter
+      const matchesSalary =
+        selectedSalary === "" ||
+        (() => {
+          const avgSalary = (job.minRange + job.maxRange) / 2;
+          const [min, max] = selectedSalary.split("-").map(Number);
+          if (selectedSalary === "150000+") return avgSalary >= 150000;
+          return avgSalary >= min && avgSalary <= max;
+        })();
+
+      // People hiring filter
+      const matchesPeople =
+        selectedPeople === "" ||
+        (() => {
+          const people = job.sizingPeople;
+          const [min, max] = selectedPeople.split("-").map(Number);
+          if (selectedPeople === "20+") return people >= 20;
+          return people >= min && people <= max;
+        })();
+
+      return (
+        matchesSearch && matchesExperience && matchesSalary && matchesPeople
+      );
+    });
+  }, [jobList, searchTerm, selectedExperience, selectedSalary, selectedPeople]);
+
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     setPage(value);
   };
+
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
       {/* Header */}
@@ -73,7 +206,7 @@ export const ListJob = () => {
                 placeholder="Search jobs by title, skill or company"
                 variant="outlined"
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 slotProps={{
                   input: {
                     startAdornment: (
@@ -109,26 +242,6 @@ export const ListJob = () => {
           {showFilters && (
             <Box mt={3}>
               <Grid2 container spacing={3}>
-                {/* Location Filter */}
-                <Grid2 size={{ xs: 12, md: 4 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="location-select-label">Location</InputLabel>
-                    <Select
-                      labelId="location-select-label"
-                      value={selectedLocation}
-                      label="Location"
-                      onChange={(e) => setSelectedLocation(e.target.value)}
-                    >
-                      <MenuItem value="">All Locations</MenuItem>
-                      {LOCATIONS.map((location) => (
-                        <MenuItem key={location} value={location}>
-                          {location}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid2>
-
                 {/* Experience Level Filter */}
                 <Grid2 size={{ xs: 12, md: 4 }}>
                   <FormControl fullWidth>
@@ -139,32 +252,53 @@ export const ListJob = () => {
                       labelId="experience-select-label"
                       value={selectedExperience}
                       label="Experience Level"
-                      onChange={(e) => setSelectedExperience(e.target.value)}
+                      onChange={(e) => handleExperienceChange(e.target.value)}
                     >
-                      <MenuItem value="">All Experience Levels</MenuItem>
                       {EXPERIENCE_LEVELS.map((level) => (
-                        <MenuItem key={level} value={level}>
-                          {level}
+                        <MenuItem key={level.value} value={level.value}>
+                          {level.label}
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                 </Grid2>
 
-                {/* Job Type Filter */}
+                {/* Salary Range Filter */}
                 <Grid2 size={{ xs: 12, md: 4 }}>
                   <FormControl fullWidth>
-                    <InputLabel id="job-type-select-label">Job Type</InputLabel>
+                    <InputLabel id="salary-select-label">
+                      Salary Range
+                    </InputLabel>
                     <Select
-                      labelId="job-type-select-label"
-                      value={selectedJobType}
-                      label="Job Type"
-                      onChange={(e) => setSelectedJobType(e.target.value)}
+                      labelId="salary-select-label"
+                      value={selectedSalary}
+                      label="Salary Range"
+                      onChange={(e) => handleSalaryChange(e.target.value)}
                     >
-                      <MenuItem value="">All Job Types</MenuItem>
-                      {JOB_TYPES.map((type) => (
-                        <MenuItem key={type} value={type}>
-                          {type}
+                      {SALARY_RANGES.map((range) => (
+                        <MenuItem key={range.value} value={range.value}>
+                          {range.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid2>
+
+                {/* People Hiring Filter */}
+                <Grid2 size={{ xs: 12, md: 4 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="people-select-label">
+                      People Hiring
+                    </InputLabel>
+                    <Select
+                      labelId="people-select-label"
+                      value={selectedPeople}
+                      label="People Hiring"
+                      onChange={(e) => handlePeopleChange(e.target.value)}
+                    >
+                      {PEOPLE_HIRING.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
                         </MenuItem>
                       ))}
                     </Select>
@@ -177,23 +311,22 @@ export const ListJob = () => {
       </Card>
 
       {/* Job Listings */}
-      {isError && <Typography>Error</Typography>}
-      {isLoading && <Typography>Loading</Typography>}
-      {jobList && (
+      {isError && (
+        <Typography color="error" align="center" sx={{ py: 4 }}>
+          Error loading jobs. Please try again later.
+        </Typography>
+      )}
+
+      {isLoading && (
+        <Box display="flex" justifyContent="center" py={4}>
+          <CircularProgress />
+        </Box>
+      )}
+
+      {!isLoading && !isError && (
         <Stack spacing={3}>
-          {jobList.data.filter(
-            (job) =>
-              job.status === statusJob.OnGoing &&
-              (job.companyId as CompanyType).status === statusCompany.APPROVED
-          ).length > 0 ? (
-            jobList.data
-              .filter(
-                (job) =>
-                  job.status === statusJob.OnGoing &&
-                  (job.companyId as CompanyType).status ===
-                    statusCompany.APPROVED
-              )
-              .map((job) => <CardJob key={job._id} job={job} />)
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map((job) => <CardJob key={job._id} job={job} />)
           ) : (
             <Card
               sx={{
@@ -236,38 +369,49 @@ export const ListJob = () => {
                   mb: 3,
                 }}
               >
-                We couldn't find any jobs matching your criteria. Try adjusting
-                your filters or search terms.
+                {searchTerm ||
+                selectedExperience ||
+                selectedSalary ||
+                selectedPeople
+                  ? "We couldn't find any jobs matching your criteria. Try adjusting your filters or search terms."
+                  : "There are no active job listings at the moment. Please check back later."}
               </Typography>
-              <Button
-                variant="outlined"
-                startIcon={<FilterIcon />}
-                onClick={() => setShowFilters(true)}
-                sx={{
-                  borderColor: colorButtonOrange,
-                  color: colorButtonOrange,
-                  "&:hover": {
+              {(searchTerm ||
+                selectedExperience ||
+                selectedSalary ||
+                selectedPeople) && (
+                <Button
+                  variant="outlined"
+                  startIcon={<FilterIcon />}
+                  onClick={handleClearFilters}
+                  sx={{
                     borderColor: colorButtonOrange,
-                    backgroundColor: "rgba(255, 152, 0, 0.04)",
-                  },
-                }}
-              >
-                Adjust Filters
-              </Button>
+                    color: colorButtonOrange,
+                    "&:hover": {
+                      borderColor: colorButtonOrange,
+                      backgroundColor: "rgba(255, 152, 0, 0.04)",
+                    },
+                  }}
+                >
+                  Clear All Filters
+                </Button>
+              )}
             </Card>
           )}
         </Stack>
       )}
 
       {/* Pagination */}
-      <Box display="flex" justifyContent="center" mt={4}>
-        <Pagination
-          count={10}
-          page={page}
-          onChange={handlePageChange}
-          color="primary"
-        />
-      </Box>
+      {filteredJobs.length > 0 && (
+        <Box display="flex" justifyContent="center" mt={4}>
+          <Pagination
+            count={Math.ceil(filteredJobs.length / 10)}
+            page={page}
+            onChange={handlePageChange}
+            color="primary"
+          />
+        </Box>
+      )}
     </Container>
   );
 };

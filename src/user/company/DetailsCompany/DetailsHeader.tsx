@@ -27,11 +27,14 @@ import { CompanySaveResponse } from "../../../types/UserType";
 import { useForm } from "react-hook-form";
 import { useCreateReportMutation } from "../../../redux/feature/report/reportApiSlice";
 import { targetType } from "../../../types/ReportType";
+import { useGetCommentsQuery } from "../../../redux/feature/comment/commentApiSlice";
+import { CommentType } from "../../../types/CommentType";
 
 export const DetailsHeader = () => {
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState(false);
   const [openReportDialog, setOpenReportDialog] = useState(false);
+  const [isCommented, setIsCommented] = useState(false);
   const { register, handleSubmit } = useForm<{
     reportTitle: string;
     reportReason: string;
@@ -48,6 +51,9 @@ export const DetailsHeader = () => {
   const { data: jobs } = useGetJobPostingsQuery(id ?? "", {
     skip: !id,
   });
+  const { data: comments } = useGetCommentsQuery(id ?? "", {
+    skip: !id,
+  });
   const user = useSelector(selectUser);
   const [removeFavouriteCompany, { isLoading: removeLoading }] =
     useRemoveFavouriteCompanyMutation();
@@ -55,6 +61,19 @@ export const DetailsHeader = () => {
     useAddFavouriteCompanyMutation();
   const [createReport, { isLoading: createReportLoading }] =
     useCreateReportMutation();
+  useEffect(() => {
+    if (id && comments?.data && user?._id) {
+      if (
+        comments.data.some(
+          (comment: CommentType) => comment?.account_id?._id === user._id
+        )
+      ) {
+        setIsCommented(true);
+      } else {
+        setIsCommented(false);
+      }
+    }
+  }, [comments, user, id]);
   const handleAddFavourite = async () => {
     if (!id) return;
     try {
@@ -159,19 +178,20 @@ export const DetailsHeader = () => {
             <br />
             <Stack direction="row" spacing={2}>
               <Button
+                disabled={isCommented}
                 onClick={() =>
                   navigate(
                     `/writeReview?companyName=${companyDetail?.data.companyName}&companyId=${companyDetail?.data._id}`
                   )
                 }
                 sx={{
-                  backgroundColor: "red",
+                  textTransform: isCommented ? "none" : "uppercase",
+                  backgroundColor: isCommented ? "gray" : "red",
                   color: "white",
                   minWidth: "10rem",
-                  padding: "0.75rem",
                 }}
               >
-                Write Review
+                {isCommented ? "You already commented" : "Write Review"}
               </Button>
               {!isFavourite ? (
                 <Button

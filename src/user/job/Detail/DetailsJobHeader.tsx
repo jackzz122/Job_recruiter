@@ -202,7 +202,8 @@ export default function DetailsJobHeader() {
             <Stack direction="row" alignItems="center" spacing={1}>
               <WorkOutlineIcon color="action" />
               <Typography variant="body2" color="text.secondary">
-                Tại công ty
+                {job?.data.experience + "+"}{" "}
+                {job?.data.experience === 1 ? "experience" : "experiences"}
               </Typography>
             </Stack>
             <Stack direction="row" alignItems="center" spacing={1}>

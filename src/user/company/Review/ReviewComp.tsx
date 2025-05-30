@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Rating from "@mui/material/Rating";
-import LinearProgress from "@mui/material/LinearProgress";
 import { HeaderOfDetails } from "../../../user/company/DetailsCompany/HeaderOfDetails";
 import { ListOfComment } from "./components/ListOfComment";
 import { useGetCommentsQuery } from "../../../redux/feature/comment/commentApiSlice";
@@ -13,6 +12,7 @@ import Grid2 from "@mui/material/Grid2";
 import StarIcon from "@mui/icons-material/Star";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import CommentIcon from "@mui/icons-material/Comment";
+import { CommentStatus, CommentType } from "../../../types/CommentType";
 
 export const ReviewComp = () => {
   const { id } = useParams();
@@ -20,44 +20,51 @@ export const ReviewComp = () => {
     skip: !id,
   });
 
-  const ratingStats = useMemo(() => {
-    if (!commentList?.data) {
+  const { averageRating, totalReviews, ratingDistribution, positiveReviews } =
+    useMemo(() => {
+      if (!commentList?.data) {
+        return {
+          averageRating: 0,
+          totalReviews: 0,
+          ratingDistribution: [0, 0, 0, 0, 0],
+          positiveReviews: 0,
+        };
+      }
+
+      const comments = commentList.data.filter((comment: CommentType) => {
+        return comment.status === CommentStatus.ACTIVE;
+      });
+
+      // Filter active comments first
+      const activeComments = comments.filter(
+        (comment) => comment.status === CommentStatus.ACTIVE
+      );
+
+      // Calculate average rating only from active comments
+      const averageRating =
+        activeComments.reduce((acc, comment) => acc + comment.rating, 0) /
+          activeComments.length || 0;
+
+      const totalReviews = activeComments.length;
+
+      // Calculate rating distribution only from active comments
+      const ratingCounts = [0, 0, 0, 0, 0];
+      activeComments.forEach((comment) => {
+        ratingCounts[comment.rating - 1]++;
+      });
+
+      // Calculate positive reviews (rating >= 4) only from active comments
+      const positiveReviews = activeComments.filter(
+        (comment) => comment.rating >= 4
+      ).length;
+
       return {
-        averageRating: 0,
-        totalReviews: 0,
-        ratingDistribution: [0, 0, 0, 0, 0],
-        positiveReviews: 0,
+        averageRating,
+        totalReviews,
+        ratingDistribution: ratingCounts.reverse(),
+        positiveReviews,
       };
-    }
-
-    const comments = commentList.data;
-    const totalReviews = comments.length;
-
-    // Calculate average rating
-    const totalRating = comments.reduce(
-      (sum, comment) => sum + comment.rating,
-      0
-    );
-    const averageRating = totalReviews > 0 ? totalRating / totalReviews : 0;
-
-    // Calculate rating distribution
-    const ratingCounts = [0, 0, 0, 0, 0];
-    comments.forEach((comment) => {
-      ratingCounts[comment.rating - 1]++;
-    });
-
-    // Calculate positive reviews (rating >= 4)
-    const positiveReviews = comments.filter(
-      (comment) => comment.rating >= 4
-    ).length;
-
-    return {
-      averageRating,
-      totalReviews,
-      ratingDistribution: ratingCounts.reverse(),
-      positiveReviews,
-    };
-  }, [commentList?.data]);
+    }, [commentList?.data]);
 
   const getRatingColor = (rating: number) => {
     if (rating >= 4) return "#2e7d32";
@@ -113,18 +120,18 @@ export const ReviewComp = () => {
                     sx={{
                       fontWeight: "bold",
                       mb: 1,
-                      color: getRatingColor(ratingStats.averageRating),
+                      color: getRatingColor(averageRating),
                       fontSize: { xs: "2.5rem", md: "3rem" },
                     }}
                   >
-                    {ratingStats.averageRating.toFixed(1)}
+                    {averageRating.toFixed(1)}
                   </Typography>
                   <Rating
-                    value={ratingStats.averageRating}
+                    value={averageRating}
                     readOnly
                     size="large"
                     sx={{ mb: 1 }}
-                    precision={0.1}
+                    precision={0.5}
                   />
                   <Typography
                     variant="subtitle1"
@@ -134,72 +141,73 @@ export const ReviewComp = () => {
                       letterSpacing: "0.5px",
                     }}
                   >
-                    Based on {ratingStats.totalReviews} reviews
+                    Based on {totalReviews} reviews
                   </Typography>
                 </Box>
 
                 {/* Rating Distribution */}
                 <Box sx={{ flex: 1 }}>
                   <Stack spacing={1.5}>
-                    {ratingStats.ratingDistribution.map((count, index) => (
-                      <Box
-                        key={index}
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 2,
-                          p: 0.5,
-                          borderRadius: 1,
-                          "&:hover": {
-                            backgroundColor: "rgba(0, 0, 0, 0.02)",
-                          },
-                        }}
-                      >
+                    {ratingDistribution.map((count, index) => {
+                      const rating = 5 - index;
+                      const percentage = totalReviews
+                        ? (count / totalReviews) * 100
+                        : 0;
+                      return (
                         <Box
+                          key={rating}
                           sx={{
                             display: "flex",
                             alignItems: "center",
-                            width: 100,
+                            gap: 2,
+                            p: 0.5,
+                            borderRadius: 1,
+                            "&:hover": {
+                              backgroundColor: "rgba(0, 0, 0, 0.02)",
+                            },
                           }}
                         >
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              width: 100,
+                            }}
+                          >
+                            <Typography
+                              variant="body2"
+                              sx={{
+                                mr: 1,
+                                fontWeight: 500,
+                                color: "text.primary",
+                              }}
+                            >
+                              {rating} stars
+                            </Typography>
+                            <StarIcon sx={{ color: "gold", fontSize: 16 }} />
+                          </Box>
+                          <Box sx={{ flex: 1, height: 8, bgcolor: "grey.200" }}>
+                            <Box
+                              sx={{
+                                width: `${percentage}%`,
+                                height: "100%",
+                                bgcolor: "primary.main",
+                              }}
+                            />
+                          </Box>
                           <Typography
                             variant="body2"
                             sx={{
-                              mr: 1,
+                              minWidth: 40,
                               fontWeight: 500,
                               color: "text.primary",
                             }}
                           >
-                            {5 - index} stars
+                            {count}
                           </Typography>
-                          <StarIcon sx={{ color: "gold", fontSize: 16 }} />
                         </Box>
-                        <LinearProgress
-                          variant="determinate"
-                          value={(count / ratingStats.totalReviews) * 100}
-                          sx={{
-                            flex: 1,
-                            height: 6,
-                            borderRadius: 3,
-                            backgroundColor: "rgba(0, 0, 0, 0.05)",
-                            "& .MuiLinearProgress-bar": {
-                              backgroundColor: getRatingColor(5 - index),
-                              borderRadius: 3,
-                            },
-                          }}
-                        />
-                        <Typography
-                          variant="body2"
-                          sx={{
-                            minWidth: 40,
-                            fontWeight: 500,
-                            color: "text.primary",
-                          }}
-                        >
-                          {count}
-                        </Typography>
-                      </Box>
-                    ))}
+                      );
+                    })}
                   </Stack>
                 </Box>
               </Stack>
@@ -240,7 +248,7 @@ export const ReviewComp = () => {
                           color: "success.main",
                         }}
                       >
-                        {ratingStats.positiveReviews}
+                        {positiveReviews}
                       </Typography>
                       <Typography
                         variant="body2"
@@ -289,7 +297,7 @@ export const ReviewComp = () => {
                           color: "primary.main",
                         }}
                       >
-                        {ratingStats.totalReviews}
+                        {totalReviews}
                       </Typography>
                       <Typography
                         variant="body2"

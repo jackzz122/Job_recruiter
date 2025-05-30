@@ -10,9 +10,10 @@ import { vi } from "date-fns/locale";
 import { useRemoveFavouriteJobMutation } from "../../../../redux/feature/user/userApiSlice";
 import { handleError } from "../../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 export const JobSavesItem = ({ job }: { job: JobSaveResponse }) => {
   const [removeFavouriteJob, { isLoading }] = useRemoveFavouriteJobMutation();
+  const navigate = useNavigate();
   const handleRemoveFavouriteJob = async () => {
     try {
       const response = await removeFavouriteJob(job._id);
@@ -87,6 +88,7 @@ export const JobSavesItem = ({ job }: { job: JobSaveResponse }) => {
           </Typography>
           <Stack direction="row">
             <Button
+              onClick={() => navigate(`/job/${job._id}`)}
               sx={{ minWidth: "100px", color: "red", border: "1px solid red" }}
               variant="outlined"
             >

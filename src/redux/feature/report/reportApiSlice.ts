@@ -60,7 +60,11 @@ export const reportApiSlice = ApiSlice.injectEndpoints({
     }),
     deleteReportItem: builder.mutation<
       ReportResponseType<ReportType>,
-      { id: string; targetType: string }
+      {
+        reportId: string;
+        targetType: targetType.JOB | targetType.COMMENT | targetType.COMPANY;
+        reportTarget: string;
+      }
     >({
       query: (data) => ({
         url: `deleteReportItem`,
@@ -69,9 +73,9 @@ export const reportApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: (_results, _error, data) => [
         { type: "Reports", id: "LIST" },
-        { type: "Comments", id: data.id },
-        { type: "Jobs", id: data.id },
-        { type: "Companies", id: data.id },
+        { type: "Comments", id: data.reportId },
+        { type: "Jobs", id: data.reportId },
+        { type: "Companies", id: data.reportId },
       ],
     }),
     updateStatusReport: builder.mutation<

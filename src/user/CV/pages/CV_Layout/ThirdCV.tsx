@@ -43,7 +43,7 @@ export const ThirdCV = () => {
             gutterBottom
             sx={{ fontStyle: "italic" }}
           >
-            Nhân viên tư vấn
+            {user?.title || "........."}
           </Typography>
         </Box>
 
@@ -56,7 +56,7 @@ export const ThirdCV = () => {
               textAlign: "right",
             }}
           >
-            {user?.phone}
+            {user?.phone || "........."}
           </Typography>
           <Typography
             variant="body2"
@@ -66,7 +66,7 @@ export const ThirdCV = () => {
               textAlign: "right",
             }}
           >
-            {user?.email}
+            {user?.email || "........."}
           </Typography>
           <Typography
             variant="body2"
@@ -76,7 +76,7 @@ export const ThirdCV = () => {
               textAlign: "right",
             }}
           >
-            {user?.address}
+            {user?.address || "........."}
           </Typography>
         </Box>
       </Box>
@@ -102,7 +102,7 @@ export const ThirdCV = () => {
           </Typography>
         </Box>
         <Typography sx={{ fontSize: "0.9rem", lineHeight: 1.5 }}>
-          {user?.aboutMe}
+          {user?.aboutMe || "........."}
         </Typography>
       </Box>
 
@@ -132,14 +132,14 @@ export const ThirdCV = () => {
             <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
               <Box sx={{ width: "30%" }}>
                 <Typography variant="subtitle2" fontWeight="bold">
-                  Công ty {job.company}
+                  Công ty {job.company || "........."}
                 </Typography>
                 <Typography
                   variant="body2"
                   color="text.secondary"
                   sx={{ fontSize: "0.8rem" }}
                 >
-                  {job.startDate} - {job.endDate}
+                  {job.startDate || "........."} - {job.endDate || "........."}
                 </Typography>
               </Box>
 
@@ -149,13 +149,13 @@ export const ThirdCV = () => {
                   fontWeight="bold"
                   color="primary"
                 >
-                  {job.jobTitle}
+                  {job.jobTitle || "........."}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}>
-                  {job.responsibilites}
+                  {job.responsibilites || "........."}
                 </Typography>
                 <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-                  {job.description}
+                  {job.description || "........."}
                 </Typography>
               </Box>
             </Box>
@@ -189,7 +189,7 @@ export const ThirdCV = () => {
             <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
               <Box sx={{ width: "30%" }}>
                 <Typography variant="subtitle2" fontWeight="bold">
-                  {edu.startDate} - {edu.endDate}
+                  {edu.startDate || "........."} - {edu.endDate || "........."}
                 </Typography>
               </Box>
 
@@ -199,13 +199,13 @@ export const ThirdCV = () => {
                   fontWeight="bold"
                   color="text.primary"
                 >
-                  {edu.major}
+                  {edu.major || "........."}
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 0.5 }}>
-                  {edu.school}
+                  {edu.school || "........."}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}>
-                  {edu.description}
+                  {edu.description || "........."}
                 </Typography>
               </Box>
             </Box>
@@ -239,7 +239,7 @@ export const ThirdCV = () => {
             <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
               <Box sx={{ width: "30%" }}>
                 <Typography variant="subtitle2" fontWeight="bold">
-                  {cert.month} {cert.year}
+                  {cert.month || "........."} {cert.year || "........."}
                 </Typography>
               </Box>
 
@@ -249,13 +249,13 @@ export const ThirdCV = () => {
                   fontWeight="bold"
                   color="text.primary"
                 >
-                  {cert.name}
+                  {cert.name || "........."}
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 0.5 }}>
-                  {cert.organization}
+                  {cert.organization || "........."}
                 </Typography>
                 <Typography sx={{ fontSize: "0.85rem", lineHeight: 1.5 }}>
-                  {cert.description}
+                  {cert.description || "........."}
                 </Typography>
               </Box>
             </Box>
@@ -310,7 +310,7 @@ export const ThirdCV = () => {
                 margin: "4px",
               }}
             >
-              {skill.value}
+              {skill.value || "........."}
             </Typography>
           ))}
         </Box>

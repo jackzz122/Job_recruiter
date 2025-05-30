@@ -355,7 +355,7 @@ export const SecondCVEdited = () => {
               variant="subtitle1"
               sx={{ mb: 2, color: selectedColor.primary }}
             >
-              Nhân viên tư vấn
+              {user?.title || "........."}
             </Typography>
 
             <Box
@@ -368,32 +368,44 @@ export const SecondCVEdited = () => {
               <Typography variant="body2" fontWeight="medium">
                 Ngày sinh:
               </Typography>
-              <Typography variant="body2">12/3/2003</Typography>
+              <Typography variant="body2">
+                {user?.dob || "........."}
+              </Typography>
 
               <Typography variant="body2" fontWeight="medium">
                 Giới tính:
               </Typography>
-              <Typography variant="body2">Nam/Nữ/Khác</Typography>
+              <Typography variant="body2">
+                {user?.gender || "........."}
+              </Typography>
 
               <Typography variant="body2" fontWeight="medium">
                 Số điện thoại:
               </Typography>
-              <Typography variant="body2">{user?.phone || ""}</Typography>
+              <Typography variant="body2">
+                {user?.phone || "........."}
+              </Typography>
 
               <Typography variant="body2" fontWeight="medium">
                 Email:
               </Typography>
-              <Typography variant="body2">{user?.email || ""}</Typography>
+              <Typography variant="body2">
+                {user?.email || "........."}
+              </Typography>
 
               <Typography variant="body2" fontWeight="medium">
-                Website:
+                Linking Profile:
               </Typography>
-              <Typography variant="body2">be.net/tencuaban</Typography>
+              <Link href={user?.linkingProfile || "........."}>
+                {user?.linkingProfile || "........."}
+              </Link>
 
               <Typography variant="body2" fontWeight="medium">
                 Địa chỉ:
               </Typography>
-              <Typography variant="body2">{user?.address || ""}</Typography>
+              <Typography variant="body2">
+                {user?.address || "........."}
+              </Typography>
             </Box>
           </Box>
         </Box>

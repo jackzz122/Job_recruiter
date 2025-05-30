@@ -185,15 +185,17 @@ export const CardJob = ({ job }: { job: JobResponse }) => {
 
             {/* Skills/Majors */}
             <Box display="flex" flexWrap="wrap" gap={1} mb={2}>
-              {job.majorId.map((major, index) => (
-                <Chip
-                  key={index}
-                  label={major.value}
-                  size="small"
-                  color="primary"
-                  variant="outlined"
-                />
-              ))}
+              {job.majorId
+                .filter((major) => major.value !== "")
+                .map((major, index) => (
+                  <Chip
+                    key={index}
+                    label={major.value}
+                    size="small"
+                    color="primary"
+                    variant="outlined"
+                  />
+                ))}
             </Box>
 
             {/* Apply Button */}

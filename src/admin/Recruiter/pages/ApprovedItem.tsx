@@ -2,9 +2,9 @@ import TableRow from "@mui/material/TableRow";
 import Button from "@mui/material/Button";
 import { useState } from "react";
 import {
-  useDeletePendingItemMutation,
   useGetListRecruiterCompanyAccountQuery,
   useBlockRecruiterCompanyAccountMutation,
+  useDeleteCompanyAccountMutation,
 } from "../../../redux/feature/pending/pendingApiSlice";
 import { toast } from "react-toastify";
 import { RecruitItem } from "../components/RecruitItem";
@@ -30,15 +30,14 @@ export const ApprovedItem = () => {
   const [blockRecruiter, { isLoading: isBlocking }] =
     useBlockRecruiterCompanyAccountMutation();
   const [id, setId] = useState<string>("");
+  const [deleteCompanyAccount, { isLoading: isDeletingCompany }] =
+    useDeleteCompanyAccountMutation();
   const [data, setData] = useState<RecruiterAccount | null>(null);
-  const [deletePending, { isLoading: isDeleting }] =
-    useDeletePendingItemMutation();
 
   const handleBlock = (data: RecruiterAccount) => {
     setOpenBlockDialog(true);
     setData(data);
   };
-
   const handleDelete = (id: string) => {
     setOpenDeleteDialog(true);
     setId(id);
@@ -48,7 +47,7 @@ export const ApprovedItem = () => {
     try {
       const response = await blockRecruiter(data._id).unwrap();
       if (response.success) {
-        toast.success("Recruiter blocked successfully!");
+        toast.success(response.message || "Recruiter blocked successfully!");
         setOpenBlockDialog(false);
       }
     } catch (err) {
@@ -59,9 +58,11 @@ export const ApprovedItem = () => {
 
   const handleConfirmDelete = async (id: string) => {
     try {
-      await deletePending(id).unwrap();
-      toast.success("Recruiter deleted successfully!");
-      setOpenDeleteDialog(false);
+      const response = await deleteCompanyAccount(id).unwrap();
+      if (response.success) {
+        toast.success(response.message || "Recruiter deleted successfully!");
+        setOpenDeleteDialog(false);
+      }
     } catch (err) {
       toast.error("Failed to delete recruiter. Please try again.");
       console.error("Delete error:", err);
@@ -88,7 +89,7 @@ export const ApprovedItem = () => {
             sx={{ border: "1px solid red", color: "red" }}
             variant="outlined"
             onClick={() => handleDelete(recruiter._id)}
-            disabled={isDeleting}
+            disabled={isDeletingCompany}
           >
             Delete
           </Button>
@@ -157,7 +158,7 @@ export const ApprovedItem = () => {
         content="Are you sure you want to delete this recruiter? This action cannot be undone."
         confirmText="Delete"
         cancelText="Cancel"
-        isLoading={isDeleting}
+        isLoading={isDeletingCompany}
         confirmColor="error"
         titleColor="error.main"
       />

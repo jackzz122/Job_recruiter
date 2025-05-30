@@ -15,6 +15,8 @@ import CircleIcon from "@mui/icons-material/Circle";
 import { colorButtonOrange } from "../../../../themeContext";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import PersonIcon from "@mui/icons-material/Person";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
+
 interface DialogViewJobProps {
   open: boolean;
   handleClose: () => void;
@@ -66,6 +68,12 @@ export const DialogViewJob = ({
               <Typography fontWeight="bold" variant="body1">
                 Poster:{" "}
                 {(job.accountId as { _id: string; fullname: string }).fullname}
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <WorkHistoryIcon fontSize="small" color="action" />
+              <Typography variant="body1">
+                {job.experience} years of experience required
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

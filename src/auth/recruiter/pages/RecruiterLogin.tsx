@@ -113,7 +113,7 @@ export const RecruiterLogin = () => {
                 alignItems: "center",
               }}
             >
-              <Link to="/recruiter/forgot-password" className="underline">
+              <Link to="/forgot_pass" className="underline">
                 Forgot password?
               </Link>
             </Box>

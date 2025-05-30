@@ -112,10 +112,10 @@ export const RecruiterComp = ({
           <img
             src={
               isString
-                ? "/bss_avatar.png"
+                ? "/defaultAvatar.png"
                 : company.logo
                 ? company.logo
-                : "/bss_avatar.png"
+                : "/defaultAvatar.png"
             }
             alt={isString ? company : company.companyName}
             style={{

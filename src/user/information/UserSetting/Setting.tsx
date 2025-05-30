@@ -8,7 +8,6 @@ import TextField from "@mui/material/TextField";
 import Divider from "@mui/material/Divider";
 import Grid2 from "@mui/material/Grid2";
 import DeleteIcon from "@mui/icons-material/Delete";
-import InfoIcon from "@mui/icons-material/Info";
 import Alert from "@mui/material/Alert";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -38,7 +37,7 @@ export const Setting = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<{
     oldPassword: string;
     newPassword: string;
@@ -132,15 +131,6 @@ export const Setting = () => {
                   <Typography variant="body1" sx={{ mb: 0.5 }}>
                     {user?.email}
                   </Typography>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <InfoIcon
-                      fontSize="small"
-                      sx={{ color: "text.disabled", fontSize: 16 }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      Cannot change login email.
-                    </Typography>
-                  </Stack>
                 </Grid2>
               </Grid2>
             </Box>
@@ -156,15 +146,7 @@ export const Setting = () => {
                   <Typography variant="body1" sx={{ mb: 0.5 }}>
                     {user?.fullname}
                   </Typography>
-                  <Stack direction="row" spacing={1} alignItems="center">
-                    <InfoIcon
-                      fontSize="small"
-                      sx={{ color: "text.disabled", fontSize: 16 }}
-                    />
-                    <Typography variant="body2" color="text.secondary">
-                      Account name is synced with profile information.
-                    </Typography>
-                  </Stack>
+
                   <Button
                     variant="text"
                     color="primary"
@@ -318,6 +300,7 @@ export const Setting = () => {
               Cancel
             </Button>
             <Button
+              loading={isSubmitting}
               onClick={handleSubmit(onSubmit)}
               variant="contained"
               color="primary"

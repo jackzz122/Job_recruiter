@@ -337,7 +337,7 @@ export const ThirdCVEdited = () => {
               gutterBottom
               sx={{ fontStyle: "italic" }}
             >
-              Nhân viên tư vấn
+              {user?.title || "........."}
             </Typography>
           </Box>
 
@@ -352,7 +352,7 @@ export const ThirdCVEdited = () => {
                 textAlign: "right",
               }}
             >
-              {user?.phone}
+              {user?.phone || "........."}
             </Typography>
             <Typography
               variant="body2"
@@ -362,7 +362,7 @@ export const ThirdCVEdited = () => {
                 textAlign: "right",
               }}
             >
-              {user?.email}
+              {user?.email || "........."}
             </Typography>
             <Typography
               variant="body2"
@@ -372,7 +372,7 @@ export const ThirdCVEdited = () => {
                 textAlign: "right",
               }}
             >
-              {user?.address}
+              {user?.address || "........."}
             </Typography>
           </Box>
         </Box>
@@ -393,7 +393,7 @@ export const ThirdCVEdited = () => {
               color={selectedColor.primary}
               sx={{ textTransform: "uppercase", pb: 0.5 }}
             >
-              Mục tiêu nghề nghiệp
+              Objective
             </Typography>
           </Box>
 

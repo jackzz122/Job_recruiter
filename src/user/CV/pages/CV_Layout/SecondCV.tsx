@@ -61,7 +61,7 @@ export const SecondCV = () => {
           </Typography>
 
           <Typography variant="subtitle1" color="text.secondary" mb={2}>
-            Nhân viên tư vấn
+            {user?.title || "........."}
           </Typography>
 
           <Box
@@ -74,34 +74,42 @@ export const SecondCV = () => {
             <Typography variant="body2" fontWeight="medium">
               Ngày sinh:
             </Typography>
-            <Typography variant="body2">15/05/1990</Typography>
+            <Typography variant="body2">{user?.dob || "........."}</Typography>
 
             <Typography variant="body2" fontWeight="medium">
               Giới tính:
             </Typography>
-            <Typography variant="body2">Nam/Nữ/Khác</Typography>
+            <Typography variant="body2">
+              {user?.gender || "........."}
+            </Typography>
 
             <Typography variant="body2" fontWeight="medium">
               Số điện thoại:
             </Typography>
-            <Typography variant="body2">{user?.phone}</Typography>
+            <Typography variant="body2">
+              {user?.phone || "........."}
+            </Typography>
 
             <Typography variant="body2" fontWeight="medium">
               Email:
             </Typography>
-            <Typography variant="body2">{user?.email}</Typography>
+            <Typography variant="body2">
+              {user?.email || "........."}
+            </Typography>
 
             <Typography variant="body2" fontWeight="medium">
               Website:
             </Typography>
             <Typography variant="body2" color={primaryColor.main}>
-              be.net/tencuaban
+              {user?.linkingProfile || "........."}
             </Typography>
 
             <Typography variant="body2" fontWeight="medium">
               Địa chỉ:
             </Typography>
-            <Typography variant="body2">{user?.address}</Typography>
+            <Typography variant="body2">
+              {user?.address || "........."}
+            </Typography>
           </Box>
         </Box>
       </Box>
@@ -124,7 +132,7 @@ export const SecondCV = () => {
           </Typography>
         </Box>
         <Typography variant="body2" sx={{ lineHeight: 1.6 }}>
-          {user?.aboutMe}
+          {user?.aboutMe || "........."}
         </Typography>
       </Box>
 
@@ -153,19 +161,19 @@ export const SecondCV = () => {
             >
               <Box sx={{ width: "30%" }}>
                 <Typography variant="body2" fontWeight="medium">
-                  {edu.startDate} - {edu.endDate}
+                  {edu.startDate || "........."} - {edu.endDate || "........."}
                 </Typography>
               </Box>
               <Box sx={{ width: "70%" }}>
                 <Typography variant="body1" fontWeight="bold">
-                  {edu.school}
+                  {edu.school || "........."}
                 </Typography>
                 <Typography
                   variant="body2"
                   color={primaryColor.main}
                   sx={{ mb: 1, fontWeight: "medium" }}
                 >
-                  {edu.major}
+                  {edu.major || "........."}
                 </Typography>
                 <Typography variant="body2">Tốt nghiệp loại Giỏi</Typography>
               </Box>
@@ -199,25 +207,25 @@ export const SecondCV = () => {
             >
               <Box sx={{ width: "30%" }}>
                 <Typography variant="body2" fontWeight="medium">
-                  {job.startDate} - {job.endDate}
+                  {job.startDate || "........."} - {job.endDate || "........."}
                 </Typography>
               </Box>
               <Box sx={{ width: "70%" }}>
                 <Typography variant="body1" fontWeight="bold">
-                  Công ty {job.company}
+                  Công ty {job.company || "........."}
                 </Typography>
                 <Typography
                   variant="body2"
                   color={primaryColor.main}
                   sx={{ mb: 1, fontWeight: "medium" }}
                 >
-                  {job.jobTitle}
+                  {job.jobTitle || "........."}
                 </Typography>
                 <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-                  {job.responsibilites}
+                  {job.responsibilites || "........."}
                 </Typography>
                 <Typography variant="body2" sx={{ whiteSpace: "pre-line" }}>
-                  {job.description}
+                  {job.description || "........."}
                 </Typography>
               </Box>
             </Box>
@@ -257,7 +265,7 @@ export const SecondCV = () => {
                 fontWeight: 500,
               }}
             >
-              {skill.value}
+              {skill.value || "........."}
             </Typography>
           ))}
         </Box>
@@ -286,21 +294,23 @@ export const SecondCV = () => {
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Box sx={{ width: "30%" }}>
                 <Typography variant="body2" fontWeight="medium">
-                  {cert.month} {cert.year}
+                  {cert.month || "........."} {cert.year || "........."}
                 </Typography>
               </Box>
               <Box sx={{ width: "70%" }}>
                 <Typography variant="body1" fontWeight="bold">
-                  {cert.name}
+                  {cert.name || "........."}
                 </Typography>
                 <Typography
                   variant="body2"
                   color={primaryColor.main}
                   sx={{ mb: 1 }}
                 >
-                  {cert.organization}
+                  {cert.organization || "........."}
                 </Typography>
-                <Typography variant="body2">{cert.description}</Typography>
+                <Typography variant="body2">
+                  {cert.description || "........."}
+                </Typography>
               </Box>
             </Box>
           </Box>

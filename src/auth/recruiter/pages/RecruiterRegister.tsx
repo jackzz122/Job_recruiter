@@ -50,13 +50,25 @@ export const RecruiterRegister = () => {
         address: data.address,
         websiteUrl: data.websiteUrl,
       });
+
+      // Check if response has error property
+      if ("error" in response) {
+        const error = handleError(response.error);
+        toast.error(error?.message || "Registration failed");
+        return;
+      }
+
+      // Handle successful response
       if (response.data?.success) {
         setIsSuccess(true);
         toast.success(response.data?.message || "Registration successful");
+      } else {
+        // Handle case where response is successful but contains error message
+        toast.error(response.data?.message || "Registration failed");
       }
     } catch (err) {
       const error = handleError(err);
-      toast.error(error?.message);
+      toast.error(error?.message || "Registration failed");
     }
   };
 

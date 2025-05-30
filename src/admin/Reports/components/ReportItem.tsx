@@ -8,7 +8,11 @@ import IconButton from "@mui/material/IconButton";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import FlagIcon from "@mui/icons-material/Flag";
 import { useState } from "react";
-import { getReportItem, statusTypeReport } from "../../../types/ReportType";
+import {
+  getReportItem,
+  statusTypeReport,
+  targetType,
+} from "../../../types/ReportType";
 import { DialogReportView } from "./DialogReportView";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ChangeCircleIcon from "@mui/icons-material/ChangeCircle";
@@ -20,9 +24,18 @@ import {
 import { CommentStatus, CommentType } from "../../../types/CommentType";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { JobType, statusJob } from "../../../types/JobType";
+import { toast } from "react-toastify";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import { CompanyType } from "../../../types/CompanyType";
 
 export const ReportItem = ({ report }: { report: getReportItem }) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [updateStatus, { isLoading: isUpdating }] =
     useUpdateStatusReportMutation();
   const [changeStatusReportItem] = useChangeStatusReportItemMutation();
@@ -34,6 +47,14 @@ export const ReportItem = ({ report }: { report: getReportItem }) => {
 
   const handleCloseDialog = () => {
     setOpenDialog(false);
+  };
+
+  const handleOpenDeleteDialog = () => {
+    setOpenDeleteDialog(true);
+  };
+
+  const handleCloseDeleteDialog = () => {
+    setOpenDeleteDialog(false);
   };
 
   const handleApprove = async () => {
@@ -81,20 +102,43 @@ export const ReportItem = ({ report }: { report: getReportItem }) => {
   const handleDelete = async () => {
     try {
       if (report.target_type === "comment") {
-        await deleteReportItem({
-          id: (report.reportTarget as CommentType)._id,
-          targetType: "comment",
+        const response = await deleteReportItem({
+          reportId: report._id,
+          targetType: targetType.COMMENT,
+          reportTarget: (report.reportTarget as CommentType)._id,
         }).unwrap();
+        if (response.success) {
+          toast.success("Report deleted successfully");
+          handleCloseDeleteDialog();
+        }
       }
       if (report.target_type === "jobPosting") {
         const jobTarget = report.reportTarget as JobType;
-        await deleteReportItem({
-          id: jobTarget._id,
-          targetType: "jobPosting",
+        const response = await deleteReportItem({
+          reportId: report._id,
+          targetType: targetType.JOB,
+          reportTarget: jobTarget._id,
         }).unwrap();
+        if (response.success) {
+          toast.success("Report deleted successfully");
+          handleCloseDeleteDialog();
+        }
+      }
+      if (report.target_type === "companyInfo") {
+        const companyTarget = report.reportTarget as CompanyType;
+        const response = await deleteReportItem({
+          reportId: report._id,
+          targetType: targetType.COMPANY,
+          reportTarget: companyTarget._id,
+        }).unwrap();
+        if (response.success) {
+          toast.success("Report deleted successfully");
+          handleCloseDeleteDialog();
+        }
       }
     } catch (error) {
       console.error("Failed to delete:", error);
+      toast.error("Failed to delete report");
     }
   };
 
@@ -196,11 +240,22 @@ export const ReportItem = ({ report }: { report: getReportItem }) => {
       <TableRow hover>
         <TableCell>
           <Stack direction="row" spacing={2} alignItems="center">
-            <Avatar
-              src={report?.accountId?.avatarIMG || "/avatar.png"}
-              alt={report?.accountId?.fullname || "User avatar"}
-            />
-            <Typography>{report?.accountId?.fullname || "Unknown"}</Typography>
+            {report?.accountId ? (
+              <>
+                <Avatar
+                  src={report.accountId.avatarIMG || "/avatar.png"}
+                  alt={report.accountId.fullname || "User avatar"}
+                />
+                <Typography>
+                  {report.accountId.fullname || "Unknown User"}
+                </Typography>
+              </>
+            ) : (
+              <>
+                <Avatar src="/avatar.png" alt="Unknown User" />
+                <Typography>Unknown User</Typography>
+              </>
+            )}
           </Stack>
         </TableCell>
         <TableCell>
@@ -253,7 +308,7 @@ export const ReportItem = ({ report }: { report: getReportItem }) => {
             </IconButton>
           )}
           {report?.status === statusTypeReport.RESOLVED && (
-            <>
+            <Stack direction="row" spacing={1}>
               <IconButton
                 size="small"
                 color="error"
@@ -274,14 +329,14 @@ export const ReportItem = ({ report }: { report: getReportItem }) => {
                 </IconButton>
               )}
               <IconButton
-                onClick={handleDelete}
+                onClick={handleOpenDeleteDialog}
                 size="small"
                 color="error"
                 aria-label="Delete report"
               >
                 <DeleteIcon fontSize="small" />
               </IconButton>
-            </>
+            </Stack>
           )}
           {report?.status === statusTypeReport.REJECTED && (
             <IconButton
@@ -306,6 +361,36 @@ export const ReportItem = ({ report }: { report: getReportItem }) => {
         onApprove={handleApprove}
         onReject={handleReject}
       />
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={openDeleteDialog}
+        onClose={handleCloseDeleteDialog}
+        aria-labelledby="delete-dialog-title"
+      >
+        <DialogTitle id="delete-dialog-title" sx={{ fontWeight: "bold" }}>
+          Delete Report
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete this report? This action cannot be
+            undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions sx={{ px: 3, pb: 3 }}>
+          <Button onClick={handleCloseDeleteDialog} variant="outlined">
+            Cancel
+          </Button>
+          <Button
+            onClick={handleDelete}
+            variant="contained"
+            color="error"
+            autoFocus
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

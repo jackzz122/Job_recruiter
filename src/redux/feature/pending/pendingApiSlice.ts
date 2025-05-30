@@ -23,9 +23,7 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
         method: "POST",
         body: data.body,
       }),
-      invalidatesTags: (_result, _error, data) => [
-        { type: "Pendings", id: data.id },
-      ],
+      invalidatesTags: [{ type: "Pendings", id: "LIST" }],
     }),
     blockAccount: builder.mutation<PendingTypeResponse<pendingType>, string>({
       query: (id) => ({
@@ -96,7 +94,16 @@ export const pendingApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Pendings", id: "LIST" }],
     }),
-
+    deleteCompanyAccount: builder.mutation<
+      CompanyTypeResponse<CompanyType>,
+      string
+    >({
+      query: (id) => ({
+        url: `/deleteCompanyAccount/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
+    }),
     deletePendingItem: builder.mutation<
       PendingTypeResponse<pendingType>,
       string
@@ -129,4 +136,6 @@ export const {
   useGetListRecruiterCompanyAccountQuery,
   useBlockRecruiterCompanyAccountMutation,
   useUnblockRecruiterCompanyAccountMutation,
+  useDeleteCompanyAccountMutation,
+  useDeleteUserByAdminMutation,
 } = pendingApiSlice;

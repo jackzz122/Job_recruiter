@@ -28,7 +28,7 @@ const listOfNavUser: {
     icon: <DashboardIcon />,
   },
   {
-    name: "Đăng xuất",
+    name: "Logout",
     href: "/login",
     icon: <LogoutIcon />,
   },
@@ -77,7 +77,7 @@ export const MenuNavUser = ({
       {listOfNavUser.map((navUser) => {
         return (
           <MenuItem key={navUser.name} onClick={handleCloseAvatar}>
-            {navUser.name === "Đăng xuất" ? (
+            {navUser.name === "Logout" ? (
               <div
                 onClick={() => handleLogout()}
                 className="text-gray-400 py-2 ml-2"

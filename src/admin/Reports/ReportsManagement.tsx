@@ -31,7 +31,6 @@ export const ReportsManagement = () => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const { data: reportList, isLoading, isError } = useGetReportsQuery();
-
   const filteredReports = useMemo(() => {
     if (!reportList?.data) return [];
 

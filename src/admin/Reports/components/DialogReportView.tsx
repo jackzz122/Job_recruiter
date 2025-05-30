@@ -36,7 +36,6 @@ const isJobTarget = (target: unknown): target is JobTarget => {
 };
 
 const isCompanyTarget = (target: unknown): target is CompanyType => {
-  console.log("target", target);
   return (
     typeof target === "object" &&
     target !== null &&
@@ -79,11 +78,10 @@ export const DialogReportView = ({
   const getReportContent = () => {
     if (!reportDetail?.data) return null;
 
-    const target = reportDetail.data.reportContent;
-    console.log("target", reportDetail.data);
+    const target = reportDetail?.data?.reportContent;
     let content = null;
     if (
-      reportDetail.data.targetType === targetType.COMMENT &&
+      reportDetail?.data?.targetType === targetType.COMMENT &&
       isCommentTarget(target)
     ) {
       content = (
@@ -91,17 +89,17 @@ export const DialogReportView = ({
           <Typography variant="subtitle2" color="text.secondary">
             Comment Content
           </Typography>
-          <Typography variant="body1">{target.title}</Typography>
+          <Typography variant="body1">{target.title || "No title"}</Typography>
           <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-            Why Love: {target.details.whyLove}
+            Why Love: {target.details?.whyLove || "No reason provided"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Suggestion: {target.details.suggest}
+            Suggestion: {target.details?.suggest || "No suggestion provided"}
           </Typography>
         </Box>
       );
     } else if (
-      reportDetail.data.targetType === targetType.JOB &&
+      reportDetail?.data?.targetType === targetType.JOB &&
       isJobTarget(target)
     ) {
       content = (
@@ -109,17 +107,17 @@ export const DialogReportView = ({
           <Typography variant="subtitle2" color="text.secondary">
             Job Details
           </Typography>
-          <Typography variant="body1">{target.title}</Typography>
+          <Typography variant="body1">{target.title || "No title"}</Typography>
           <Typography variant="body2" color="text.secondary">
-            Required People: {target.sizingPeople}
+            Required People: {target.sizingPeople || "Not specified"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Salary Range: ${target.minRange} - ${target.maxRange}
+            Salary Range: ${target.minRange || "0"} - ${target.maxRange || "0"}
           </Typography>
         </Box>
       );
     } else if (
-      reportDetail.data.targetType === targetType.COMPANY &&
+      reportDetail?.data?.targetType === targetType.COMPANY &&
       isCompanyTarget(target)
     ) {
       content = (
@@ -127,12 +125,14 @@ export const DialogReportView = ({
           <Typography variant="subtitle2" color="text.secondary">
             Company Information
           </Typography>
-          <Typography variant="body1">{target.companyName}</Typography>
-          <Typography variant="body2" color="text.secondary">
-            Country: {target.country}
+          <Typography variant="body1">
+            {target.companyName || "No company name"}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Companny Phone: {target.phoneNumberCompany}
+            Country: {target.country || "Not specified"}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            Company Phone: {target.phoneNumberCompany || "Not specified"}
           </Typography>
         </Box>
       );
@@ -185,6 +185,27 @@ export const DialogReportView = ({
       </Dialog>
     );
   }
+
+  const reporterName =
+    typeof reportDetail?.data?.report?.accountId === "string"
+      ? reportDetail?.data?.report?.accountId
+      : reportDetail?.data?.report?.accountId?.fullname || "Unknown Reporter";
+
+  const reporterEmail =
+    typeof reportDetail?.data?.report?.accountId === "string"
+      ? reportDetail?.data?.report?.accountId
+      : reportDetail?.data?.report?.accountId?.email || "No email provided";
+
+  const targetName =
+    typeof reportDetail?.data?.report?.target_id === "string"
+      ? reportDetail?.data?.report?.target_id
+      : reportDetail?.data?.report?.target_id?.fullname || "Unknown Target";
+
+  const targetEmail =
+    typeof reportDetail?.data?.report?.target_id === "string"
+      ? reportDetail?.data?.report?.target_id
+      : reportDetail?.data?.report?.target_id?.email || "No email provided";
+
   return (
     <Dialog
       open={openDialog}
@@ -207,7 +228,9 @@ export const DialogReportView = ({
             </Typography>
             <Chip
               icon={<FlagIcon />}
-              label={getReportTypeLabel(reportDetail.data.targetType)}
+              label={getReportTypeLabel(
+                reportDetail.data.targetType || "unknown"
+              )}
               color={
                 color as
                   | "primary"
@@ -228,15 +251,9 @@ export const DialogReportView = ({
             </Typography>
             <Stack direction="row" spacing={2} alignItems="center">
               <Box>
-                <Typography>
-                  {typeof reportDetail.data.report.accountId === "string"
-                    ? reportDetail.data.report.accountId
-                    : reportDetail.data.report.accountId.fullname}
-                </Typography>
+                <Typography>{reporterName}</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {typeof reportDetail.data.report.accountId === "string"
-                    ? reportDetail.data.report.accountId
-                    : reportDetail.data.report.accountId.email}
+                  {reporterEmail}
                 </Typography>
               </Box>
             </Stack>
@@ -248,15 +265,9 @@ export const DialogReportView = ({
             </Typography>
             <Stack direction="row" spacing={2} alignItems="center">
               <Box>
-                <Typography>
-                  {typeof reportDetail.data.report.target_id === "string"
-                    ? reportDetail.data.report.target_id
-                    : reportDetail.data.report.target_id.fullname}
-                </Typography>
+                <Typography>{targetName}</Typography>
                 <Typography variant="body2" color="text.secondary">
-                  {typeof reportDetail.data.report.target_id === "string"
-                    ? reportDetail.data.report.target_id
-                    : reportDetail.data.report.target_id.email}
+                  {targetEmail}
                 </Typography>
               </Box>
             </Stack>
@@ -269,9 +280,10 @@ export const DialogReportView = ({
               Reason for Report
             </Typography>
             <Typography>
-              {reportDetail.data.report.reason.reasonTitle}
+              {reportDetail.data.report?.reason?.reasonTitle ||
+                "No reason provided"}
             </Typography>
-            {reportDetail.data.report.reason.additionalReason && (
+            {reportDetail?.data?.report?.reason?.additionalReason && (
               <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
                 {reportDetail.data.report.reason.additionalReason}
               </Typography>
@@ -283,7 +295,9 @@ export const DialogReportView = ({
               Report Date
             </Typography>
             <Typography>
-              {new Date(reportDetail.data.report.createdAt).toLocaleString()}
+              {reportDetail.data.report?.createdAt
+                ? new Date(reportDetail.data.report.createdAt).toLocaleString()
+                : "Date not available"}
             </Typography>
           </Box>
         </Stack>
@@ -293,7 +307,7 @@ export const DialogReportView = ({
           variant="outlined"
           color="error"
           onClick={onReject}
-          loading={isUpdating}
+          disabled={isUpdating || !reportDetail?.data?.report?.accountId}
           aria-label="Reject report"
         >
           Reject Report
@@ -301,10 +315,8 @@ export const DialogReportView = ({
         <Button
           variant="contained"
           color="success"
-          loading={isUpdating}
-          onClick={() => {
-            onApprove();
-          }}
+          disabled={isUpdating || !reportDetail?.data?.report?.accountId}
+          onClick={onApprove}
           aria-label="Approve report"
         >
           Approve Report

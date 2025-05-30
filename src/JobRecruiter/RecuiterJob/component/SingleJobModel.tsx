@@ -28,6 +28,7 @@ import StopCircleOutlinedIcon from "@mui/icons-material/StopCircleOutlined";
 import BlockIcon from "@mui/icons-material/Block";
 import { useChangeStatusMutation } from "../../../redux/feature/job/jobApiSlice";
 import { toast } from "react-toastify";
+import WorkHistoryIcon from "@mui/icons-material/WorkHistory";
 
 export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
   const [openViewDialog, setOpenViewDialog] = useState(false);
@@ -183,6 +184,12 @@ export const SingleJobModel = ({ jobs }: { jobs: JobResponse }) => {
             <Typography variant="body2">
               Poster:{" "}
               {(jobs.accountId as { _id: string; fullname: string }).fullname}
+            </Typography>
+          </Box>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <WorkHistoryIcon fontSize="small" color="action" />
+            <Typography variant="body2">
+              {jobs.experience} years of experience required
             </Typography>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>

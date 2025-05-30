@@ -128,7 +128,7 @@ const RecruiterCompany = () => {
               "&:hover": { borderColor: "primary.main", color: "primary.main" },
             }}
           >
-            Filters
+            Search
           </Button>
         </Box>
 
