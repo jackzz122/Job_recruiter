@@ -43,7 +43,14 @@ export const PersonalProject = ({ projects }: { projects: projectType[] }) => {
         </Box>
         <Stack spacing={3}>
           {projects.length === 0 ? (
-            <Typography>................</Typography>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              fontStyle="italic"
+              gutterBottom
+            >
+              Not found personal project
+            </Typography>
           ) : (
             projects.map((project) => {
               return (

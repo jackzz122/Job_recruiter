@@ -54,15 +54,11 @@ export const ListJob = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
   const [page, setPage] = useState(1);
-
-  // Get values from URL params with defaults
   const searchTerm = searchParams.get("search") || "";
   const selectedExperience = searchParams.get("experience") || "";
   const selectedSalary = searchParams.get("salary") || "";
   const selectedPeople = searchParams.get("people") || "";
-
   const { data: jobList, isLoading, isError } = useGetAllJobsQuery();
-  // Update URL params when filters change
   const handleSearchChange = (value: string) => {
     setSearchParams((prev) => {
       if (value) {
@@ -74,7 +70,7 @@ export const ListJob = () => {
     });
   };
 
-  const handleExperienceChange = (value: string) => {
+  const handleExperienceChange = async (value: string) => {
     setSearchParams((prev) => {
       if (value) {
         prev.set("experience", value);
@@ -128,11 +124,7 @@ export const ListJob = () => {
       const matchesSearch =
         searchTerm === "" ||
         job.title.toLowerCase().includes(searchTermLower) ||
-        job.description.summary.toLowerCase().includes(searchTermLower) ||
-        companyData.companyName.toLowerCase().includes(searchTermLower) ||
-        job.description.keySkills.bulletPoints.some((skill) =>
-          skill.value.toLowerCase().includes(searchTermLower)
-        );
+        companyData.companyName.toLowerCase().includes(searchTermLower);
 
       // Experience filter
       const matchesExperience =

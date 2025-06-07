@@ -52,11 +52,26 @@ export const Education = ({
             Education
           </Typography>
         </Box>
-        {educationList.map((edu, index) => {
-          return (
-            <EducationItem key={index} {...edu} onEdit={handleEditEducation} />
-          );
-        })}
+        {educationList.length > 0 ? (
+          educationList.map((edu, index) => {
+            return (
+              <EducationItem
+                key={index}
+                {...edu}
+                onEdit={handleEditEducation}
+              />
+            );
+          })
+        ) : (
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            fontStyle="italic"
+            gutterBottom
+          >
+            Not found education
+          </Typography>
+        )}
       </Paper>
       <DialogEdu
         openEducation={openEducation}

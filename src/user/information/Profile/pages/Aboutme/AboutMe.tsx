@@ -8,6 +8,7 @@ import TextField from "@mui/material/TextField";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useUpdateUserInfoMutation } from "../../../../../redux/feature/user/userApiSlice";
 import { handleError } from "../../../../../helper/HandleError/handleError";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { toast } from "react-toastify";
 type AboutMeType = {
   aboutMe: string;
@@ -18,7 +19,12 @@ export const AboutMe = ({ aboutMe }: { aboutMe: string }) => {
     aboutMe: aboutMe,
   };
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
-  const { register, handleSubmit, reset } = useForm<AboutMeType>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AboutMeType>({
     defaultValues: defaultValue,
   });
   useEffect(() => {
@@ -47,11 +53,21 @@ export const AboutMe = ({ aboutMe }: { aboutMe: string }) => {
         >
           <EditIcon />
         </IconButton>
-        <Typography variant="h6" fontWeight="bold" gutterBottom>
-          About Me
+        <Typography
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 1,
+          }}
+          variant="h6"
+          fontWeight="bold"
+          gutterBottom
+        >
+          <InfoOutlinedIcon sx={{ color: "blue" }} /> About Me
         </Typography>
         <Typography color="text.secondary">
-          {aboutMe || "..............."}
+          {aboutMe || "No information"}
         </Typography>
       </Paper>
       <EditDialog
@@ -66,7 +82,11 @@ export const AboutMe = ({ aboutMe }: { aboutMe: string }) => {
           rows={4}
           fullWidth
           label="About Me"
-          {...register("aboutMe")}
+          {...register("aboutMe", {
+            required: "About me is required",
+          })}
+          error={!!errors.aboutMe}
+          helperText={errors.aboutMe?.message}
           sx={{ mt: 2 }}
         />
       </EditDialog>

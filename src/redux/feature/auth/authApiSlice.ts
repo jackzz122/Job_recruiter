@@ -19,10 +19,12 @@ export const authApiSlice = ApiSlice.injectEndpoints({
         method: "POST",
         body: credentials,
       }),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
     userRegister: builder.mutation<ResponseType<UserType>, regisData>({
       query: (userData: regisData) =>
         dataForLogin_Register(userData, "createAccount"),
+      invalidatesTags: [{ type: "Users", id: "LIST" }],
     }),
     forgotPassword: builder.mutation<ResponseType<{ id: string }>, string>({
       query: (email: string) => ({

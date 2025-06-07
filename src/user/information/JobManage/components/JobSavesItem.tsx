@@ -6,7 +6,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import IconButton from "@mui/material/IconButton";
 import { JobSaveResponse } from "../../../../types/UserType";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
-import { vi } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { useRemoveFavouriteJobMutation } from "../../../../redux/feature/user/userApiSlice";
 import { handleError } from "../../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
@@ -79,7 +79,7 @@ export const JobSavesItem = ({ job }: { job: JobSaveResponse }) => {
             Posted{" "}
             {formatDistanceToNow(new Date(job.startDate), {
               addSuffix: true,
-              locale: vi,
+              locale: enUS,
             })}
           </Typography>
           <Typography variant="body2" sx={{ color: "orange", marginBottom: 2 }}>

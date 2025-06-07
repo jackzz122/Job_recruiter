@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { JobResponse, statusApplication } from "../../../../types/JobType";
 import { formatDistanceToNow, differenceInDays } from "date-fns";
-import { vi } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { Link } from "react-router-dom";
 import Chip from "@mui/material/Chip";
 import VisibilityIcon from "@mui/icons-material/Visibility";
@@ -135,7 +135,7 @@ export const JobAppliedItem = ({
               Applied{" "}
               {formatDistanceToNow(applicationDate, {
                 addSuffix: true,
-                locale: vi,
+                locale: enUS,
               })}
             </Typography>
           </Stack>

@@ -46,7 +46,14 @@ export const Certificate = ({
         </Box>
         <Stack spacing={2}>
           {certificate.length === 0 ? (
-            <p>Not found list</p>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              fontStyle="italic"
+              gutterBottom
+            >
+              Not found certificate
+            </Typography>
           ) : (
             certificate.map((certi) => {
               return (

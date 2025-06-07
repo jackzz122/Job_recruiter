@@ -8,6 +8,7 @@ import WorkOutlineOutlinedIcon from "@mui/icons-material/WorkOutlineOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../../redux/feature/user/userSlice";
+import { capitalizeStr } from "../../../utils/capitalizeStr";
 
 const listOfInformations: {
   name: string;
@@ -56,10 +57,10 @@ export const LayoutUser = () => {
         <div className="w-1/4 h-fit bg-white p-4 rounded-lg border border-gray-200 sticky top-20">
           <div className="flex items-center gap-2 mb-2">
             <WavingHandIcon sx={{ color: "red" }} />
-            <p>Hello {user?.fullname}</p>
+            <p>Hello {user && capitalizeStr(user?.fullname)}</p>
           </div>
           <Typography variant="h5" fontWeight="bold">
-            {user?.fullname}
+            {user && capitalizeStr(user?.fullname)}
           </Typography>
           <Box marginTop={2}>
             {listOfInformations.map((user) => {

@@ -194,7 +194,7 @@ export const BasicInformation = () => {
         </Typography>
         <TextField
           sx={{ border: "1px solid #e0e0e0", mr: 2 }}
-          type="datetime-local"
+          type="date"
           {...register("startDate", {
             required: "Start date is required",
             valueAsDate: true,
@@ -209,6 +209,9 @@ export const BasicInformation = () => {
           helperText={errors?.startDate?.message}
           slotProps={{
             input: {
+              inputProps: {
+                min: new Date().toISOString().slice(0, 10),
+              },
               startAdornment: (
                 <CalendarMonthIcon sx={{ color: colorButtonOrange, mr: 1 }} />
               ),
@@ -217,14 +220,21 @@ export const BasicInformation = () => {
         />
         <TextField
           sx={{ border: "1px solid #e0e0e0" }}
-          type="datetime-local"
+          type="date"
           {...register("applicationDeadline", {
             required: "Application deadline is required",
             valueAsDate: true,
             validate: (value) => {
-              if (value < startDateWatch) {
-                return "Application deadline must be after start date";
+              const startDate = new Date(startDateWatch);
+              const deadlineDate = new Date(value);
+
+              const minDeadline = new Date(startDate);
+              minDeadline.setDate(minDeadline.getDate() + 3);
+
+              if (deadlineDate < minDeadline) {
+                return "Application deadline must be at least 3 days after start date";
               }
+
               return true;
             },
           })}
@@ -232,6 +242,9 @@ export const BasicInformation = () => {
           helperText={errors?.applicationDeadline?.message}
           slotProps={{
             input: {
+              inputProps: {
+                min: new Date().toISOString().slice(0, 10),
+              },
               startAdornment: (
                 <AccessTimeIcon sx={{ color: colorButtonOrange, mr: 1 }} />
               ),

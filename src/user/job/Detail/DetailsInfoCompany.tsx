@@ -15,14 +15,17 @@ export default function DetailsInforCompany() {
   const companyInfo = [
     {
       label: "Company Size",
-      value: companyField?.description[0]?.companySize,
+      value: companyField?.description[0]?.companySize || ".....",
     },
-    { label: "Country", value: companyField?.country },
+    { label: "Country", value: companyField?.country || "....." },
     {
       label: "Working day",
-      value: `${companyField?.description[0]?.workingDays} days`,
+      value: `${companyField?.description[0]?.workingDays || "....."} days`,
     },
-    { label: "Overtime", value: companyField?.overTime ? "Yes" : "No" },
+    {
+      label: "Overtime",
+      value: companyField?.overTime ? "Yes" : "No",
+    },
   ];
 
   return (
@@ -40,7 +43,7 @@ export default function DetailsInforCompany() {
         <Stack direction="row" spacing={2}>
           <Box
             component="img"
-            src={companyField?.logo}
+            src={companyField?.logo || "/companyNotFound.png"}
             alt={companyField?.companyName}
             sx={{
               width: 96,
@@ -57,13 +60,9 @@ export default function DetailsInforCompany() {
             </Typography>
             <Link
               to={`/company/${companyField?._id}`}
-              style={{
-                color: "#e50000",
-                textDecoration: "none",
-                fontWeight: 500,
-              }}
+              className="text-red-500 font-bold hover:underline"
             >
-              Xem Công ty
+              View Company Details
             </Link>
           </Box>
         </Stack>

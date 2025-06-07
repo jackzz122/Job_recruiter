@@ -45,11 +45,7 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
       methods.reset(getJobDefaultValues(jobData));
     }
   }, [jobData, mode, methods]);
-  const {
-    handleSubmit,
-    reset,
-    formState: { isValid },
-  } = methods;
+  const { handleSubmit, reset } = methods;
 
   const { data: majors } = useGetMajorbyNameQuery();
 
@@ -169,7 +165,6 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
                     startIcon={<SaveIcon />}
                     loading={isUpdating}
                     onClick={handleSubmit(onSubmit)}
-                    disabled={!isValid}
                     sx={{
                       backgroundColor: "primary.main",
                       "&:hover": { backgroundColor: "primary.dark" },
@@ -185,7 +180,6 @@ export const RecruiterEditJob = ({ mode }: { mode: "create" | "update" }) => {
                     startIcon={<SaveIcon />}
                     loading={isLoading}
                     onClick={handleSubmit(onSubmit)}
-                    disabled={!isValid}
                     sx={{
                       backgroundColor: "primary.main",
                       "&:hover": { backgroundColor: "primary.dark" },

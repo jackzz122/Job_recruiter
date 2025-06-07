@@ -29,11 +29,21 @@ export const DialogWorkEx = ({
     },
   };
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
-  const { register, handleSubmit, setValue, reset } = useForm<{
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<{
     workEx: Omit<workExType, "_id">;
   }>({
     defaultValues: defaultWorkValue,
   });
+  const watchStartDate = watch("workEx.startDate");
+  const watchEndDate = watch("workEx.endDate");
+  const isEndDateValid = watchEndDate && watchEndDate < watchStartDate;
   useEffect(() => {
     if (currentEx) {
       setValue("workEx.company", currentEx.company);
@@ -86,32 +96,55 @@ export const DialogWorkEx = ({
           <Typography variant="subtitle2">Current Position</Typography>
           <TextField
             label="Job Title"
-            {...register("workEx.jobTitle")}
+            {...register("workEx.jobTitle", {
+              required: "Job title is required",
+            })}
+            error={!!errors.workEx?.jobTitle}
+            helperText={errors.workEx?.jobTitle?.message}
             fullWidth
           />
           <TextField
             label="Company"
-            {...register("workEx.company")}
+            {...register("workEx.company", {
+              required: "Company is required",
+            })}
+            error={!!errors.workEx?.company}
+            helperText={errors.workEx?.company?.message}
             fullWidth
           />
           <Box>
             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
               Enter the date of your work experience (Start date and End Date)
             </Typography>
-            <input
+            <TextField
+              sx={{ mr: 2 }}
               {...register("workEx.startDate")}
-              className="border border-gray-300 p-4 mr-2"
+              error={!!errors.workEx?.startDate}
+              helperText={errors.workEx?.startDate?.message}
               type="date"
             />
-            <input
-              {...register("workEx.endDate")}
-              className="border border-gray-300 p-4"
+            <TextField
+              sx={{ mr: 2 }}
+              {...register("workEx.endDate", {
+                validate: () => {
+                  if (isEndDateValid) {
+                    return "End date must be after start date";
+                  }
+                  return true;
+                },
+              })}
+              error={!!errors.workEx?.endDate}
+              helperText={errors.workEx?.endDate?.message}
               type="date"
             />
           </Box>
           <TextField
             label="Responsibilities"
-            {...register("workEx.responsibilites")}
+            {...register("workEx.responsibilites", {
+              required: "Responsibilities are required",
+            })}
+            error={!!errors.workEx?.responsibilites}
+            helperText={errors.workEx?.responsibilites?.message}
             multiline
             rows={4}
             fullWidth
@@ -121,7 +154,11 @@ export const DialogWorkEx = ({
           />
           <TextField
             label="Description"
-            {...register("workEx.description")}
+            {...register("workEx.description", {
+              required: "Description is required",
+            })}
+            error={!!errors.workEx?.description}
+            helperText={errors.workEx?.description?.message}
             fullWidth
           />
         </Stack>

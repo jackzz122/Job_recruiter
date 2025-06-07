@@ -10,49 +10,52 @@ import { EmployeeInfor } from "../JobRecruiter/EmployeeInfor/EmployeeInfor";
 import { EmployeeEdit } from "../JobRecruiter/EmployeeInfor/EmployeeEdit";
 import { lazy, Suspense } from "react";
 import { Loading } from "../shared/components/Loading";
+import { ProtectedRecruiter } from "../auth/recruiter/components/ProtectedRecruiter";
 const RecruiterCompany = lazy(
   () => import("../JobRecruiter/RecuiterJob/pages/RecruiterCompany")
 );
 const List_employ = lazy(() => import("../JobRecruiter/Employees/List_employ"));
 export const RecruiterRoute = [
   <Route key="recruiter" path="recruiter">
-    <Route element={<LayoutRecruiter />}>
-      <Route index element={<Dashboard />} />
-      <Route path="list_employees" element={<List_employ />} />
+    <Route element={<ProtectedRecruiter />}>
+      <Route element={<LayoutRecruiter />}>
+        <Route index element={<Dashboard />} />
+        <Route path="list_employees" element={<List_employ />} />
 
-      <Route
-        path="job_management"
-        element={
-          <Suspense fallback={<Loading />}>
-            <RecruiterCompany />
-          </Suspense>
-        }
-      />
-      <Route
-        path="candidate_management"
-        element={
-          <Suspense fallback={<Loading />}>
-            <List_employ />
-          </Suspense>
-        }
-      />
-      <Route path="comment_management" element={<CommentManage />} />
-      {/* <Route path="staff_management" element={<StaffManage />} /> */}
-      <Route
-        path="job_management/create"
-        element={<RecruiterEditJob mode="create" />}
-      />
-      <Route
-        path="job_management/:id/update"
-        element={<RecruiterEditJob mode="update" />}
-      />
-      <Route path="settings" element={<CompanyInfo />} />
-      <Route path="manage_account" element={<EmployeeInfor />} />
-      <Route path="manage_account/update" element={<EmployeeEdit />} />
-      <Route
-        path="settings/update_company/:companyId"
-        element={<UpdateCompany />}
-      />
+        <Route
+          path="job_management"
+          element={
+            <Suspense fallback={<Loading />}>
+              <RecruiterCompany />
+            </Suspense>
+          }
+        />
+        <Route
+          path="candidate_management"
+          element={
+            <Suspense fallback={<Loading />}>
+              <List_employ />
+            </Suspense>
+          }
+        />
+        <Route path="comment_management" element={<CommentManage />} />
+        {/* <Route path="staff_management" element={<StaffManage />} /> */}
+        <Route
+          path="job_management/create"
+          element={<RecruiterEditJob mode="create" />}
+        />
+        <Route
+          path="job_management/:id/update"
+          element={<RecruiterEditJob mode="update" />}
+        />
+        <Route path="settings" element={<CompanyInfo />} />
+        <Route path="manage_account" element={<EmployeeInfor />} />
+        <Route path="manage_account/update" element={<EmployeeEdit />} />
+        <Route
+          path="settings/update_company/:companyId"
+          element={<UpdateCompany />}
+        />
+      </Route>
     </Route>
   </Route>,
 ];

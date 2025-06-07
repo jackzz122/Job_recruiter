@@ -24,7 +24,9 @@ import { colorButtonOrange } from "../../../themeContext";
 import { PendingStatus } from "../../../types/PendingStatus";
 import { useSearchParams } from "react-router-dom";
 import { useGetMajorsQuery } from "../../../redux/feature/major/majorApiSlice";
+import Pagination from "@mui/material/Pagination";
 
+const ITEMS_PER_PAGE = 10;
 const COMPANY_SIZES = [
   { label: "All Sizes", value: "" },
   { label: "1-10 employees", value: "1-10" },
@@ -39,8 +41,8 @@ export const ListOfCompany = () => {
   const { data: companyList, isLoading } = useGetCompanyQuery();
   const { data: majors } = useGetMajorsQuery();
   const [showFilters, setShowFilters] = useState(false);
+  const [page, setPage] = useState(1);
 
-  // Get values from URL params with defaults
   const searchQuery = searchParams.get("search") || "";
   const selectedSize = searchParams.get("size") || "";
   const selectedTechnology = searchParams.get("technology") || "";
@@ -55,6 +57,7 @@ export const ListOfCompany = () => {
       }
       return prev;
     });
+    setPage(1);
   };
 
   const handleSizeChange = (value: string) => {
@@ -66,6 +69,7 @@ export const ListOfCompany = () => {
       }
       return prev;
     });
+    setPage(1);
   };
 
   const handleTechnologyChange = (value: string) => {
@@ -77,6 +81,7 @@ export const ListOfCompany = () => {
       }
       return prev;
     });
+    setPage(1);
   };
 
   const handleOvertimeChange = (value: string) => {
@@ -88,21 +93,28 @@ export const ListOfCompany = () => {
       }
       return prev;
     });
+    setPage(1);
   };
 
   const handleClearFilters = () => {
     setSearchParams({});
     setShowFilters(true);
+    setPage(1);
+  };
+
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
   };
 
   const filteredCompanies = useMemo(() => {
     if (!companyList?.data) return [];
 
     return companyList.data.filter((company) => {
-      // Basic status filter
       if (company.status !== PendingStatus.APPROVED) return false;
 
-      // Search term filter
       const searchTermLower = searchQuery.toLowerCase();
       const matchesSearch =
         searchQuery === "" ||
@@ -112,14 +124,12 @@ export const ListOfCompany = () => {
           skill.value.toLowerCase().includes(searchTermLower)
         );
 
-      // Company size filter
       const matchesSize =
         selectedSize === "" ||
         (() => {
           const companySizeStr = company.description?.[0]?.companySize;
           if (!companySizeStr) return false;
 
-          // Get the first number from the string (e.g., "51" from "51 - 200 employees")
           const companySize = parseInt(
             companySizeStr.toString().split("-")[0].trim()
           );
@@ -130,12 +140,10 @@ export const ListOfCompany = () => {
           return companySize >= min && companySize <= max;
         })();
 
-      // Technology filter
       const matchesTechnology =
         selectedTechnology === "" ||
         company.keySkills.some((skill) => skill.value === selectedTechnology);
 
-      // Overtime filter
       const matchesOvertime =
         selectedOvertime === "" ||
         (selectedOvertime === "yes" && company.overTime) ||
@@ -153,7 +161,14 @@ export const ListOfCompany = () => {
     selectedOvertime,
   ]);
 
-  const listOfCompany = filteredCompanies.map((company) => (
+  const totalPages = Math.ceil(filteredCompanies.length / ITEMS_PER_PAGE);
+  const startIndex = (page - 1) * ITEMS_PER_PAGE;
+  const paginatedCompanies = filteredCompanies.slice(
+    startIndex,
+    startIndex + ITEMS_PER_PAGE
+  );
+
+  const listOfCompany = paginatedCompanies.map((company) => (
     <Grid2 size={{ xs: 12, sm: 6, md: 3 }} key={company._id}>
       <CardItemCompanyList company={company} />
     </Grid2>
@@ -314,13 +329,44 @@ export const ListOfCompany = () => {
           <CircularProgress size={60} thickness={4} />
         </Box>
       ) : (
-        <Grid2 container spacing={2}>
-          {listOfCompany}
-        </Grid2>
+        <>
+          <Grid2 container spacing={2}>
+            {listOfCompany}
+          </Grid2>
+
+          {/* Pagination */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 4,
+              mb: 2,
+            }}
+          >
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={handlePageChange}
+              color="primary"
+              size="large"
+              sx={{
+                "& .MuiPaginationItem-root": {
+                  "&.Mui-selected": {
+                    backgroundColor: colorButtonOrange,
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: colorButtonOrange,
+                    },
+                  },
+                },
+              }}
+            />
+          </Box>
+        </>
       )}
 
       {/* No Results State */}
-      {!isLoading && listOfCompany.length === 0 && (
+      {!isLoading && filteredCompanies.length === 0 && (
         <Card
           sx={{
             display: "flex",

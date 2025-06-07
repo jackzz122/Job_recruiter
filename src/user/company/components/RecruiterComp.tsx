@@ -12,7 +12,7 @@ import { Link } from "react-router-dom";
 import { ListOfInformation } from "../../component/lists/ListOfInformation";
 import { JobResponse, statusJob } from "../../../types/JobType";
 import { formatDistanceToNow } from "date-fns";
-import { vi } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 
 export const RecruiterComp = ({
   jobDetail,
@@ -64,12 +64,12 @@ export const RecruiterComp = ({
           >
             {formatDistanceToNow(new Date(jobDetail?.startDate), {
               addSuffix: true,
-              locale: vi,
+              locale: enUS,
             })}
           </Typography>
           <Chip
             icon={isActive ? <CheckCircleOutlineIcon /> : <AccessTimeIcon />}
-            label={isActive ? "Đang tuyển" : "Đã kết thúc"}
+            label={isActive ? "Hiring" : "Ended"}
             size="small"
             sx={{
               backgroundColor: isActive

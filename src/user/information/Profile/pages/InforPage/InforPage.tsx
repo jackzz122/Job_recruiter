@@ -21,6 +21,7 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import LinkIcon from "@mui/icons-material/Link";
 import InputAdornment from "@mui/material/InputAdornment";
+import { capitalizeStr } from "../../../../../utils/capitalizeStr";
 // import DeleteIcon from "@mui/icons-material/Delete";
 
 type basicInforType = {
@@ -71,10 +72,16 @@ export const InforPage = ({
     linkingProfile: linkingProfile || "",
   };
   const [updateUser, { isLoading }] = useUpdateUserInfoMutation();
-  const { register, handleSubmit, reset, setValue, watch } =
-    useForm<basicInforType>({
-      defaultValues: defaultBasic,
-    });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<basicInforType>({
+    defaultValues: defaultBasic,
+  });
 
   const selectedGender = watch("gender");
 
@@ -142,7 +149,7 @@ export const InforPage = ({
           />
           <Box>
             <Typography variant="h5" fontWeight="bold">
-              {fullname || "Your Name"}
+              {(fullname && capitalizeStr(fullname)) || "Your Name"}
             </Typography>
             {title && (
               <Typography variant="subtitle1" color="primary.main">
@@ -248,10 +255,22 @@ export const InforPage = ({
 
           <Divider sx={{ my: 1 }}>Profile Information</Divider>
 
-          <TextField label="Full Name" {...register("fullname")} fullWidth />
+          <TextField
+            label="Full Name"
+            {...register("fullname", {
+              required: "Full name is required",
+            })}
+            error={!!errors.fullname}
+            helperText={errors.fullname?.message}
+            fullWidth
+          />
           <TextField
             label="Title"
-            {...register("title")}
+            {...register("title", {
+              required: "Title is required",
+            })}
+            error={!!errors.title}
+            helperText={errors.title?.message}
             fullWidth
             placeholder="e.g. Software Engineer, Project Manager"
           />
@@ -271,10 +290,13 @@ export const InforPage = ({
             </Select>
           </FormControl>
 
-          <input
+          <TextField
             type="date"
-            {...register("dob")}
-            className="p-3 border border-gray-500 rounded-lg"
+            {...register("dob", {
+              required: "Date of birth is required",
+            })}
+            error={!!errors.dob}
+            helperText={errors.dob?.message}
           />
 
           <TextField

@@ -94,6 +94,11 @@ export const jobApiSlice = ApiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "Jobs", id: "LIST" }],
     }),
+    searchJob: builder.query<JobTypeResponse<JobResponse[]>, void>({
+      query: () => `searchJobPosting`,
+      providesTags: (results) =>
+        generateProvidesTags("Jobs", results?.data, (item) => item._id),
+    }),
     getCandidateJobPosingList: builder.query<
       JobTypeResponse<candidateJobPostingType[]>,
       string
@@ -136,5 +141,6 @@ export const {
   useGetCandidateJobPosingListQuery,
   useChangeStatusApplicantMutation,
   useRemoveApplicantMutation,
+  useSearchJobQuery,
   useChangeStatusMutation,
 } = jobApiSlice;

@@ -65,17 +65,17 @@ export const DialogJobReport = ({
   return (
     <Dialog open={open} onClose={handleCloseDialog} maxWidth="sm" fullWidth>
       <DialogTitle sx={{ color: "error.main", fontWeight: "bold" }}>
-        Báo cáo tin tuyển dụng
+        Report Job
       </DialogTitle>
       <DialogContent>
         <Typography sx={{ mb: 2, color: "text.secondary" }}>
-          Vui lòng cho chúng tôi biết lý do bạn muốn báo cáo tin tuyển dụng "
-          {jobTitle}". Chúng tôi sẽ xem xét báo cáo của bạn một cách cẩn thận.
+          Please let us know the reason you want to report the job "{jobTitle}".
+          We will review your report carefully.
         </Typography>
         <TextField
           autoFocus
           margin="dense"
-          label="Tiêu đề báo cáo"
+          label="Report title"
           type="text"
           {...register("reportTitle", {
             required: true,
@@ -86,7 +86,7 @@ export const DialogJobReport = ({
         />
         <TextField
           margin="dense"
-          label="Lý do báo cáo"
+          label="Report reason"
           type="text"
           fullWidth
           multiline
@@ -105,7 +105,7 @@ export const DialogJobReport = ({
             mr: 1,
           }}
         >
-          Hủy
+          Cancel
         </Button>
         <Button
           onClick={handleSubmit(handleSubmitReport)}
@@ -119,7 +119,7 @@ export const DialogJobReport = ({
             },
           }}
         >
-          Gửi báo cáo
+          Send report
         </Button>
       </DialogActions>
     </Dialog>

@@ -37,7 +37,14 @@ export const WorkExp = ({ workEx }: { workEx: workExType[] }) => {
         </Box>
         <Stack spacing={3}>
           {workEx.length === 0 ? (
-            <p>............</p>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              fontStyle="italic"
+              gutterBottom
+            >
+              Not found work experience
+            </Typography>
           ) : (
             workEx.map((work) => {
               return (

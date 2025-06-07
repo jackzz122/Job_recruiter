@@ -53,9 +53,9 @@ export const DialogReportComment = ({
           additionalReason: data.reason.additionalReason,
         },
       };
-      const response = await createReport(report);
-      if (response?.data?.success) {
-        toast.success("Report created successfully");
+      const response = await createReport(report).unwrap();
+      if (response?.success) {
+        toast.success(response.message || "Report created successfully");
         handleCloseReportDialogFixed();
       }
     } catch (err) {

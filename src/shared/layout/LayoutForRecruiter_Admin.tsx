@@ -5,14 +5,12 @@ import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Avatar from "@mui/material/Avatar";
-import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import NotificationsActiveOutlinedIcon from "@mui/icons-material/NotificationsActiveOutlined";
 import CodeIcon from "@mui/icons-material/Code";
 import {
   backgroundColorRecruiter,
@@ -141,34 +139,25 @@ export function LayoutForRecruiter_Admin({
               {getCurrentPath()}
             </Typography>
             <Stack alignItems="center" direction="row" spacing={2}>
-              <IconButton>
-                <NotificationsActiveOutlinedIcon sx={{ color: "white" }} />
-              </IconButton>
-              <IconButton>
-                {user?.role === RoleName.STAFF_RECRUIT ||
-                  (user?.role === RoleName.RECRUIT && (
-                    <Avatar
-                      alt="Company logo"
-                      src={
-                        (
-                          (user?.companyId as CompanyType) ||
-                          "/defaultAvatar.png"
-                        ).logo
-                          ? (user?.companyId as CompanyType)?.logo
-                          : "/defaultAvatar.png"
-                      }
-                    />
-                  ))}
-                <Typography
-                  sx={{ color: "white" }}
-                  fontSize={20}
-                  marginLeft={2}
-                >
-                  {isCompanyPopulated(user?.companyId)
-                    ? user.companyId.companyName
-                    : user?.fullname}
-                </Typography>
-              </IconButton>
+              {user?.role === RoleName.STAFF_RECRUIT ||
+                (user?.role === RoleName.RECRUIT && (
+                  <Avatar
+                    alt="Company logo"
+                    src={
+                      (
+                        (user?.companyId as CompanyType) ||
+                        "/companyNotFound.png"
+                      ).logo
+                        ? (user?.companyId as CompanyType)?.logo
+                        : "/companyNotFound.png"
+                    }
+                  />
+                ))}
+              <Typography sx={{ color: "white" }} fontSize={20} marginLeft={2}>
+                {isCompanyPopulated(user?.companyId)
+                  ? user.companyId.companyName
+                  : user?.fullname || "Company not found"}
+              </Typography>
             </Stack>
           </Toolbar>
         </AppBar>

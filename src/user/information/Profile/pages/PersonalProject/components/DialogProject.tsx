@@ -29,11 +29,24 @@ export const DialogProject = ({
       role: "",
     },
   };
-  const { register, handleSubmit, setValue, reset } = useForm<{
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<{
     projects: Omit<projectType, "_id">;
   }>({
     defaultValues: defaultProject,
   });
+  const watchStartDate = watch("projects.startDate");
+  const watchEndDate = watch("projects.endDate");
+  const isEndDateValid =
+    watchStartDate && watchEndDate
+      ? new Date(watchEndDate) < new Date(watchStartDate)
+      : false;
   useEffect(() => {
     if (currentProject) {
       setValue("projects.link", currentProject.link);
@@ -86,36 +99,70 @@ export const DialogProject = ({
           <Typography variant="subtitle2">Project</Typography>
           <TextField
             label="Project Name"
-            {...register("projects.projectName")}
+            {...register("projects.projectName", {
+              required: "Project name is required",
+            })}
+            fullWidth
+            error={!!errors.projects?.projectName}
+            helperText={errors.projects?.projectName?.message}
+          />
+          <TextField
+            label="Role"
+            {...register("projects.role", {
+              required: "Role is required",
+            })}
+            error={!!errors.projects?.role}
+            helperText={errors.projects?.role?.message}
             fullWidth
           />
-          <TextField label="Role" {...register("projects.role")} fullWidth />
           <TextField
             label="Project Link"
-            {...register("projects.link")}
+            {...register("projects.link", {
+              required: "Project link is required",
+            })}
+            error={!!errors.projects?.link}
+            helperText={errors.projects?.link?.message}
             fullWidth
           />
           <Box>
             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
               Enter the date of your project (Start date and End Date)
             </Typography>
-            <input
-              {...register("projects.startDate")}
-              className="border border-gray-300 p-4 mr-2"
+            <TextField
+              sx={{ mr: 2 }}
+              {...register("projects.startDate", {
+                required: "Start date is required",
+              })}
               type="date"
+              error={!!errors.projects?.startDate}
+              helperText={errors.projects?.startDate?.message}
             />
-            <input
-              {...register("projects.endDate")}
-              className="border border-gray-300 p-4"
+            <TextField
+              sx={{ mr: 2 }}
+              {...register("projects.endDate", {
+                required: "End date is required",
+                validate: () => {
+                  if (isEndDateValid) {
+                    return "End date must be after start date";
+                  }
+                  return true;
+                },
+              })}
               type="date"
+              error={!!errors.projects?.endDate}
+              helperText={errors.projects?.endDate?.message}
             />
           </Box>
           <TextField
             label="Description"
-            {...register("projects.description")}
+            {...register("projects.description", {
+              required: "Description is required",
+            })}
             multiline
             rows={4}
             fullWidth
+            error={!!errors.projects?.description}
+            helperText={errors.projects?.description?.message}
             placeholder="• Technologies used
 • Key features
 • Your role"

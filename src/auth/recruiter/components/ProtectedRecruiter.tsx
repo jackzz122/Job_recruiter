@@ -1,22 +1,17 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useGetUserInfoQuery } from "../../../redux/feature/user/userApiSlice";
+import { RoleName } from "../../../types/UserType";
 
 export const ProtectedRecruiter = () => {
-  const {
-    data: user,
-    isSuccess,
-    isLoading,
-  } = useGetUserInfoQuery(undefined, {
+  const { data: user, isLoading } = useGetUserInfoQuery(undefined, {
     refetchOnMountOrArgChange: true,
+    skip: false,
   });
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  return isSuccess &&
-    (user?.data?.role === "recruiter" ||
-      user?.data?.role === "staffRecruiter") ? (
+  return user?.data?.role === RoleName.RECRUIT ? (
     <Outlet />
   ) : (
     <Navigate replace to="/recruiter/login" />

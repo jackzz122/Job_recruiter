@@ -16,7 +16,7 @@ export default function DetailsJobBody() {
       {/* Reasons to Join */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
-          3 lý do để gia nhập công ty
+          Three reasons to join the company
         </Typography>
         <Divider sx={{ my: 2 }} />
       </Box>
@@ -24,7 +24,7 @@ export default function DetailsJobBody() {
       {/* Job Description */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
-          Mô Tả công việc
+          Job Description
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
           {job?.data?.description.summary}
@@ -35,7 +35,7 @@ export default function DetailsJobBody() {
       {/* Job Requirements */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
-          Yêu cầu công việc
+          Job Requirements
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
           {job?.data?.description.keySkills.mainText}
@@ -49,7 +49,7 @@ export default function DetailsJobBody() {
       {/* Why You'll Love It */}
       <Box>
         <Typography variant="h6" fontWeight="bold" gutterBottom>
-          Tại sao bạn thích làm ở đây
+          Why You'll Love It
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
           {job?.data?.description.whyYouLoveIt.mainText}

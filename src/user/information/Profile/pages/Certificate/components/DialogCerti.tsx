@@ -29,7 +29,14 @@ export const DialogCerti = ({
   const listOfYear = [...Array(new Date().getFullYear() - 2000)].map(
     (_, i) => i + 0
   );
-  const { register, handleSubmit, control, reset, setValue } = useForm<{
+  const {
+    register,
+    handleSubmit,
+    control,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<{
     certificate: certificateType;
   }>({
     defaultValues: defaultValue,
@@ -85,13 +92,21 @@ export const DialogCerti = ({
         <Stack spacing={2} sx={{ mt: 2 }}>
           <TextField
             label="Certificate Name"
-            {...register("certificate.name")}
+            {...register("certificate.name", {
+              required: "Certificate name is required",
+            })}
             fullWidth
+            error={!!errors.certificate?.name}
+            helperText={errors.certificate?.name?.message}
           />
           <TextField
             label="Issuing Organization"
-            {...register("certificate.organization")}
+            {...register("certificate.organization", {
+              required: "Issuing organization is required",
+            })}
             fullWidth
+            error={!!errors.certificate?.organization}
+            helperText={errors.certificate?.organization?.message}
           />
           <Controller
             name="certificate.month"

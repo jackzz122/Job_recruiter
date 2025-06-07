@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
-import { vi } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Box from "@mui/material/Box";
@@ -55,7 +55,6 @@ export default function DetailsJobHeader() {
 
   const company = job?.data.companyId;
   const isString = typeof company === "string";
-  console.log("job", job);
   const handleAddFavourite = async () => {
     if (!id) return;
     try {
@@ -133,8 +132,8 @@ export default function DetailsJobHeader() {
               }}
             >
               {job?.data.status === statusJob.Stop || checkJobExpired
-                ? "Đã dừng tuyển"
-                : "Ứng tuyển"}
+                ? "Stopped"
+                : "Apply"}
             </Button>
             <IconButton
               onClick={isFavourite ? handleRemoveFavourite : handleAddFavourite}
@@ -166,7 +165,7 @@ export default function DetailsJobHeader() {
 
         <DialogApplication
           handleClose={() => setOpenApplication(false)}
-          title="Ứng tuyển cho vị trí"
+          title="Apply for the position"
           open={openApplication}
         />
 
@@ -212,9 +211,9 @@ export default function DetailsJobHeader() {
                 {job?.data?.createdAt
                   ? formatDistanceToNow(new Date(job.data.createdAt), {
                       addSuffix: true,
-                      locale: vi,
+                      locale: enUS,
                     })
-                  : "Đang tải..."}
+                  : "Loading..."}
               </Typography>
             </Stack>
           </Stack>
@@ -222,7 +221,7 @@ export default function DetailsJobHeader() {
 
         <Box>
           <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-            Kỹ năng yêu cầu
+            Skills Required
           </Typography>
           <ListOfRequirement listOfRequire={job?.data?.majorId} />
         </Box>

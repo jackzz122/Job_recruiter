@@ -9,20 +9,23 @@ import { ReportsManagement } from "../admin/Reports/ReportsManagement";
 import { PendingItem } from "../admin/Recruiter/pages/PendingItem";
 import { ApprovedItem } from "../admin/Recruiter/pages/ApprovedItem";
 import { BlockedItem } from "../admin/Recruiter/pages/BlockedItem";
+import { ProtectedAdmin } from "../auth/admin/component/ProtectedAdmin";
 
 export const AdminRoute = [
   <Route key="admin" path="admin">
     <Route path="login" element={<AdminLogin />} />
-    <Route element={<AdminLayout />}>
-      <Route index element={<Dashboard />} />
-      <Route path="account_manage" element={<CandidateManagement />} />
-      <Route path="recruite_manage" element={<RecruiterManagement />}>
-        <Route index element={<PendingItem />} />
-        <Route path="approved" element={<ApprovedItem />} />
-        <Route path="blocked" element={<BlockedItem />} />
+    <Route element={<ProtectedAdmin />}>
+      <Route element={<AdminLayout />}>
+        <Route index element={<Dashboard />} />
+        <Route path="account_manage" element={<CandidateManagement />} />
+        <Route path="recruite_manage" element={<RecruiterManagement />}>
+          <Route index element={<PendingItem />} />
+          <Route path="approved" element={<ApprovedItem />} />
+          <Route path="blocked" element={<BlockedItem />} />
+        </Route>
+        <Route path="major_manage" element={<MajorsManagement />} />
+        <Route path="reports_manage" element={<ReportsManagement />} />
       </Route>
-      <Route path="major_manage" element={<MajorsManagement />} />
-      <Route path="reports_manage" element={<ReportsManagement />} />
     </Route>
   </Route>,
 ];

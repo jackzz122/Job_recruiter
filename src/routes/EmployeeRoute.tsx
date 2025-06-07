@@ -24,43 +24,43 @@ import { FirstCVEdited } from "../user/CV/pages/EditCV/FirstCv/FirstCVEdited";
 import { SecondCVEdited } from "../user/CV/pages/EditCV/SecondCv/SecondCVEdited";
 import { ThirdCVEdited } from "../user/CV/pages/EditCV/ThirdCv/ThirdCVEdited";
 import { ListJob } from "../user/job/ListJob";
-
-// import { ProtectedUser } from "../auth/user/components/ProtectedUser";
+import { ProtectedUser } from "../auth/user/components/ProtectedUser";
 
 export const EmployeeRoute = [
-  // <Route key="employee" element={<ProtectedUser />}>
-  <Route key="employee" element={<LayoutHome />}>
-    <Route path="/homepage" element={<HomePage />} />
-    {/* Information pages */}
-    <Route element={<LayoutUser />}>
-      <Route path="myInfo" element={<MyInfo />} />
-      <Route path="jobManage" element={<JobManage />}>
-        <Route index element={<JobApplied />} />
-        <Route path="saved" element={<JobSaves />} />
-        <Route path="companySaves" element={<CompanySave />} />
+  <Route key="employee" element={<ProtectedUser />}>
+    <Route key="employee" element={<LayoutHome />}>
+      <Route path="/homepage" element={<HomePage />} />
+      {/* Information pages */}
+      <Route element={<LayoutUser />}>
+        <Route path="myInfo" element={<MyInfo />} />
+        <Route path="jobManage" element={<JobManage />}>
+          <Route index element={<JobApplied />} />
+          <Route path="saved" element={<JobSaves />} />
+          <Route path="companySaves" element={<CompanySave />} />
+        </Route>
+        <Route path="settings" element={<Setting />} />
+        <Route path="change_pass" element={<ChangePass />} />
       </Route>
-      <Route path="settings" element={<Setting />} />
-      <Route path="change_pass" element={<ChangePass />} />
-    </Route>
-    {/* CV page */}
-    <Route path="CV" element={<CVPages />} />
-    <Route path="layoutCV" element={<CVLayoutPage />}>
-      <Route index element={<FirstCV />} />
-      <Route path="cv_2" element={<SecondCV />} />
-      <Route path="cv_3" element={<ThirdCV />} />
-    </Route>
-    <Route path="edited" element={<FirstCVEdited />} />
-    <Route path="edited/cv_2" element={<SecondCVEdited />} />
-    <Route path="edited/cv_3" element={<ThirdCVEdited />} />
-    <Route path="list_company" element={<ListOfCompany />} />
-    <Route path="list_job" element={<ListJob />} />
-    <Route path="job/:id" element={<DetailsJob />} />
+      {/* CV page */}
+      <Route path="CV" element={<CVPages />} />
+      <Route path="layoutCV" element={<CVLayoutPage />}>
+        <Route index element={<FirstCV />} />
+        <Route path="cv_2" element={<SecondCV />} />
+        <Route path="cv_3" element={<ThirdCV />} />
+      </Route>
+      <Route path="edited" element={<FirstCVEdited />} />
+      <Route path="edited/cv_2" element={<SecondCVEdited />} />
+      <Route path="edited/cv_3" element={<ThirdCVEdited />} />
+      <Route path="list_company" element={<ListOfCompany />} />
+      <Route path="list_job" element={<ListJob />} />
+      <Route path="job/:id" element={<DetailsJob />} />
 
-    <Route path="writeReview" element={<WriteReview />} />
-    <Route path="company/:id" element={<LayoutDetailsComp />}>
-      <Route index element={<DetailsComp />} />
-      <Route path="reviews" element={<ReviewComp />} />
+      <Route path="writeReview" element={<WriteReview />} />
+      <Route path="company/:id" element={<LayoutDetailsComp />}>
+        <Route index element={<DetailsComp />} />
+        <Route path="reviews" element={<ReviewComp />} />
+      </Route>
     </Route>
+    ,
   </Route>,
-  // </Route>,
 ];

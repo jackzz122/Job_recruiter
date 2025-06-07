@@ -26,6 +26,7 @@ import { handleError } from "../../../helper/HandleError/handleError";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { capitalizeStr } from "../../../utils/capitalizeStr";
 
 export const Setting = () => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
@@ -77,19 +78,20 @@ export const Setting = () => {
       const response = await updatePassword({
         oldPassword: data.oldPassword,
         newPassword: data.newPassword,
-      });
-      if (response?.data?.success) {
-        toast.success(response?.data.message);
+      }).unwrap();
+
+      if (response?.success) {
+        toast.success(response.message);
+        handleClosePasswordDialog();
         navigate("/");
       }
     } catch (err) {
       const error = handleError(err);
-      toast.error(error?.message || "Update password failed");
+      toast.error(error.message);
     }
   };
   const handleDeleteAccount = async () => {
-    // Handle account deletion logic here
-    if (isDeleted === "XÓA") {
+    if (isDeleted === "DELETE") {
       try {
         const response = await deleteAccount();
         if (response.data?.success) {
@@ -144,7 +146,7 @@ export const Setting = () => {
                 </Grid2>
                 <Grid2 size={{ xs: 12, sm: 9 }}>
                   <Typography variant="body1" sx={{ mb: 0.5 }}>
-                    {user?.fullname}
+                    {user && capitalizeStr(user?.fullname)}
                   </Typography>
 
                   <Button
@@ -270,15 +272,23 @@ export const Setting = () => {
                 label="Current password"
                 type="password"
                 fullWidth
-                {...register("oldPassword")}
+                {...register("oldPassword", {
+                  required: "Current password is required",
+                })}
                 variant="outlined"
+                error={!!errors.oldPassword}
+                helperText={errors.oldPassword?.message}
               />
               <TextField
                 label="New password"
                 type="password"
                 fullWidth
-                {...register("newPassword")}
+                {...register("newPassword", {
+                  required: "New password is required",
+                })}
                 variant="outlined"
+                error={!!errors.newPassword}
+                helperText={errors.newPassword?.message}
               />
               <TextField
                 label="Confirm new password"
