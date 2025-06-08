@@ -76,7 +76,12 @@ export const EmployeeEdit = () => {
     }
   }, [user]);
 
-  const { register, handleSubmit, reset } = useForm<userEdit>({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<userEdit>({
     defaultValues: userInfo,
   });
   const { ...rest } = register("avatarIMG");
@@ -238,7 +243,11 @@ export const EmployeeEdit = () => {
                         },
                       }}
                       variant="outlined"
-                      {...register("fullname")}
+                      {...register("fullname", {
+                        required: "Full name field is required",
+                      })}
+                      error={!!errors.fullname}
+                      helperText={errors.fullname?.message as string}
                     />
                     <TextField
                       label="Email"
@@ -249,7 +258,11 @@ export const EmployeeEdit = () => {
                         },
                       }}
                       variant="outlined"
-                      {...register("email")}
+                      {...register("email", {
+                        required: "Email field is required",
+                      })}
+                      error={!!errors.email}
+                      helperText={errors.email?.message as string}
                     />
                     <TextField
                       label="Phone Number"
@@ -260,7 +273,11 @@ export const EmployeeEdit = () => {
                         },
                       }}
                       variant="outlined"
-                      {...register("phone")}
+                      {...register("phone", {
+                        required: "Phone number field is required",
+                      })}
+                      error={!!errors.phone}
+                      helperText={errors.phone?.message as string}
                     />
                     <TextField
                       label="Address"
@@ -271,7 +288,11 @@ export const EmployeeEdit = () => {
                         },
                       }}
                       variant="outlined"
-                      {...register("address")}
+                      {...register("address", {
+                        required: "Address field is required",
+                      })}
+                      error={!!errors.address}
+                      helperText={errors.address?.message as string}
                     />
                     <FormControl fullWidth>
                       <InputLabel id="gender-label">Gender</InputLabel>
@@ -280,7 +301,9 @@ export const EmployeeEdit = () => {
                         id="gender"
                         label="Gender"
                         defaultValue={user?.gender || ""}
-                        {...register("gender")}
+                        {...register("gender", {
+                          required: "Gender field is required",
+                        })}
                       >
                         {genderOptions.map((option) => (
                           <MenuItem key={option.value} value={option.value}>

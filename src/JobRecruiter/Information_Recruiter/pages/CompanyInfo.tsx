@@ -307,7 +307,7 @@ export const CompanyInfo = () => {
                         </Box>
                         <Box>
                           <Typography variant="body2" color="text.secondary">
-                            Personal Phone
+                            Website Url
                           </Typography>
                           <Typography variant="body1" fontWeight="medium">
                             {companyInfor?.websiteUrl || "........."}
@@ -500,7 +500,9 @@ export const CompanyInfo = () => {
                     transition: "all 0.3s",
                   }}
                   onClick={() => {
-                    navigate("/recruiter/settings/update_company/123");
+                    navigate(
+                      "/recruiter/settings/update_company/update_company"
+                    );
                   }}
                 >
                   Update Information

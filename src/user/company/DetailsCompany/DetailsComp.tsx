@@ -85,6 +85,7 @@ export const DetailsComp = () => {
                     color: "#4a4a4a",
                     lineHeight: 1.8,
                     whiteSpace: "pre-line",
+                    textAlign: "justify",
                   }}
                 >
                   {companyDetail?.data.description[0]?.about}
@@ -109,7 +110,11 @@ export const DetailsComp = () => {
                       size={{ xs: 12, sm: 6, md: 4 }}
                       key={index}
                     >
-                      <Stack direction="row" alignItems="center">
+                      <Stack
+                        direction="row"
+                        alignItems="flex-start"
+                        spacing={2}
+                      >
                         <Box
                           sx={{
                             p: 1.5,
@@ -117,15 +122,17 @@ export const DetailsComp = () => {
                             pr: 2,
                             color: colorButtonOrange,
                             bgcolor: "rgba(255, 152, 0, 0.08)",
+                            flexShrink: 0,
                           }}
                         >
                           {info.icon}
                         </Box>
-                        <Box>
+                        <Box sx={{ flexGrow: 1, minWidth: 0 }}>
                           <Typography
                             variant="body2"
                             color="text.secondary"
                             gutterBottom
+                            sx={{ wordBreak: "break-word" }}
                           >
                             {info.label}
                           </Typography>
@@ -138,7 +145,12 @@ export const DetailsComp = () => {
                                 color: colorButtonOrange,
                                 textDecoration: "none",
                                 fontWeight: 500,
+                                display: "block",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
                               }}
+                              title={info.value}
                             >
                               {info.value}
                             </a>
@@ -147,6 +159,14 @@ export const DetailsComp = () => {
                               variant="body1"
                               fontWeight="500"
                               color="#1a1a1a"
+                              sx={{
+                                wordBreak: "break-word",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                display: "-webkit-box",
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: "vertical",
+                              }}
                             >
                               {info.value}
                             </Typography>

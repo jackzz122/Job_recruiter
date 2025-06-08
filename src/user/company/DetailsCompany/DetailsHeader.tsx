@@ -154,29 +154,50 @@ export const DetailsHeader = () => {
         spacing={2}
         sx={{ marginTop: "1.5rem" }}
       >
-        <Stack direction="row" spacing={2}>
+        <Stack direction={{ xs: "column", md: "row" }} spacing={2} width="100%">
           <img
             src={companyDetail?.data.logo || "/companyNotFound.png"}
             alt=""
-            className="w-1/4 h-40 rounded-lg bg-white"
+            className="w-1/8 h-40 rounded-lg bg-white"
           />
-          <Box sx={{ color: "white" }}>
-            <Typography fontWeight="bold" variant="h5">
+          <Box sx={{ color: "white", width: "100%" }}>
+            <Typography
+              fontWeight="bold"
+              variant="h5"
+              sx={{ wordBreak: "break-word" }}
+            >
               {companyDetail?.data.companyName}
             </Typography>
-            <Stack direction="row" spacing={3} sx={{ marginBlock: "0.75rem" }}>
-              <Typography>
-                {" "}
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={3}
+              sx={{ marginBlock: "0.75rem" }}
+              flexWrap="wrap"
+            >
+              <Typography
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1,
+                  wordBreak: "break-word",
+                }}
+              >
                 <EditLocationAltOutlinedIcon />
                 {companyDetail?.data.address}
               </Typography>
-              <Typography>
-                {" "}
-                <WorkOutlineOutlinedIcon /> {jobs?.data?.length} jobs are hiring
+              <Typography
+                sx={{ display: "flex", alignItems: "center", gap: 1 }}
+              >
+                <WorkOutlineOutlinedIcon />
+                {jobs?.data?.length} jobs are hiring
               </Typography>
             </Stack>
-            <br />
-            <Stack direction="row" spacing={2}>
+            <Stack
+              direction={{ xs: "column", sm: "row" }}
+              spacing={2}
+              sx={{ mt: 2 }}
+              flexWrap="wrap"
+            >
               <Button
                 disabled={isCommented}
                 onClick={() =>
@@ -188,7 +209,7 @@ export const DetailsHeader = () => {
                   textTransform: isCommented ? "none" : "uppercase",
                   backgroundColor: isCommented ? "gray" : "red",
                   color: "white",
-                  minWidth: "10rem",
+                  minWidth: { xs: "100%", sm: "10rem" },
                 }}
               >
                 {isCommented ? "You already commented" : "Write Review"}
@@ -201,7 +222,7 @@ export const DetailsHeader = () => {
                     backgroundColor: "white",
                     color: "red",
                     border: "1px solid red",
-                    minWidth: "10rem",
+                    minWidth: { xs: "100%", sm: "10rem" },
                     padding: "0.75rem",
                   }}
                 >
@@ -215,7 +236,7 @@ export const DetailsHeader = () => {
                     backgroundColor: "white",
                     color: "red",
                     border: "1px solid red",
-                    minWidth: "10rem",
+                    minWidth: { xs: "100%", sm: "10rem" },
                     padding: "0.75rem",
                   }}
                 >
@@ -229,7 +250,7 @@ export const DetailsHeader = () => {
                   backgroundColor: "white",
                   color: "red",
                   border: "1px solid red",
-                  minWidth: "10rem",
+                  minWidth: { xs: "100%", sm: "10rem" },
                   padding: "0.75rem",
                 }}
               >

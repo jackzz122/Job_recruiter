@@ -9,6 +9,7 @@ import { Grid2, InputAdornment } from "@mui/material";
 import BusinessIcon from "@mui/icons-material/Business";
 import { useFormContext } from "react-hook-form";
 import TextField from "@mui/material/TextField";
+import LanguageIcon from "@mui/icons-material/Language";
 
 export const BasicInfo = () => {
   const {
@@ -45,6 +46,15 @@ export const BasicInfo = () => {
       icons: (
         <InputAdornment position="start">
           <PhoneIcon sx={{ color: colorButtonOrange }} />
+        </InputAdornment>
+      ),
+    },
+    {
+      label: "Website URL",
+      name: "websiteUrl",
+      icons: (
+        <InputAdornment position="start">
+          <LanguageIcon sx={{ color: colorButtonOrange }} />
         </InputAdornment>
       ),
     },
@@ -91,10 +101,18 @@ export const BasicInfo = () => {
         if (input.type === "date") {
           return (
             <Grid2 key={index} size={{ xs: 12, md: 6 }}>
-              <input
-                className="w-full border border-gray-400 rounded-md px-2 py-3"
+              <TextField
                 type="date"
                 {...register(input.name)}
+                sx={{ mb: 3 }}
+                placeholder="YYYY-MM-DD"
+                fullWidth
+                label={input.label}
+                slotProps={{
+                  inputLabel: {
+                    shrink: true,
+                  },
+                }}
               />
               {errors[input.name]?.message && (
                 <Typography variant="body2" color="error">

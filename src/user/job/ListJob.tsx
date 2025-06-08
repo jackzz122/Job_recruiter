@@ -53,7 +53,8 @@ const PEOPLE_HIRING = [
 export const ListJob = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
-  const [page, setPage] = useState(1);
+  const page = Number(searchParams.get("page")) || 1;
+  const itemsPerPage = 5;
   const searchTerm = searchParams.get("search") || "";
   const selectedExperience = searchParams.get("experience") || "";
   const selectedSalary = searchParams.get("salary") || "";
@@ -166,8 +167,17 @@ export const ListJob = () => {
     _event: React.ChangeEvent<unknown>,
     value: number
   ) => {
-    setPage(value);
+    setSearchParams((prev) => {
+      prev.set("page", value.toString());
+      return prev;
+    });
   };
+
+  const paginatedJobs = useMemo(() => {
+    const startIndex = (page - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return filteredJobs.slice(startIndex, endIndex);
+  }, [filteredJobs, page]);
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -318,7 +328,7 @@ export const ListJob = () => {
       {!isLoading && !isError && (
         <Stack spacing={3}>
           {filteredJobs.length > 0 ? (
-            filteredJobs.map((job) => <CardJob key={job._id} job={job} />)
+            paginatedJobs.map((job) => <CardJob key={job._id} job={job} />)
           ) : (
             <Card
               sx={{
@@ -397,7 +407,7 @@ export const ListJob = () => {
       {filteredJobs.length > 0 && (
         <Box display="flex" justifyContent="center" mt={4}>
           <Pagination
-            count={Math.ceil(filteredJobs.length / 10)}
+            count={Math.ceil(filteredJobs.length / itemsPerPage)}
             page={page}
             onChange={handlePageChange}
             color="primary"

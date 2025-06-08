@@ -7,7 +7,6 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TablePagination from "@mui/material/TablePagination";
-import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import { NavLink, Outlet } from "react-router-dom";
 import { useState } from "react";
@@ -16,7 +15,6 @@ import { colorButtonOrange } from "../../themeContext";
 export const RecruiterManagement = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [searchTerm, setSearchTerm] = useState("");
 
   return (
     <Box sx={{ p: 3 }}>
@@ -34,16 +32,6 @@ export const RecruiterManagement = () => {
         >
           Recruiter Management
         </Typography>
-      </Stack>
-
-      <Stack direction="row" spacing={2} sx={{ mb: 3 }} alignItems="center">
-        <TextField
-          placeholder="Search recruiters..."
-          size="small"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          sx={{ width: 300 }}
-        />
       </Stack>
 
       <Stack direction="row" spacing={2} sx={{ mb: 3 }} alignItems="center">

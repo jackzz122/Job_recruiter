@@ -60,7 +60,10 @@ export const userApiSlice = ApiSlice.injectEndpoints({
           body: data,
         };
       },
-      invalidatesTags: [{ type: "Users", id: "LIST" }],
+      invalidatesTags: [
+        { type: "Users", id: "LIST" },
+        { type: "Companies", id: "LIST" },
+      ],
     }),
     generateTextAi: builder.mutation<
       {

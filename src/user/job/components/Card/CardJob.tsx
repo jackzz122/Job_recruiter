@@ -121,7 +121,18 @@ export const CardJob = ({ job }: { job: JobResponse }) => {
               </IconButton>
             </Box>
 
-            <Typography variant="body2" marginBottom={2}>
+            <Typography
+              variant="body2"
+              marginBottom={2}
+              sx={{
+                textAlign: "justify",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+              }}
+            >
               {job.description.summary}
             </Typography>
 
