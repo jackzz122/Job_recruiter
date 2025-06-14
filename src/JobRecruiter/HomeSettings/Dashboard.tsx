@@ -23,7 +23,11 @@ import {
 } from "@mui/icons-material";
 
 import { useGetJobPostingsQuery } from "../../redux/feature/job/jobApiSlice";
-import { statusJob } from "../../types/JobType";
+import {
+  candidateJobPostingType,
+  JobResponse,
+  statusJob,
+} from "../../types/JobType";
 import * as XLSX from "xlsx";
 import { StatCard } from "./components/StatCard";
 import { CompanyType } from "../../types/CompanyType";
@@ -60,7 +64,9 @@ export const Dashboard = () => {
     successfulHires: 0,
   });
 
-  const countSuccessfulHiresInJob = (job) => {
+  const countSuccessfulHiresInJob = (
+    job: candidateJobPostingType | JobResponse
+  ) => {
     if (!job.listAccount || !Array.isArray(job.listAccount)) return 0;
 
     return job.listAccount.filter((account) => account.status === "Success")
