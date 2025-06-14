@@ -26,6 +26,7 @@ import { statusCompany, statusJob, JobResponse } from "../../types/JobType";
 import WorkOutlineIcon from "@mui/icons-material/WorkOutline";
 import { CompanyType } from "../../types/CompanyType";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useGetMajorsQuery } from "../../redux/feature/major/majorApiSlice";
 
 const EXPERIENCE_LEVELS = [
   { label: "All Experience Levels", value: "" },
@@ -50,6 +51,17 @@ const PEOPLE_HIRING = [
   { label: "20+ people", value: "20+" },
 ];
 
+const JobStatus = [
+  {
+    label: "On Going",
+    value: "ongoing",
+  },
+  {
+    label: "Stop",
+    value: "stop",
+  },
+];
+
 export const ListJob = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [showFilters, setShowFilters] = useState(false);
@@ -59,6 +71,9 @@ export const ListJob = () => {
   const selectedExperience = searchParams.get("experience") || "";
   const selectedSalary = searchParams.get("salary") || "";
   const selectedPeople = searchParams.get("people") || "";
+  const jobActive = searchParams.get("jobStatus") || "ongoing";
+  const selectedTechnology = searchParams.get("technology") || "";
+  const { data: majors } = useGetMajorsQuery();
   const { data: jobList, isLoading, isError } = useGetAllJobsQuery();
   const handleSearchChange = (value: string) => {
     setSearchParams((prev) => {
@@ -77,6 +92,16 @@ export const ListJob = () => {
         prev.set("experience", value);
       } else {
         prev.delete("experience");
+      }
+      return prev;
+    });
+  };
+  const handleTechnologyChange = (value: string) => {
+    setSearchParams((prev) => {
+      if (value) {
+        prev.set("technology", value);
+      } else {
+        prev.delete("technology");
       }
       return prev;
     });
@@ -104,6 +129,16 @@ export const ListJob = () => {
     });
   };
 
+  const handleChangeStatus = (value: string) => {
+    setSearchParams((prev) => {
+      if (value) {
+        prev.set("jobStatus", value);
+      } else {
+        prev.delete("jobStatus");
+      }
+      return prev;
+    });
+  };
   const handleClearFilters = () => {
     setSearchParams({});
     setShowFilters(true);
@@ -113,12 +148,10 @@ export const ListJob = () => {
     if (!jobList?.data) return [];
 
     return jobList.data.filter((job: JobResponse) => {
-      // Basic status filters
-      const isActiveJob = job.status === statusJob.OnGoing;
       const companyData = job.companyId as CompanyType;
       const isApprovedCompany = companyData.status === statusCompany.APPROVED;
 
-      if (!isActiveJob || !isApprovedCompany) return false;
+      if (!isApprovedCompany) return false;
 
       // Search term filter
       const searchTermLower = searchTerm.toLowerCase();
@@ -157,11 +190,33 @@ export const ListJob = () => {
           return people >= min && people <= max;
         })();
 
+      const matchesTechnology =
+        selectedTechnology === "" ||
+        job.majorId.some((skill) => skill.value === selectedTechnology);
+      //Search job Active
+      const matchesJobActive =
+        jobActive === "" ||
+        (jobActive === "ongoing" && job.status === statusJob.OnGoing) ||
+        (jobActive === "stop" && job.status === statusJob.Stop);
+
       return (
-        matchesSearch && matchesExperience && matchesSalary && matchesPeople
+        matchesSearch &&
+        matchesExperience &&
+        matchesSalary &&
+        matchesPeople &&
+        matchesJobActive &&
+        matchesTechnology
       );
     });
-  }, [jobList, searchTerm, selectedExperience, selectedSalary, selectedPeople]);
+  }, [
+    jobList,
+    searchTerm,
+    selectedExperience,
+    selectedSalary,
+    selectedPeople,
+    jobActive,
+    selectedTechnology,
+  ]);
 
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
@@ -245,7 +300,7 @@ export const ListJob = () => {
             <Box mt={3}>
               <Grid2 container spacing={3}>
                 {/* Experience Level Filter */}
-                <Grid2 size={{ xs: 12, md: 4 }}>
+                <Grid2 size={{ xs: 12, md: 3 }}>
                   <FormControl fullWidth>
                     <InputLabel id="experience-select-label">
                       Experience Level
@@ -266,7 +321,7 @@ export const ListJob = () => {
                 </Grid2>
 
                 {/* Salary Range Filter */}
-                <Grid2 size={{ xs: 12, md: 4 }}>
+                <Grid2 size={{ xs: 12, md: 3 }}>
                   <FormControl fullWidth>
                     <InputLabel id="salary-select-label">
                       Salary Range
@@ -287,7 +342,7 @@ export const ListJob = () => {
                 </Grid2>
 
                 {/* People Hiring Filter */}
-                <Grid2 size={{ xs: 12, md: 4 }}>
+                <Grid2 size={{ xs: 12, md: 3 }}>
                   <FormControl fullWidth>
                     <InputLabel id="people-select-label">
                       People Hiring
@@ -299,6 +354,42 @@ export const ListJob = () => {
                       onChange={(e) => handlePeopleChange(e.target.value)}
                     >
                       {PEOPLE_HIRING.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid2>
+                <Grid2 size={{ xs: 12, md: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel>Technology</InputLabel>
+                    <Select
+                      value={selectedTechnology}
+                      label="Technology"
+                      onChange={(e) => handleTechnologyChange(e.target.value)}
+                    >
+                      <MenuItem value="">All Technologies</MenuItem>
+                      {majors?.data?.map((major) => (
+                        <MenuItem key={major._id} value={major.name}>
+                          {major.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid2>
+                <Grid2 size={{ xs: 12, md: 3 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="people-select-label">
+                      Active Jobs
+                    </InputLabel>
+                    <Select
+                      labelId="people-select-label"
+                      value={jobActive}
+                      label="People Hiring"
+                      onChange={(e) => handleChangeStatus(e.target.value)}
+                    >
+                      {JobStatus.map((option) => (
                         <MenuItem key={option.value} value={option.value}>
                           {option.label}
                         </MenuItem>

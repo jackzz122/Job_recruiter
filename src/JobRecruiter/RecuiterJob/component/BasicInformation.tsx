@@ -19,7 +19,6 @@ export const BasicInformation = () => {
     formState: { errors },
   } = useFormContext<JobFormData>();
   const startDateWatch = watch("startDate");
-
   return (
     <>
       <Typography variant="subtitle2" color="text.secondary" gutterBottom>
@@ -195,11 +194,6 @@ export const BasicInformation = () => {
         <TextField
           sx={{ border: "1px solid #e0e0e0", mr: 2 }}
           type="date"
-          value={
-            startDateWatch
-              ? new Date(startDateWatch).toISOString().split("T")[0]
-              : ""
-          }
           {...register("startDate", {
             required: "Start date is required",
             valueAsDate: true,
@@ -226,13 +220,6 @@ export const BasicInformation = () => {
         <TextField
           sx={{ border: "1px solid #e0e0e0" }}
           type="date"
-          value={
-            watch("applicationDeadline")
-              ? new Date(watch("applicationDeadline"))
-                  .toISOString()
-                  .split("T")[0]
-              : ""
-          }
           {...register("applicationDeadline", {
             required: "Application deadline is required",
             valueAsDate: true,

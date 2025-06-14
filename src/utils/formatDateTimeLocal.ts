@@ -1,10 +1,9 @@
-export const formatDateForDatetimeLocal = (dateString: string) => {
+export const formatDateForDateInput = (dateString: string) => {
+  if (!dateString) return "";
+
   const date = new Date(dateString);
-  const pad = (n: number) => n.toString().padStart(2, "0");
-  const yyyy = date.getFullYear();
-  const MM = pad(date.getMonth() + 1);
-  const dd = pad(date.getDate());
-  const HH = pad(date.getHours());
-  const mm = pad(date.getMinutes());
-  return `${yyyy}-${MM}-${dd}T${HH}:${mm}`;
+
+  if (isNaN(date.getTime())) return "";
+
+  return date.toISOString().split("T")[0];
 };

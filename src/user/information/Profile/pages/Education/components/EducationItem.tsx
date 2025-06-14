@@ -26,13 +26,17 @@ export const EducationItem = ({
       <ItemList type="education" id={_id} onEdit={onEdit}>
         <Box marginBlock={2}>
           <Typography variant="subtitle1" fontWeight="bold">
-            Ngành nghề: {major}
+            Major: {major}
           </Typography>
-          <Typography color="text.secondary">Trường: {school}</Typography>
+          <Typography textAlign="justify" color="text.secondary">
+            School: {school}
+          </Typography>
           <Typography color="text.secondary">
-            (Thời gian bắt đầu - Kết thúc): {startDate} - {endDate}
+            (Start Date - End Date): {startDate} - {endDate}
           </Typography>
-          <Typography color="text.secondary">Mô tả: {description}</Typography>
+          <Typography color="text.secondary">
+            Description: {description}
+          </Typography>
         </Box>
       </ItemList>
     </>

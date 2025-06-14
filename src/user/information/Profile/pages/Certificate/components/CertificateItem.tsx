@@ -31,7 +31,7 @@ export const CertificateItem = ({
           <Typography color="text.secondary">
             {month}/{year}
           </Typography>
-          <Typography color="text.secondary">
+          <Typography textAlign="justify" color="text.secondary">
             Description: {description}
           </Typography>
         </Box>

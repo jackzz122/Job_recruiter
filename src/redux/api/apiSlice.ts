@@ -13,8 +13,8 @@ export const ApiSlice = createApi({
     "Recruiter",
   ],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://job-recruiter-backend.onrender.com/api",
-    // baseUrl: "http://localhost:3000/api",
+    // baseUrl: "https://job-recruiter-backend.onrender.com/api",
+    baseUrl: "http://localhost:3000/api",
     prepareHeaders: (headers) => {
       return headers;
     },

@@ -47,7 +47,7 @@ export const ProjectItem = ({
           >
             {role} - {startDate} - {endDate}
           </Typography>
-          <Typography variant="body2" sx={{ mt: 1 }}>
+          <Typography textAlign="justify" variant="body2" sx={{ mt: 1 }}>
             {description}
           </Typography>
         </Box>

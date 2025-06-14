@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 import { handleError } from "../../../../helper/HandleError/handleError";
 import { useUpdateUserInfoMutation } from "../../../../redux/feature/user/userApiSlice";
 import { toast } from "react-toastify";
-
+import Box from "@mui/material/Box";
 type ItemListProps = {
   type: string;
   id: string;
@@ -49,7 +49,7 @@ export const ItemList = ({ id, children, onEdit, type }: ItemListProps) => {
           marginBlock={1}
           justifyContent="space-between"
         >
-          {children}
+          <Box maxWidth="750px">{children}</Box>
           <Stack
             position="absolute"
             right={0}

@@ -7,8 +7,8 @@ type PdfExportOptions = {
   scale?: number;
   format?: string | [number, number];
   orientation?: "portrait" | "p" | "landscape" | "l";
-  padding?: number; // Padding tính bằng mm
-  maxSizeMB?: number; // Maximum size in MB
+  padding?: number;
+  maxSizeMB?: number;
 };
 
 export const usePdfExport = () => {
@@ -20,8 +20,8 @@ export const usePdfExport = () => {
         scale = 2,
         format = "a4",
         orientation = "portrait",
-        padding = 5, // Padding mặc định 5mm
-        maxSizeMB = 5, // Maximum size 5MB
+        padding = 5,
+        maxSizeMB = 5,
       }: PdfExportOptions = {}
     ) => {
       if (!elementRef.current) {
@@ -36,7 +36,7 @@ export const usePdfExport = () => {
 
         // Function to get image quality based on size
         const getImageQuality = (canvas: HTMLCanvasElement): number => {
-          const maxSizeBytes = maxSizeMB * 1024 * 1024; // Convert MB to bytes
+          const maxSizeBytes = maxSizeMB * 1024 * 1024;
           const dataUrl = canvas.toDataURL("image/jpeg", 1.0);
           const base64Size = Math.ceil((dataUrl.length * 3) / 4);
 

@@ -3,7 +3,7 @@ import {
   JobResponse,
   JobTypeResponse,
 } from "../../../types/JobType";
-import { formatDateForDatetimeLocal } from "../../../utils/formatDateTimeLocal";
+import { formatDateForDateInput } from "../../../utils/formatDateTimeLocal";
 export const formDetail = {
   title: "",
   sizingPeople: 1,
@@ -43,10 +43,10 @@ export const getJobDefaultValues = (
     minRange: jobData.data.minRange || 1,
     maxRange: jobData.data.maxRange || 1,
     location: jobData.data.location || "",
-    startDate: formatDateForDatetimeLocal(jobData.data.startDate) || "",
+    startDate: formatDateForDateInput(jobData.data.startDate) || "",
     experience: jobData.data.experience || 1,
     applicationDeadline:
-      formatDateForDatetimeLocal(jobData.data.applicationDeadline) || "",
+      formatDateForDateInput(jobData.data.applicationDeadline) || "",
     description: {
       summary: jobData.data.description?.summary || "",
       keySkills: {

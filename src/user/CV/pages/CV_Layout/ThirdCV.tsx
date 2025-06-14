@@ -35,7 +35,7 @@ export const ThirdCV = () => {
             color="primary"
             gutterBottom
           >
-            {user?.fullname}
+            {user?.fullname.toUpperCase()}
           </Typography>
           <Typography
             variant="subtitle1"
@@ -98,7 +98,7 @@ export const ThirdCV = () => {
             color="primary"
             sx={{ textTransform: "uppercase", pb: 0.5 }}
           >
-            Mục tiêu nghề nghiệp
+            About me
           </Typography>
         </Box>
         <Typography sx={{ fontSize: "0.9rem", lineHeight: 1.5 }}>
@@ -123,7 +123,7 @@ export const ThirdCV = () => {
             color="primary"
             sx={{ textTransform: "uppercase", pb: 0.5 }}
           >
-            Kinh nghiệm làm việc
+            Work Experience
           </Typography>
         </Box>
 
@@ -132,7 +132,7 @@ export const ThirdCV = () => {
             <Box sx={{ display: "flex", alignItems: "flex-start", gap: 1 }}>
               <Box sx={{ width: "30%" }}>
                 <Typography variant="subtitle2" fontWeight="bold">
-                  Công ty {job.company || "........."}
+                  Company {job.company || "........."}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -180,7 +180,7 @@ export const ThirdCV = () => {
             color="primary"
             sx={{ textTransform: "uppercase", pb: 0.5 }}
           >
-            Học vấn
+            Education
           </Typography>
         </Box>
 
@@ -230,7 +230,7 @@ export const ThirdCV = () => {
             color="primary"
             sx={{ textTransform: "uppercase", pb: 0.5 }}
           >
-            Chứng chỉ
+            Certificates
           </Typography>
         </Box>
 
@@ -280,7 +280,7 @@ export const ThirdCV = () => {
             color="primary"
             sx={{ textTransform: "uppercase", pb: 0.5 }}
           >
-            Các kỹ năng
+            Skills
           </Typography>
         </Box>
 

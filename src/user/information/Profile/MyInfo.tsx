@@ -16,7 +16,6 @@ import { useNavigate } from "react-router-dom";
 
 export const MyInfo = () => {
   const user = useSelector(selectUser);
-  console.log(user);
   const navigate = useNavigate();
   return (
     <Box

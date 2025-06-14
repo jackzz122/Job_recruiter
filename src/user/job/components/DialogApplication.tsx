@@ -327,8 +327,8 @@ export const DialogApplication = ({
               borderRadius: 2,
             }}
           >
-            Một thư giới thiệu ngắn gọn, chỉn chu sẽ giúp bạn trở nên chuyên
-            nghiệp và gây ấn tượng hơn với nhà tuyển dụng.
+            A concise and well-crafted introduction can make you appear more
+            professional and leave a strong impression on employers.
           </Typography>
 
           <TextField
@@ -395,7 +395,7 @@ export const DialogApplication = ({
               },
             }}
           >
-            Nộp Hồ Sơ
+            Upload
           </Button>
         </Stack>
       </form>

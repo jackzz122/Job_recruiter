@@ -14,12 +14,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Button from "@mui/material/Button";
 
 import {
-  TrendingUp as TrendingUpIcon,
   People as PeopleIcon,
   Work as WorkIcon,
   Assessment as AssessmentIcon,
   CheckCircle as CheckCircleIcon,
   FileDownload as FileDownloadIcon,
+  PersonAdd as PersonAddIcon,
 } from "@mui/icons-material";
 
 import { useGetJobPostingsQuery } from "../../redux/feature/job/jobApiSlice";
@@ -30,12 +30,11 @@ import { CompanyType } from "../../types/CompanyType";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/feature/user/userSlice";
 
-// Types for our dashboard data
 interface DashboardStats {
   totalJobs: number;
   activeJobs: number;
   totalApplications: number;
-  conversionRate: number;
+  successfulHires: number;
 }
 
 export const Dashboard = () => {
@@ -47,37 +46,48 @@ export const Dashboard = () => {
   } = useGetJobPostingsQuery((user?.companyId as CompanyType)?._id || "", {
     skip: !user?.companyId,
   });
+
   useEffect(() => {
     if (user?.companyId) {
       refetch();
     }
   }, [user?.companyId, refetch]);
+
   const [stats, setStats] = useState<DashboardStats>({
     totalJobs: 0,
     activeJobs: 0,
     totalApplications: 0,
-    conversionRate: 0,
+    successfulHires: 0,
   });
+
+  const countSuccessfulHiresInJob = (job) => {
+    if (!job.listAccount || !Array.isArray(job.listAccount)) return 0;
+
+    return job.listAccount.filter((account) => account.status === "Success")
+      .length;
+  };
 
   useEffect(() => {
     if (jobs?.data) {
       const activeJobs = jobs.data.filter(
         (job) => job.status === statusJob.OnGoing
       );
-      const totalApplications = activeJobs.reduce(
+
+      const totalApplications = jobs.data.reduce(
         (acc, job) => acc + (job.listAccount?.length || 0),
         0
       );
-      const conversionRate =
-        activeJobs.length > 0
-          ? Math.round((totalApplications / activeJobs.length) * 100)
-          : 0;
+
+      const successfulHires = jobs.data.reduce(
+        (acc, job) => acc + countSuccessfulHiresInJob(job),
+        0
+      );
 
       setStats({
         totalJobs: jobs.data.length,
         activeJobs: activeJobs.length,
         totalApplications,
-        conversionRate,
+        successfulHires,
       });
     }
   }, [jobs]);
@@ -89,11 +99,12 @@ export const Dashboard = () => {
       (job) => job.status === statusJob.OnGoing
     );
 
-    // Prepare jobs data
+    // Prepare jobs data with successful hires
     const jobsData = activeJobs.map((job) => ({
       "Job Title": job.title,
       Status: job.status,
       Applicants: job.listAccount?.length || 0,
+      "Successful Hires": countSuccessfulHiresInJob(job),
       "Created At": new Date(job.createdAt).toLocaleDateString(),
       Location: job.location,
     }));
@@ -107,6 +118,13 @@ export const Dashboard = () => {
       }))
     );
 
+    // Prepare successful hires summary
+    const hiresData = jobs.data.map((job) => ({
+      "Job Title": job.title,
+      "Total Applications": job.listAccount?.length || 0,
+      "Successful Hires": countSuccessfulHiresInJob(job),
+    }));
+
     // Create workbook with multiple sheets
     const wb = XLSX.utils.book_new();
 
@@ -117,6 +135,10 @@ export const Dashboard = () => {
     // Add applications sheet
     const applicationsSheet = XLSX.utils.json_to_sheet(applicationsData);
     XLSX.utils.book_append_sheet(wb, applicationsSheet, "Applications");
+
+    // Add successful hires sheet
+    const hiresSheet = XLSX.utils.json_to_sheet(hiresData);
+    XLSX.utils.book_append_sheet(wb, hiresSheet, "Successful Hires");
 
     // Save the file
     XLSX.writeFile(wb, "recruiter_dashboard_report.xlsx");
@@ -205,10 +227,10 @@ export const Dashboard = () => {
           </Grid2>
           <Grid2 size={{ xs: 12, sm: 6, md: 3 }}>
             <StatCard
-              title="Applications per Job"
-              value={stats.conversionRate}
-              icon={TrendingUpIcon}
-              color="warning"
+              title="Successful Hires"
+              value={stats.successfulHires}
+              icon={PersonAddIcon}
+              color="success"
             />
           </Grid2>
         </Grid2>
@@ -239,23 +261,28 @@ export const Dashboard = () => {
               {jobs?.data
                 ?.filter((job) => job.status === statusJob.OnGoing)
                 .slice(0, 5)
-                .map((job) => (
-                  <Box key={job._id}>
-                    <ListItem>
-                      <ListItemIcon>
-                        <CheckCircleIcon sx={{ color: "#FF6B35" }} />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={job.title}
-                        secondary={`${job.listAccount?.length || 0} applicants`}
-                      />
-                      <Typography variant="caption" color="text.secondary">
-                        {new Date(job.createdAt).toLocaleDateString()}
-                      </Typography>
-                    </ListItem>
-                    <Divider />
-                  </Box>
-                ))}
+                .map((job) => {
+                  const successfulHires = countSuccessfulHiresInJob(job);
+                  return (
+                    <Box key={job._id}>
+                      <ListItem>
+                        <ListItemIcon>
+                          <CheckCircleIcon sx={{ color: "#FF6B35" }} />
+                        </ListItemIcon>
+                        <ListItemText
+                          primary={job.title}
+                          secondary={`${
+                            job.listAccount?.length || 0
+                          } applicants • ${successfulHires} hired`}
+                        />
+                        <Typography variant="caption" color="text.secondary">
+                          {new Date(job.createdAt).toLocaleDateString()}
+                        </Typography>
+                      </ListItem>
+                      <Divider />
+                    </Box>
+                  );
+                })}
             </List>
           </Paper>
         </Grid2>
@@ -278,7 +305,7 @@ export const Dashboard = () => {
                 fontWeight: "bold",
               }}
             >
-              Job Status
+              Hiring Statistics
             </Typography>
             <Stack spacing={2}>
               <Box>
@@ -290,7 +317,11 @@ export const Dashboard = () => {
                 </Stack>
                 <LinearProgress
                   variant="determinate"
-                  value={(stats.activeJobs / stats.totalJobs) * 100}
+                  value={
+                    stats.totalJobs > 0
+                      ? (stats.activeJobs / stats.totalJobs) * 100
+                      : 0
+                  }
                   sx={{
                     height: 8,
                     borderRadius: 4,
@@ -311,7 +342,10 @@ export const Dashboard = () => {
                 <LinearProgress
                   variant="determinate"
                   value={Math.min(
-                    (stats.totalApplications / (stats.activeJobs * 10)) * 100,
+                    stats.activeJobs > 0
+                      ? (stats.totalApplications / (stats.activeJobs * 10)) *
+                          100
+                      : 0,
                     100
                   )}
                   sx={{

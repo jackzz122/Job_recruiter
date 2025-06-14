@@ -65,7 +65,7 @@ export const SecondCVSectionContent = ({
               fontWeight="bold"
               sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
-              Mục tiêu nghề nghiệp
+              About Me
             </Typography>
           </Box>
 
@@ -107,7 +107,7 @@ export const SecondCVSectionContent = ({
               fontWeight="bold"
               sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
-              Các kỹ năng
+              Skills
             </Typography>
           </Box>
 
@@ -163,7 +163,7 @@ export const SecondCVSectionContent = ({
               fontWeight="bold"
               sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
-              Kinh nghiệm làm việc
+              Work Experience
             </Typography>
           </Box>
 
@@ -185,7 +185,7 @@ export const SecondCVSectionContent = ({
                   <EditableText
                     variant="body1"
                     fontWeight="bold"
-                    value={`Công ty ${job.company}`}
+                    value={`${job.company} Company`}
                   />
                   <EditableText
                     variant="body2"
@@ -243,7 +243,7 @@ export const SecondCVSectionContent = ({
               fontWeight="bold"
               sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
-              Học vấn
+              Education
             </Typography>
           </Box>
 
@@ -315,7 +315,7 @@ export const SecondCVSectionContent = ({
               fontWeight="bold"
               sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
-              Các dự án
+              Projects
             </Typography>
           </Box>
 
@@ -387,7 +387,7 @@ export const SecondCVSectionContent = ({
               fontWeight="bold"
               sx={{ textTransform: "uppercase", color: selectedColor.primary }}
             >
-              Chứng chỉ
+              Certificates
             </Typography>
           </Box>
 
@@ -396,7 +396,7 @@ export const SecondCVSectionContent = ({
               <Box sx={{ display: "flex", justifyContent: "space-between" }}>
                 <Box sx={{ width: "30%" }}>
                   <Typography variant="body2" fontWeight="medium">
-                    {cert.month} {cert.year}
+                    {cert.month}/{cert.year}
                   </Typography>
                 </Box>
                 <Box sx={{ width: "70%" }}>

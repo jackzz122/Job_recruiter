@@ -39,9 +39,9 @@ export const Register = () => {
         fullname: data.fullname,
         email: data.email.toLowerCase(),
         password: data.password,
-      });
-      if (response.data?.success) {
-        toast.success(response.data?.message || "Registration successful");
+      }).unwrap();
+      if (response.success) {
+        toast.success(response.message || "Registration successful");
         navigate("/", {
           replace: true,
         });

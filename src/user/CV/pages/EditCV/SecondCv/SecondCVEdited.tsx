@@ -366,21 +366,21 @@ export const SecondCVEdited = () => {
               }}
             >
               <Typography variant="body2" fontWeight="medium">
-                Ngày sinh:
+                Date of Birth:
               </Typography>
               <Typography variant="body2">
                 {user?.dob || "........."}
               </Typography>
 
               <Typography variant="body2" fontWeight="medium">
-                Giới tính:
+                Gender:
               </Typography>
               <Typography variant="body2">
                 {user?.gender || "........."}
               </Typography>
 
               <Typography variant="body2" fontWeight="medium">
-                Số điện thoại:
+                Phone Number:
               </Typography>
               <Typography variant="body2">
                 {user?.phone || "........."}
@@ -401,7 +401,7 @@ export const SecondCVEdited = () => {
               </Link>
 
               <Typography variant="body2" fontWeight="medium">
-                Địa chỉ:
+                Address:
               </Typography>
               <Typography variant="body2">
                 {user?.address || "........."}

@@ -59,7 +59,7 @@ export const FirstCV = () => {
                 fontWeight="bold"
                 color="text.primary"
               >
-                {user?.fullname}
+                {user?.fullname.toUpperCase()}
               </Typography>
             </Box>
 

@@ -30,11 +30,11 @@ export const WorkExItem = ({
           <Typography color="text.secondary">
             {company} • {startDate} - {endDate ? endDate : "Present"}
           </Typography>
-          <Typography variant="body2" sx={{ mt: 1 }}>
-            <strong> Responsible:</strong> {responsibilites}
+          <Typography textAlign="justify" variant="body2" sx={{ mt: 1 }}>
+            <b> Responsible:</b> {responsibilites}
           </Typography>
-          <Typography variant="body2" sx={{ mt: 1 }}>
-            <strong>Description: </strong> {description}
+          <Typography textAlign="justify" variant="body2" sx={{ mt: 1 }}>
+            <b>Description: </b> {description}
           </Typography>
         </Box>
       </ItemList>
